@@ -1,0 +1,113 @@
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@500;600&family=DM+Sans:wght@400;500;700&family=DM+Mono:wght@400;500&display=swap');
+
+:root {
+  --app-max-width: 1100px;
+  --topbar-height: 48px;
+  --font: 'DM Sans', sans-serif;
+  --font-mono: 'DM Mono', monospace;
+}
+
+/* Override global font vars with DM Sans */
+body { font-family: var(--font) !important; }
+
+.root {
+  display: flex; flex-direction: column;
+  min-height: 100dvh; align-items: center;
+  background: #0a0a0a;
+}
+
+.topBar {
+  position: fixed; top: 0;
+  width: 100%; max-width: var(--app-max-width);
+  height: calc(var(--topbar-height) + var(--safe-top));
+  padding-top: var(--safe-top);
+  background: var(--bg2);
+  border-bottom: 1px solid var(--divider);
+  display: flex; align-items: stretch;
+  z-index: 100;
+  box-shadow: var(--elevation-1);
+  overflow: hidden;
+}
+
+/* Logo section — slightly darker tint */
+.logoSection {
+  display: flex; align-items: center;
+  padding: 0 16px;
+  background: rgba(0,0,0,0.25);
+  flex-shrink: 0;
+  border-right: 1px solid var(--divider);
+}
+
+.logoLink {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+}
+
+.logoIcon {
+  width: 26px;
+  height: 26px;
+  border-radius: 6px;
+  flex-shrink: 0;
+}
+
+.logo {
+  font-family: 'Oswald', sans-serif;
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.logoArr     { color: #29b6f6; }  /* sonarr blue */
+.logoMonitor { color: #ffa726; }  /* radarr yellow */
+
+/* Thin vertical divider between logo and context */
+.barDivider {
+  width: 1px;
+  background: var(--divider);
+  align-self: stretch;
+  flex-shrink: 0;
+}
+
+/* Context section — takes remaining space, clips overflow */
+.contextSection {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+  overflow: hidden;
+}
+
+.barSpacer { flex: 1; }
+
+/* Nav icon buttons */
+.navBtns {
+  display: flex; align-items: center;
+  gap: 2px; padding: 0 8px;
+  flex-shrink: 0;
+}
+
+.navBtn {
+  display: flex; align-items: center; justify-content: center;
+  width: 36px; height: 36px; border-radius: 50%;
+  color: var(--text3);
+  transition: background 0.12s, color 0.15s;
+  -webkit-tap-highlight-color: transparent;
+}
+.navBtn:hover  { background: var(--bg3); color: var(--text2); }
+.navBtn:active { background: var(--bg4); }
+.navBtnActive  { color: var(--accent) !important; }
+.navBtnSpinning svg { animation: spin 0.7s linear infinite; }
+
+.content {
+  flex: 1; width: 100%;
+  max-width: var(--app-max-width);
+  padding-top: calc(var(--topbar-height) + var(--safe-top));
+  background: var(--bg);
+  box-shadow: 0 0 40px rgba(0,0,0,0.6);
+  min-height: 100dvh;
+}

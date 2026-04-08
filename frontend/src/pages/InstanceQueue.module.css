@@ -1,0 +1,134 @@
+.page { display: flex; flex-direction: column; min-height: calc(100dvh - 48px); }
+
+/* ── Sub-bar ──────────────────────────────────────────────────────────────── */
+.subBar {
+  position: sticky; top: 48px; z-index: 40;
+  background: var(--bg2); border-bottom: 1px solid var(--divider);
+}
+
+/* Single flex row — info on left, filters on right */
+.subBarRow {
+  display: flex;
+  align-items: center;
+  flex-wrap: nowrap;
+  min-height: 48px;
+  padding: 0 8px 0 0;
+  gap: 0;
+}
+
+.backBtn {
+  display: flex; align-items: center; justify-content: center;
+  width: 36px; height: 48px; flex-shrink: 0;
+  color: var(--text3);
+  -webkit-tap-highlight-color: transparent; transition: color 0.12s;
+}
+.backBtn:active { color: var(--text); }
+
+/* Instance info: name + link icon + tags all on one line, tags wrap if needed */
+.instanceInfo {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px;
+  min-width: 0;
+  flex-shrink: 1;
+  padding: 6px 0;
+}
+
+.instanceNameRow {
+  display: flex; align-items: center; gap: 4px;
+  flex-shrink: 0;
+}
+
+.instanceName {
+  font-size: 13px; font-weight: 500; color: var(--text);
+  white-space: nowrap;
+}
+
+.openLink {
+  display: inline-flex; align-items: center;
+  color: var(--text3); transition: color 0.12s; flex-shrink: 0;
+}
+.openLink:hover { color: var(--accent); }
+
+/* Tags sit inline with name, wrap to next line if no space */
+.instanceMeta {
+  display: flex; align-items: center; gap: 3px; flex-wrap: wrap;
+  flex-shrink: 0;
+}
+
+/* Filters — pushed to the right on wide screens */
+.filters {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 4px;
+  padding: 6px 0 6px 8px;
+  margin-left: auto;
+  flex-shrink: 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.filters::-webkit-scrollbar { display: none; }
+
+/* On mobile: filters drop to their own row, right-aligned, with divider */
+@media (max-width: 600px) {
+  .subBarRow {
+    flex-wrap: wrap;
+    padding-bottom: 0;
+    align-items: flex-start;
+    padding-top: 4px;
+  }
+  .backBtn { height: 40px; }
+  .instanceInfo { flex: 1; padding-top: 8px; padding-bottom: 6px; }
+  .filters {
+    width: 100%;
+    margin-left: 0;
+    padding: 6px 8px 8px 36px;
+    flex-wrap: wrap;
+    border-top: 1px solid var(--divider);
+    justify-content: flex-start;
+    overflow-x: visible;
+  }
+}
+
+.filterChip {
+  display: inline-flex; align-items: center; gap: 3px;
+  padding: 3px 9px; border-radius: 100px;
+  font-size: 11px; font-weight: 500;
+  white-space: nowrap; flex-shrink: 0;
+  -webkit-tap-highlight-color: transparent; transition: all 0.15s;
+  /* Default state */
+  color: var(--text3); background: var(--bg3); border: 1px solid var(--border);
+}
+
+/* Active filter chips use status colours */
+.filterChip.active                  { color: var(--accent);           background: var(--accent-light);          border-color: var(--accent-border); }
+.filterChip[data-f="all"].active    { color: var(--accent);           background: var(--accent-light);          border-color: var(--accent-border); }
+.filterChip[data-f="downloading"].active { color: var(--status-downloading); background: var(--status-downloading-bg); border-color: var(--status-downloading); }
+.filterChip[data-f="importing"].active   { color: var(--status-importing);   background: var(--status-importing-bg);   border-color: var(--status-importing); }
+.filterChip[data-f="waiting"].active     { color: var(--status-waiting);     background: var(--status-waiting-bg);     border-color: var(--status-waiting); }
+.filterChip[data-f="paused"].active      { color: var(--status-paused);      background: var(--status-paused-bg);      border-color: var(--status-paused); }
+.filterChip[data-f="issues"].active      { color: var(--status-issue);       background: var(--status-issue-bg);       border-color: var(--status-issue); }
+
+.filterCount { font-family: var(--font-mono); font-size: 10px; opacity: 0.7; margin-left: 2px; }
+
+/* ── Toast ─────────────────────────────────────────────────────────────────── */
+.toast {
+  margin: 6px 16px 0; padding: 7px 12px;
+  background: var(--bg3); border-left: 3px solid var(--accent);
+  border-radius: var(--radius-sm); font-size: 12px;
+  color: var(--text2); font-family: var(--font-mono); animation: fadeUp 0.18s ease;
+}
+.toastError { border-left-color: var(--red); color: var(--red); }
+
+/* ── List ──────────────────────────────────────────────────────────────────── */
+.list { display: flex; flex-direction: column; gap: 4px; padding: 8px 16px 16px; flex: 1; }
+
+.skeleton {
+  height: 52px; border-radius: var(--radius);
+  background: linear-gradient(90deg, var(--bg2) 25%, var(--bg3) 50%, var(--bg2) 75%);
+  background-size: 200% 100%; animation: shimmer 1.3s infinite;
+}
+.errorState { padding: 32px; text-align: center; font-size: 13px; color: var(--red); font-family: var(--font-mono); }
+.emptyState { padding: 48px 16px; text-align: center; color: var(--text3); font-size: 13px; }
+.footer { padding: 12px 16px 8px; font-size: 10px; color: var(--text3); font-family: var(--font-mono); text-align: center; }

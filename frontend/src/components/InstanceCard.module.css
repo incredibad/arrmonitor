@@ -1,0 +1,144 @@
+.card {
+  background: var(--bg2);
+  border-radius: var(--radius);
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  box-shadow: var(--elevation-1);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: background 0.12s;
+}
+.card:active { background: var(--bg3); }
+
+.stripe {
+  width: 3px;
+  align-self: stretch;
+  flex-shrink: 0;
+}
+.stripe[data-type="sonarr"]   { background: var(--sonarr); }
+.stripe[data-type="radarr"]   { background: var(--radarr); }
+.stripe[data-type="lidarr"]   { background: var(--lidarr); }
+.stripe[data-type="sportarr"] { background: #26a69a; }
+
+.body {
+  flex: 1;
+  padding: 10px 10px 10px 12px;
+  min-width: 0;
+}
+
+/* Name + chips all on one row */
+.headerRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+  flex-wrap: wrap;
+}
+
+.name {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex-shrink: 1;
+  min-width: 0;
+}
+
+.openBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: var(--radius-sm);
+  color: var(--text3);
+  flex-shrink: 0;
+  transition: color 0.12s, background 0.12s;
+  -webkit-tap-highlight-color: transparent;
+}
+.openBtn:hover, .openBtn:active { color: var(--accent); background: var(--accent-light); }
+
+.headerMeta {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+  flex-wrap: wrap;
+}
+
+/* Stats bar */
+.stats {
+  display: flex;
+  align-items: stretch;
+  background: var(--bg3);
+  border-radius: var(--radius-sm);
+}
+
+.stat {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 4px;
+  gap: 1px;
+  border-radius: var(--radius-sm);
+  transition: background 0.15s;
+}
+
+
+
+.statVal {
+  font-size: 18px;
+  font-weight: 700;
+  font-family: var(--font-mono);
+  color: var(--text2);
+  line-height: 1;
+}
+
+.statLabel {
+  font-size: 9px;
+  color: var(--text3);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+}
+
+.statDivider {
+  width: 1px;
+  background: var(--divider);
+  align-self: stretch;
+  margin: 4px 0;
+}
+
+.shimmerRow {
+  display: flex;
+  gap: 6px;
+  flex: 1;
+  padding: 4px 6px;
+}
+.shimmer {
+  flex: 1;
+  height: 28px;
+  border-radius: var(--radius-sm);
+  background: linear-gradient(90deg, var(--bg3) 25%, var(--bg4) 50%, var(--bg3) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.2s infinite;
+}
+
+.errText {
+  font-size: 11px;
+  color: var(--red);
+  padding: 0 10px;
+  font-family: var(--font-mono);
+  align-self: center;
+}
+
+.chevron {
+  padding: 0 10px;
+  color: var(--text3);
+  flex-shrink: 0;
+}

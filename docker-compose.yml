@@ -1,0 +1,31 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: arrmonitor
+      POSTGRES_USER: arrmonitor
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-arrmonitor_secret}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U arrmonitor"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  arrmonitor:
+    image: incredibad/arrmonitor:latest
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: postgres://arrmonitor:${POSTGRES_PASSWORD:-arrmonitor_secret}@postgres:5432/arrmonitor
+      NODE_ENV: production
+      SESSION_SECRET: ${SESSION_SECRET:-change-this-secret-in-production}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - "6767:6767"
+
+volumes:
+  postgres_data:
