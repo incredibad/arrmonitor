@@ -68,6 +68,20 @@ async function arrFetch(instance, apiPath, options = {}, retries = 2) {
   throw lastError;
 }
 
+// GET LinuxServer.io image list — proxied to avoid CORS on the client
+router.get('/lsio/images', async (req, res) => {
+  try {
+    const r = await fetch(
+      'https://api.linuxserver.io/api/v1/images?include_config=false&include_deprecated=false',
+      { signal: AbortSignal.timeout(10000) }
+    );
+    if (!r.ok) return res.status(502).json({ error: `Upstream ${r.status}` });
+    res.json(await r.json());
+  } catch (e) {
+    res.status(502).json({ error: e.message });
+  }
+});
+
 // GET queue
 router.get('/:id/queue', async (req, res) => {
   try {

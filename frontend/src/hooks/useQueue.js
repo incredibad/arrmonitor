@@ -36,9 +36,7 @@ async function fetchLsioVersion(type) {
   const name = LSIO_NAMES[type];
   if (!name) return null;
   try {
-    const res = await fetch(`https://api.linuxserver.io/api/v1/images?include_config=false&include_deprecated=false`);
-    if (!res.ok) return null;
-    const data = await res.json();
+    const data = await api.getLsioImages();
     const images = data?.data?.repositories?.linuxserver;
     if (!Array.isArray(images)) return null;
     const image = images.find(i => i.name === name);
