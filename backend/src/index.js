@@ -14,7 +14,7 @@ import { requireAuth } from './middleware/requireAuth.js';
 const app = express();
 const PORT = process.env.PORT || 6767;
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const publicPath = join(__dirname, '../../public');
+const publicPath = join(__dirname, '../public');
 const PgSession = connectPgSimple(session);
 
 const SESSION_SECRET = process.env.SESSION_SECRET || 'arrmonitor-dev-secret-change-in-production';
