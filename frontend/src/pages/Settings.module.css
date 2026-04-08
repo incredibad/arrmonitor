@@ -30,18 +30,20 @@
   align-items: center;
   gap: 5px;
   padding: 6px 14px;
-  background: var(--accent);
+  background: linear-gradient(135deg, #6366f1, #818cf8);
   color: #fff;
   border-radius: var(--radius-sm);
   font-size: 13px;
   font-weight: 500;
   -webkit-tap-highlight-color: transparent;
+  box-shadow: 0 3px 10px rgba(99,102,241,0.30);
 }
-.addBtn:active { opacity: 0.8; }
+.addBtn:active { opacity: 0.85; }
 
 /* Form card */
 .formCard {
   background: var(--bg2);
+  border: 1px solid var(--border);
   border-radius: var(--radius);
   padding: 16px;
   display: flex;
@@ -114,15 +116,16 @@
 
 .saveBtn {
   padding: 8px 18px;
-  background: var(--accent);
+  background: linear-gradient(135deg, #6366f1, #818cf8);
   color: #fff;
   border-radius: var(--radius-sm);
   font-size: 13px;
   font-weight: 500;
   -webkit-tap-highlight-color: transparent;
+  box-shadow: 0 3px 10px rgba(99,102,241,0.30);
 }
-.saveBtn:disabled { opacity: 0.4; }
-.saveBtn:not(:disabled):active { opacity: 0.8; }
+.saveBtn:disabled { opacity: 0.4; box-shadow: none; }
+.saveBtn:not(:disabled):active { opacity: 0.85; }
 
 /* Instance list */
 .instanceList {
@@ -133,6 +136,7 @@
 
 .instanceRow {
   background: var(--bg2);
+  border: 1px solid var(--border);
   border-radius: var(--radius);
   display: flex;
   align-items: center;

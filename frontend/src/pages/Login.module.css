@@ -3,18 +3,18 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: var(--bg);
+  background: radial-gradient(ellipse at 50% 0%, rgba(99,102,241,0.08) 0%, transparent 60%), var(--bg);
   padding: 24px 16px;
 }
 
 .card {
   background: var(--bg2);
-  border: 1px solid var(--border);
+  border: 1px solid rgba(255,255,255,0.09);
   border-radius: var(--radius-lg);
   padding: 32px 28px;
   width: 100%;
   max-width: 360px;
-  box-shadow: var(--elevation-3);
+  box-shadow: var(--elevation-3), 0 0 0 1px rgba(99,102,241,0.08);
 }
 
 .logo {
@@ -72,14 +72,15 @@
 
 .submit {
   padding: 11px;
-  background: var(--accent);
+  background: linear-gradient(135deg, #6366f1, #818cf8);
   color: #fff;
   border-radius: var(--radius-sm);
   font-size: 14px;
   font-weight: 500;
   margin-top: 4px;
-  transition: opacity 0.15s;
+  transition: opacity 0.15s, box-shadow 0.15s;
   letter-spacing: 0.02em;
+  box-shadow: 0 4px 14px rgba(99,102,241,0.35);
 }
-.submit:disabled { opacity: 0.5; cursor: not-allowed; }
-.submit:not(:disabled):active { opacity: 0.8; }
+.submit:disabled { opacity: 0.5; cursor: not-allowed; box-shadow: none; }
+.submit:not(:disabled):active { opacity: 0.85; box-shadow: 0 2px 8px rgba(99,102,241,0.25); }
