@@ -43,4 +43,7 @@ export const api = {
   },
   confirmManualImport: (instanceId, files, importMode = 'move') =>
     request(`/api/arr/${instanceId}/manualimport?importMode=${importMode}`, { method: 'POST', body: JSON.stringify(files) }),
+
+  // External API proxies (avoids CORS on the client)
+  getLsioImages: () => request('/api/arr/lsio/images'),
 };

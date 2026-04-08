@@ -4,6 +4,11 @@ All notable changes are documented here, newest first.
 
 ---
 
+## [1.0.2] — 2026-04-09
+
+### Fixed
+- LinuxServer.io version check now proxied through the backend to avoid CORS errors in the browser
+
 ## [1.0.1] — 2026-04-09
 
 ### Changed
