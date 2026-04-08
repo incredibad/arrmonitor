@@ -1,12 +1,13 @@
 .item {
   background: var(--bg2);
+  border: 1px solid var(--border);
   border-radius: var(--radius);
   display: flex;
   align-items: stretch;
   overflow: hidden;
   box-shadow: var(--elevation-1);
 }
-.item.hasError { box-shadow: 0 0 0 1px rgba(239,83,80,0.3), var(--elevation-1); }
+.item.hasError { border-color: rgba(248,113,113,0.25); box-shadow: 0 0 0 1px rgba(248,113,113,0.15), var(--elevation-1); }
 
 .main { flex: 1; padding: 7px 8px 6px; min-width: 0; }
 
@@ -52,17 +53,17 @@
   padding: 2px 8px;
   border-radius: 100px;
   font-size: 10px; font-family: var(--font-mono);
-  color: #c8c8d8;
-  background: #2a2a3a;
+  color: var(--text2);
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.08);
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
   flex-shrink: 1; min-width: 40px; max-width: 55%;
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
-  transition: background 0.12s;
-  border: none;
+  transition: background 0.12s, border-color 0.12s;
   text-align: left;
 }
-.metaFile:active { background: #353550; }
+.metaFile:active { background: rgba(255,255,255,0.10); border-color: rgba(255,255,255,0.12); }
 
 /* Standard meta pill — solid bg, more colour */
 .metaTag {
@@ -71,25 +72,27 @@
   border-radius: 100px;
   font-size: 10px; font-weight: 500;
   font-family: var(--font-mono);
-  color: #b0b8cc;
-  background: #252535;
+  color: var(--text3);
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.07);
   white-space: nowrap; flex-shrink: 0;
   letter-spacing: 0.01em;
 }
 
-/* Coloured pill variants — solid colours */
-.metaTagGreen  { color: #1a2e1c; background: #66bb6a; }
-.metaTagRed    { color: #2e1a1a; background: #ef5350; }
-.metaTagAccent { color: #1a1e38; background: #7986cb; }
+/* Coloured pill variants — vivid */
+.metaTagGreen  { color: #052010; background: var(--green);  border-color: transparent; }
+.metaTagRed    { color: #200505; background: var(--red);    border-color: transparent; }
+.metaTagAccent { color: #0a0b20; background: var(--accent); border-color: transparent; }
 
 /* Progress bar */
 .progressTrack {
-  height: 2px; background: var(--bg4); border-radius: 1px;
-  overflow: hidden; margin-top: 4px;
+  height: 3px; background: var(--bg4); border-radius: 2px;
+  overflow: hidden; margin-top: 5px;
 }
 .progressFill {
-  height: 100%; background: var(--accent); border-radius: 1px;
+  height: 100%; background: linear-gradient(90deg, var(--accent), #818cf8); border-radius: 2px;
   transition: width 0.4s ease;
+  box-shadow: 0 0 6px rgba(99,102,241,0.6);
 }
 
 /* Warning tag */
@@ -116,7 +119,7 @@
 /* Inline action column */
 .actions {
   display: flex; flex-direction: column;
-  border-left: 1px solid var(--divider); flex-shrink: 0;
+  border-left: 1px solid rgba(255,255,255,0.06); flex-shrink: 0;
 }
 .actionBtn {
   flex: 1; display: flex; align-items: center; justify-content: center;
@@ -191,9 +194,10 @@
   border-top: 1px solid var(--divider);
 }
 .importConfirmBtn {
-  flex: 2; padding: 11px; background: var(--accent); color: #fff;
+  flex: 2; padding: 11px; background: linear-gradient(135deg, #6366f1, #818cf8); color: #fff;
   border-radius: var(--radius); font-size: 14px; font-weight: 500;
   text-align: center; -webkit-tap-highlight-color: transparent;
+  box-shadow: 0 4px 14px rgba(99,102,241,0.35);
 }
-.importConfirmBtn:disabled { opacity: 0.4; }
-.importConfirmBtn:not(:disabled):active { opacity: 0.8; }
+.importConfirmBtn:disabled { opacity: 0.4; box-shadow: none; }
+.importConfirmBtn:not(:disabled):active { opacity: 0.85; }

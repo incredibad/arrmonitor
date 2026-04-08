@@ -4,6 +4,21 @@ All notable changes are documented here, newest first.
 
 ---
 
+## [1.0.1] — 2026-04-09
+
+### Changed
+- UI overhaul: switched from flat dark-gray palette to a deep navy/indigo theme with vivid accent colours
+- Topbar now uses a glass morphism effect (backdrop blur + semi-transparent background)
+- Instance cards and queue items have subtle borders and a hover lift animation
+- Type stripes on instance cards widened to 4px with a matching colour glow
+- Stat values on instance cards are now full-brightness white for better readability
+- Progress bars thickened to 3px with a gradient fill and soft glow
+- Meta pills on queue items use translucent glass-style backgrounds
+- Primary action buttons (login, save, add, import) use an indigo gradient with a shadow
+- Bottom sheet modals gain a backdrop blur overlay and a faint top border
+- Status chip colours updated to more vivid Tailwind-palette equivalents (sky, violet, amber, etc.)
+- Border radius increased slightly across cards and inputs for a softer feel
+
 ## [1.0.0] — 2026-04-08
 
 ### Added
