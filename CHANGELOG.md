@@ -4,6 +4,11 @@ All notable changes are documented here, newest first.
 
 ---
 
+## [1.0.3] — 2026-04-09
+
+### Fixed
+- Frontend static files not served: `publicPath` was resolving to `/public` instead of `/app/public` due to an extra `..` in the path
+
 ## [1.0.2] — 2026-04-09
 
 ### Fixed
