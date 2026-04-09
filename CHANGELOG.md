@@ -4,6 +4,12 @@ All notable changes are documented here, newest first.
 
 ---
 
+## [1.1.3] — 2026-04-09
+
+### Changed
+- Logo text now uses a smooth blue→amber gradient (`background-clip: text`) instead of two hard-coloured spans
+- Login page logo now matches the topbar: includes the favicon icon, all-caps text, same gradient and letter-spacing
+
 ## [1.1.2] — 2026-04-09
 
 ### Fixed

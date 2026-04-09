@@ -18,15 +18,30 @@
 }
 
 .logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 24px;
+}
+
+.logoIcon {
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  flex-shrink: 0;
+}
+
+.logoText {
   font-family: 'Oswald', sans-serif;
   font-size: 26px;
   font-weight: 600;
-  letter-spacing: 0.04em;
-  margin-bottom: 24px;
-  display: block;
+  letter-spacing: 0.08em;
+  line-height: 1;
+  background: linear-gradient(90deg, #38bdf8 0%, #fbbf24 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
-.logoArr     { color: #29b6f6; }
-.logoMonitor { color: #ffa726; }
 
 .title {
   font-size: 18px;
