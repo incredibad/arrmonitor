@@ -37,7 +37,8 @@ export default function Login() {
     <div className={styles.page}>
       <div className={styles.card}>
         <div className={styles.logo}>
-          <span className={styles.logoArr}>Arr</span><span className={styles.logoMonitor}>Monitor</span>
+          <img src="/favicon.svg" alt="" className={styles.logoIcon} />
+          <span className={styles.logoText}>ARRMONITOR</span>
         </div>
 
         <h1 className={styles.title}>{isSetup ? 'Create Account' : 'Sign In'}</h1>

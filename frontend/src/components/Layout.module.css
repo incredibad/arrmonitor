@@ -61,10 +61,11 @@ body { font-family: var(--font) !important; }
   letter-spacing: 0.08em;
   line-height: 1;
   white-space: nowrap;
+  background: linear-gradient(90deg, #38bdf8 0%, #fbbf24 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
-
-.logoArr     { color: #29b6f6; }  /* sonarr blue */
-.logoMonitor { color: #ffa726; }  /* radarr yellow */
 
 /* Thin vertical divider between logo and context */
 .barDivider {

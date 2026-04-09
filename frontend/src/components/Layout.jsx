@@ -39,9 +39,7 @@ export default function Layout({ children }) {
         <div className={styles.logoSection}>
           <NavLink to="/" className={styles.logoLink}>
             <img src="/favicon.svg" alt="" className={styles.logoIcon} />
-            <span className={styles.logo}>
-              <span className={styles.logoArr}>ARR</span><span className={styles.logoMonitor}>MONITOR</span>
-            </span>
+            <span className={styles.logo}>ARRMONITOR</span>
           </NavLink>
         </div>
 
