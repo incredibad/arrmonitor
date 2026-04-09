@@ -4,6 +4,11 @@ All notable changes are documented here, newest first.
 
 ---
 
+## [1.1.2] — 2026-04-09
+
+### Fixed
+- Update badge now only shows when the newest entry from the arr `/update` endpoint has `installed: false` — previously checked `array.length > 0` which was true even when on the latest version, causing all instances to show the update indicator
+
 ## [1.1.1] — 2026-04-09
 
 ### Fixed
