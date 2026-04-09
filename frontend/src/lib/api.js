@@ -46,4 +46,6 @@ export const api = {
 
   // External API proxies (avoids CORS on the client)
   getLsioImages: () => request('/api/arr/lsio/images'),
+
+  getInstanceUpdates: (id) => request(`/api/arr/${id}/update`),
 };
