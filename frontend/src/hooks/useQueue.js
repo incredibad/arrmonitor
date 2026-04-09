@@ -133,16 +133,14 @@ export function useInstanceStatus(instanceId, type) {
         if (s.ok) {
           setIsLsio(isLinuxServer(s));
 
-          // Ask the arr app itself — same source its own UI uses
+          // Ask the arr app itself — same source its own UI uses.
+          // The response is newest-first; if the first entry is not installed,
+          // a newer version exists that isn't running yet.
           const updates = await api.getInstanceUpdates(instanceId);
           if (cancelled) return;
-          if (Array.isArray(updates) && updates.length > 0) {
-            setUpdateAvailable(true);
-            setLatestVersion(updates[0].version ?? null);
-          } else {
-            setUpdateAvailable(false);
-            setLatestVersion(null);
-          }
+          const hasUpdate = Array.isArray(updates) && updates.length > 0 && updates[0].installed !== true;
+          setUpdateAvailable(hasUpdate);
+          setLatestVersion(hasUpdate ? (updates[0].version ?? null) : null);
         }
       } catch {
         if (!cancelled) setStatus({ ok: false });
