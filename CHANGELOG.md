@@ -4,6 +4,16 @@ All notable changes are documented here, newest first.
 
 ---
 
+## [1.1.0] — 2026-04-09
+
+### Changed
+- Instance cards redesigned as vertical dashboard tiles: top accent stripe (full width with glow), larger bold name, chips on a dedicated row, stat tiles pushed to the bottom
+- Stat tiles are now two equal-width blocks showing a large number with a label; when active they get a vivid coloured border and background so Queue vs Issues are immediately distinguishable
+- Removed the chevron arrow from instance cards (the whole card is clickable)
+- Dashboard grid now starts at 2 columns from 560px (was 640px) for a better mid-size layout
+- Dashboard card skeleton height updated to match new taller cards
+- Dashboard content padding increased slightly
+
 ## [1.0.3] — 2026-04-09
 
 ### Fixed
