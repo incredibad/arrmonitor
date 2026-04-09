@@ -1,90 +1,10 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { api } from '../lib/api.js';
 
-// Version checking — supports both official GitHub releases and LinuxServer.io builds
-const VERSION_CACHE = {};
-const VERSION_TTL = 10 * 60 * 1000; // 10 minutes
-
-// GitHub repos for official releases
-const GITHUB_REPOS = {
-  sonarr: 'Sonarr/Sonarr',
-  radarr: 'Radarr/Radarr',
-  lidarr: 'lidarr/Lidarr',
-};
-
-// LinuxServer.io image names (from their API)
-const LSIO_NAMES = {
-  sonarr: 'sonarr',
-  radarr: 'radarr',
-  lidarr: 'lidarr',
-};
-
 // Detect if an instance is running a LinuxServer.io build
 // Their Dockerfile writes packageAuthor containing "linuxserver.io"
 export function isLinuxServer(status) {
   return !!(status?.packageAuthor?.toLowerCase().includes('linuxserver'));
-}
-
-// Fetch latest version from LinuxServer.io API
-// Returns the upstream version part (strips the -ls{n} suffix)
-async function fetchLsioVersion(type) {
-  const cacheKey = `lsio:${type}`;
-  const now = Date.now();
-  if (VERSION_CACHE[cacheKey] && now - VERSION_CACHE[cacheKey].ts < VERSION_TTL) {
-    return VERSION_CACHE[cacheKey];
-  }
-  const name = LSIO_NAMES[type];
-  if (!name) return null;
-  try {
-    const data = await api.getLsioImages();
-    const images = data?.data?.repositories?.linuxserver;
-    if (!Array.isArray(images)) return null;
-    const image = images.find(i => i.name === name);
-    if (!image?.version) return null;
-    // Version format: "5.18.4.9674-ls259" — we compare the upstream part only
-    const upstreamVersion = image.version.replace(/-ls\d+$/, '');
-    const result = { version: image.version, upstreamVersion, ts: now };
-    VERSION_CACHE[cacheKey] = result;
-    return result;
-  } catch {
-    return null;
-  }
-}
-
-// Fetch latest version from GitHub official releases
-async function fetchGithubVersion(type) {
-  const cacheKey = `github:${type}`;
-  const now = Date.now();
-  if (VERSION_CACHE[cacheKey] && now - VERSION_CACHE[cacheKey].ts < VERSION_TTL) {
-    return VERSION_CACHE[cacheKey].version;
-  }
-  const repo = GITHUB_REPOS[type];
-  if (!repo) return null;
-  try {
-    const res = await fetch(`https://api.github.com/repos/${repo}/releases/latest`);
-    if (!res.ok) return null;
-    const data = await res.json();
-    const version = data.tag_name?.replace(/^v/, '');
-    VERSION_CACHE[cacheKey] = { version, ts: now };
-    return version;
-  } catch {
-    return null;
-  }
-}
-
-// Compare two version strings numerically, returns true if latest > current
-function compareVersions(current, latest) {
-  if (!current || !latest) return false;
-  // Strip any -ls suffix before comparing
-  const clean = v => v.replace(/-ls\d+$/, '').replace(/^v/, '');
-  const a = clean(current).split('.').map(Number);
-  const b = clean(latest).split('.').map(Number);
-  for (let i = 0; i < Math.max(a.length, b.length); i++) {
-    const diff = (b[i] || 0) - (a[i] || 0);
-    if (diff > 0) return true;
-    if (diff < 0) return false;
-  }
-  return false;
 }
 
 function getSortGroup(item) {
@@ -210,25 +130,18 @@ export function useInstanceStatus(instanceId, type) {
         if (cancelled) return;
         setStatus(s);
 
-        if (s.ok && s.version && type) {
-          const lsio = isLinuxServer(s);
-          setIsLsio(lsio);
+        if (s.ok) {
+          setIsLsio(isLinuxServer(s));
 
-          if (lsio) {
-            // LinuxServer.io build — check their API for the latest image version
-            const lsioInfo = await fetchLsioVersion(type);
-            if (cancelled) return;
-            if (lsioInfo) {
-              setLatestVersion(lsioInfo.version);
-              // Compare running version against LinuxServer's latest upstream version
-              setUpdateAvailable(compareVersions(s.version, lsioInfo.upstreamVersion));
-            }
+          // Ask the arr app itself — same source its own UI uses
+          const updates = await api.getInstanceUpdates(instanceId);
+          if (cancelled) return;
+          if (Array.isArray(updates) && updates.length > 0) {
+            setUpdateAvailable(true);
+            setLatestVersion(updates[0].version ?? null);
           } else {
-            // Official build — check GitHub
-            const latest = await fetchGithubVersion(type);
-            if (cancelled) return;
-            setLatestVersion(latest);
-            setUpdateAvailable(compareVersions(s.version, latest));
+            setUpdateAvailable(false);
+            setLatestVersion(null);
           }
         }
       } catch {

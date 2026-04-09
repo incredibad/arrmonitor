@@ -4,6 +4,11 @@ All notable changes are documented here, newest first.
 
 ---
 
+## [1.1.1] — 2026-04-09
+
+### Fixed
+- Update detection now queries the arr app's own `/update` endpoint (proxied through the backend) instead of comparing versions against GitHub releases. This is the same source the arr UI uses, so it will always agree with what Radarr/Sonarr/Lidarr shows internally. Removes dependency on GitHub API rate limits and the LinuxServer.io image list for update checks.
+
 ## [1.1.0] — 2026-04-09
 
 ### Changed

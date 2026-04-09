@@ -197,6 +197,18 @@ router.post('/:id/manualimport', async (req, res) => {
   }
 });
 
+// GET available updates from the arr app itself
+router.get('/:id/update', async (req, res) => {
+  try {
+    const instance = await getInstance(req.params.id);
+    if (!instance) return res.status(404).json({ error: 'Instance not found' });
+    const data = await arrFetch(instance, '/update');
+    res.json(Array.isArray(data) ? data : []);
+  } catch (e) {
+    res.json([]); // treat errors as no updates rather than breaking the card
+  }
+});
+
 // GET system status — always returns 200 so the frontend can read ok:false gracefully
 router.get('/:id/status', async (req, res) => {
   try {
