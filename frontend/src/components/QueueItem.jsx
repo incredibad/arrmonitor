@@ -60,17 +60,19 @@ function getSemanticStatus(item) {
 
 function statusLabel(sem) {
   return {
-    downloading: 'Downloading',
-    paused:      'Paused',
-    importing:   'Importing',
-    waiting:     'Waiting to Import',
-    issue:       'Issue',
-    queued:      'Queued',
+    downloading:         'Downloading',
+    paused:              'Paused',
+    importing:           'Importing',
+    'manually-importing': 'Manually Importing',
+    waiting:             'Waiting to Import',
+    issue:               'Issue',
+    queued:              'Queued',
   }[sem] || sem;
 }
 
 function statusChipClass(sem) {
-  return `chip chip-${sem}`;
+  const chipSem = sem === 'manually-importing' ? 'importing' : sem;
+  return `chip chip-${chipSem}`;
 }
 
 // Only show manual import button when item has an issue
@@ -79,7 +81,7 @@ function needsManualImport(item) {
 }
 
 // ─── Manual Import Confirmation Modal ────────────────────────────────────────
-function ManualImportModal({ item, instanceId, instanceType, instanceName, onClose }) {
+function ManualImportModal({ item, instanceId, instanceType, instanceName, onClose, onImportStarted }) {
   const [candidates, setCandidates] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -163,6 +165,7 @@ function ManualImportModal({ item, instanceId, instanceType, instanceName, onClo
         mediaTitle: getTitle(item),
         mediaSubtitle: getSubtitle(item),
       });
+      onImportStarted?.();
       onClose();
     } catch (e) {
       setError(e.message);
@@ -173,6 +176,9 @@ function ManualImportModal({ item, instanceId, instanceType, instanceName, onClo
   const mediaTitle = getTitle(item);
   const mediaSubtitle = getSubtitle(item);
   const selectedCount = Object.values(selected).filter(Boolean).length;
+  const issueMessages = (item.statusMessages ?? []).flatMap(m =>
+    m.messages?.length ? m.messages.map(msg => `${m.title}: ${msg}`) : [m.title]
+  ).filter(Boolean);
 
   return (
     <div className="modal-backdrop" onClick={onClose}>
@@ -182,6 +188,13 @@ function ManualImportModal({ item, instanceId, instanceType, instanceName, onClo
           <div className={styles.importModalLabel}>Manual Import</div>
           <div className="modal-title">{mediaTitle}</div>
           {mediaSubtitle && <span className="modal-subtitle">{mediaSubtitle}</span>}
+          {issueMessages.length > 0 && (
+            <div className={styles.importIssueBlock}>
+              {issueMessages.map((msg, i) => (
+                <div key={i} className={styles.importIssueMsg}>⚠ {msg}</div>
+              ))}
+            </div>
+          )}
         </div>
 
         <div className={styles.importBody}>
@@ -377,12 +390,13 @@ export default function QueueItem({ item, instanceId, instanceType, instanceName
   const [showImport, setShowImport] = useState(false);
   const [showRemove, setShowRemove] = useState(false);
   const [importBusy, setImportBusy] = useState(false);
+  const [manuallyImporting, setManuallyImporting] = useState(false);
 
   const progress = item.size > 0 ? ((item.size - (item.sizeleft || 0)) / item.size) * 100 : 0;
   const title = getTitle(item);
-  const sem = getSemanticStatus(item);
+  const sem = manuallyImporting ? 'manually-importing' : getSemanticStatus(item);
   const hasError = sem === 'issue';
-  const canImport = needsManualImport(item);
+  const canImport = !manuallyImporting && needsManualImport(item);
   const eta = formatEta(item.estimatedCompletionTime);
   const sizeStr = formatBytes(item.size);
   const quality = item.quality?.quality?.name;
@@ -461,6 +475,7 @@ export default function QueueItem({ item, instanceId, instanceType, instanceName
           instanceType={instanceType}
           instanceName={instanceName}
           onClose={() => setShowImport(false)}
+          onImportStarted={() => setManuallyImporting(true)}
         />
       )}
       {showRemove && (
