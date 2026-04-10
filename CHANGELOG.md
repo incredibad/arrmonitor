@@ -4,6 +4,12 @@ All notable changes are documented here, newest first.
 
 ---
 
+## [1.1.7] — 2026-04-10
+
+### Fixed
+- Reverted queue item card layout to its previous state (episode subtitle and truncated release title restored)
+- Manual Import modal now shows the full release filename as the heading instead of the show/movie title + episode code; filename wraps on mobile rather than truncating
+
 ## [1.1.6] — 2026-04-10
 
 ### Changed
