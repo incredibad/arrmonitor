@@ -1,13 +1,15 @@
 .stack {
   position: fixed;
   bottom: 0;
-  left: 0;
-  right: 0;
+  left: 50%;
+  transform: translateX(-50%);
   z-index: 300;
   display: flex;
   flex-direction: column;
   gap: 4px;
-  padding: 8px 12px calc(8px + env(safe-area-inset-bottom, 0px));
+  padding: 8px 0 calc(8px + env(safe-area-inset-bottom, 0px));
+  width: max-content;
+  max-width: calc(100vw - 24px);
   pointer-events: none;
 }
 
@@ -15,17 +17,16 @@
 .toast {
   pointer-events: all;
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   gap: 8px;
   background: var(--bg2);
   border: 1px solid rgba(255,255,255,0.08);
-  border-left-width: 3px;
-  border-left-color: var(--accent);
+  border-left: 3px solid var(--accent);
   border-radius: var(--radius);
-  padding: 9px 10px 9px 12px;
+  padding: 7px 12px;
   box-shadow: var(--elevation-3);
   animation: fadeUp 0.2s ease;
-  max-width: 420px;
+  min-width: 0;
 }
 
 /* Per-app accent colours */
@@ -38,24 +39,15 @@
 .stateDone   { border-left-color: var(--green); }
 .stateFailed { border-left-color: var(--red); }
 
-/* ── Toast body ─────────────────────────────────────────────────────────────── */
-.left { flex: 1; min-width: 0; }
-
-.topRow {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  margin-bottom: 3px;
-}
-
-.instanceName {
-  font-size: 11px;
+/* ── Content ─────────────────────────────────────────────────────────────── */
+.label {
+  font-size: 12px;
   font-weight: 500;
-  color: var(--text2);
-  flex: 1;
+  color: var(--text);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  max-width: 320px;
 }
 
 .statusIcon {
@@ -64,7 +56,7 @@
   align-items: center;
   color: var(--text3);
 }
-.stateDone .statusIcon   { color: var(--green); }
+.stateDone   .statusIcon { color: var(--green); }
 .stateFailed .statusIcon { color: var(--red); }
 
 .spinner {
@@ -75,48 +67,4 @@
   border-top-color: var(--accent);
   border-radius: 50%;
   animation: spin 0.7s linear infinite;
-}
-
-.mediaTitle {
-  font-size: 12px;
-  font-weight: 500;
-  color: var(--text);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  margin-bottom: 1px;
-}
-
-.statusMsg {
-  font-size: 10px;
-  color: var(--text3);
-  font-family: var(--font-mono);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.stateFailed .statusMsg { color: var(--red); }
-
-/* ── Dismiss button ─────────────────────────────────────────────────────────── */
-.dismiss {
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 20px;
-  height: 20px;
-  color: var(--text3);
-  border-radius: 4px;
-  transition: background 0.1s, color 0.1s;
-  -webkit-tap-highlight-color: transparent;
-  margin-top: 1px;
-}
-.dismiss:active { background: var(--bg3); color: var(--text); }
-
-/* Desktop: constrain width, sit bottom-left */
-@media (min-width: 600px) {
-  .stack {
-    right: auto;
-    max-width: 400px;
-  }
 }
