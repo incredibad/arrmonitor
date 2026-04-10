@@ -4,6 +4,14 @@ All notable changes are documented here, newest first.
 
 ---
 
+## [1.2.2] — 2026-04-10
+
+### Changed
+- Import toast is now centered horizontally and compact (single row: chip · title · episode · spinner)
+- Removed instance name text, status message text, and dismiss button from toast
+- Toast auto-dismisses after 3 s on success; stays visible on failure
+- Episode/subtitle info (S01E02, album title, etc.) now shown in the toast
+
 ## [1.2.1] — 2026-04-10
 
 ### Changed

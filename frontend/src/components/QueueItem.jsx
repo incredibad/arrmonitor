@@ -161,6 +161,7 @@ function ManualImportModal({ item, instanceId, instanceType, instanceName, onClo
         instanceType,
         instanceName,
         mediaTitle: getTitle(item),
+        mediaSubtitle: getSubtitle(item),
       });
       onClose();
     } catch (e) {
