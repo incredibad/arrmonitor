@@ -161,7 +161,8 @@ function ManualImportModal({ item, instanceId, instanceType, onClose, onDone }) 
     }
   }
 
-  const releaseTitle = item.title || item.sourceTitle;
+  const mediaTitle = getTitle(item);
+  const mediaSubtitle = getSubtitle(item);
   const selectedCount = Object.values(selected).filter(Boolean).length;
 
   return (
@@ -170,7 +171,8 @@ function ManualImportModal({ item, instanceId, instanceType, onClose, onDone }) 
         <div className="modal-handle" />
         <div className="modal-header">
           <div className={styles.importModalLabel}>Manual Import</div>
-          {releaseTitle && <div className={styles.importModalTitle}>{releaseTitle}</div>}
+          <div className="modal-title">{mediaTitle}</div>
+          {mediaSubtitle && <span className="modal-subtitle">{mediaSubtitle}</span>}
         </div>
 
         <div className={styles.importBody}>
@@ -201,9 +203,6 @@ function ManualImportModal({ item, instanceId, instanceType, onClose, onDone }) 
               <div className={styles.candidateList}>
                 {candidates.map((c, i) => {
                   const valid = !!(c.series || c.movie || c.artist);
-                  const epLabel = c.episodes?.length
-                    ? c.episodes.map(e => `S${String(e.seasonNumber).padStart(2,'0')}E${String(e.episodeNumber).padStart(2,'0')}`).join(', ')
-                    : null;
                   return (
                     <label key={i} className={`${styles.candidate} ${!valid ? styles.candidateInvalid : ''}`}>
                       <input
@@ -216,12 +215,6 @@ function ManualImportModal({ item, instanceId, instanceType, onClose, onDone }) 
                       <div className={styles.candidateInfo}>
                         <div className={styles.candidatePath}>{c.relativePath || c.path?.split('/').pop()}</div>
                         <div className={styles.candidateMeta}>
-                          {(c.series?.title || c.movie?.title || c.artist?.artistName) && (
-                            <span className={styles.candidateMatch}>
-                              {c.series?.title || c.movie?.title || c.artist?.artistName}
-                              {epLabel && ` · ${epLabel}`}
-                            </span>
-                          )}
                           {c.quality?.quality?.name && <span className="chip chip-neutral">{c.quality.quality.name}</span>}
                           {c.size > 0 && <span className={styles.candidateSize}>{formatBytes(c.size)}</span>}
                           {!valid && <span className="chip chip-red">Unmatched</span>}
