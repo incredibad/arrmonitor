@@ -155,6 +155,18 @@ router.delete('/:id/queue/:itemId', async (req, res) => {
   }
 });
 
+// GET command status
+router.get('/:id/command/:commandId', async (req, res) => {
+  try {
+    const instance = await getInstance(req.params.id);
+    if (!instance) return res.status(404).json({ error: 'Instance not found' });
+    const data = await arrFetch(instance, `/command/${req.params.commandId}`);
+    res.json(data);
+  } catch (e) {
+    res.status(502).json({ error: e.message });
+  }
+});
+
 // POST generic command
 router.post('/:id/command', async (req, res) => {
   try {

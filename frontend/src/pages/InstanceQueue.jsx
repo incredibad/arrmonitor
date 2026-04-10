@@ -147,6 +147,7 @@ export default function InstanceQueue() {
               item={item}
               instanceId={id}
               instanceType={instance?.type}
+              instanceName={instance?.name}
               onRemove={async (itemId, opts) => {
                 await removeItem(itemId, opts);
                 showToast('Removed from queue');

@@ -4,6 +4,14 @@ All notable changes are documented here, newest first.
 
 ---
 
+## [1.2.0] — 2026-04-10
+
+### Added
+- Manual import now closes the modal immediately and shows a persistent toast at the bottom of the screen that polls the command status every 2 s
+- Toast is coloured by app type (sonarr/radarr/lidarr/sportarr left-border accent) and shows the instance name, media title, and current status message
+- Multiple simultaneous imports stack as separate toasts; each auto-dismisses 5 s after reaching a terminal state (completed/failed/aborted)
+- Backend: added `GET /api/arr/:id/command/:commandId` proxy route for command status polling
+
 ## [1.1.8] — 2026-04-10
 
 ### Changed

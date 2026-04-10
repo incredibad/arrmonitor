@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
 import { api } from '../lib/api.js';
 import { useNav } from '../lib/navContext.jsx';
+import ImportToastStack from './ImportToastStack.jsx';
 import styles from './Layout.module.css';
 
 function useTabNotification() {
@@ -67,6 +68,7 @@ export default function Layout({ children }) {
       </header>
 
       <div className={styles.content}>{children}</div>
+      <ImportToastStack />
     </div>
   );
 }
