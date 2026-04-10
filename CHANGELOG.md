@@ -4,6 +4,11 @@ All notable changes are documented here, newest first.
 
 ---
 
+## [1.1.5] — 2026-04-10
+
+### Changed
+- Manual Import modal header now shows "MANUAL IMPORT" as a small accent label, with the show/movie/artist title as the main heading and the season+episode info (Sonarr/Sportarr) as a subtitle beneath it
+
 ## [1.1.4] — 2026-04-10
 
 ### Changed
