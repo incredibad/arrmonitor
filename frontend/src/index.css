@@ -125,21 +125,23 @@ select option { background: var(--bg3); }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
 
-/* Bottom sheet modal */
+/* Centered modal */
 .modal-backdrop {
   position: fixed; inset: 0; background: rgba(0,0,0,0.75);
-  z-index: 200; display: flex; align-items: flex-end; justify-content: center;
+  z-index: 200; display: flex; align-items: center; justify-content: center;
   animation: fadeIn 0.15s ease;
   backdrop-filter: blur(4px);
   -webkit-backdrop-filter: blur(4px);
+  padding: 16px;
 }
 .modal-sheet {
-  background: var(--bg2); border-radius: var(--radius-lg) var(--radius-lg) 0 0;
-  border-top: 1px solid rgba(255,255,255,0.08);
-  width: 100%; max-width: 540px; padding-bottom: calc(8px + var(--safe-bottom));
-  box-shadow: var(--elevation-3); animation: fadeUp 0.2s ease;
+  background: var(--bg2); border-radius: var(--radius-lg);
+  border: 1px solid rgba(255,255,255,0.08);
+  width: 100%; max-width: 480px;
+  max-height: calc(100dvh - 32px); overflow-y: auto;
+  box-shadow: var(--elevation-3); animation: fadeIn 0.15s ease;
 }
-.modal-handle { width: 36px; height: 4px; background: rgba(255,255,255,0.12); border-radius: 2px; margin: 10px auto 4px; }
+.modal-handle { display: none; }
 .modal-header { padding: 10px 16px 12px; border-bottom: 1px solid var(--divider); }
 .modal-title  { font-size: 15px; font-weight: 500; color: var(--text); }
 .modal-subtitle { font-size: 12px; color: var(--text3); font-family: var(--font-mono); margin-top: 2px; display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -157,7 +159,7 @@ select option { background: var(--bg3); }
 .modal-divider { height: 1px; background: var(--divider); margin: 4px 0; }
 .modal-cancel {
   display: flex; align-items: center; justify-content: center;
-  width: calc(100% - 32px); margin: 8px 16px 0; padding: 12px;
+  width: calc(100% - 32px); margin: 8px 16px; padding: 12px;
   background: var(--bg3); border-radius: var(--radius); font-size: 14px;
   font-weight: 500; color: var(--text2); -webkit-tap-highlight-color: transparent;
 }
