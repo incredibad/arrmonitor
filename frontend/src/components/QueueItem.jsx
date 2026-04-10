@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { api } from '../lib/api.js';
+import { useImportToast } from '../lib/importToastContext.jsx';
 import styles from './QueueItem.module.css';
 
 function formatBytes(bytes) {
@@ -78,13 +79,14 @@ function needsManualImport(item) {
 }
 
 // ─── Manual Import Confirmation Modal ────────────────────────────────────────
-function ManualImportModal({ item, instanceId, instanceType, onClose, onDone }) {
+function ManualImportModal({ item, instanceId, instanceType, instanceName, onClose }) {
   const [candidates, setCandidates] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [selected, setSelected] = useState({});
   const [importing, setImporting] = useState(false);
   const [importMode, setImportMode] = useState('move');
+  const { addImport } = useImportToast();
 
   // Fetch candidates on mount
   useEffect(() => {
@@ -152,8 +154,14 @@ function ManualImportModal({ item, instanceId, instanceType, onClose, onDone }) 
           };
         });
 
-      await api.sendCommand(instanceId, { name: 'ManualImport', files, importMode });
-      onDone();
+      const result = await api.sendCommand(instanceId, { name: 'ManualImport', files, importMode });
+      addImport({
+        commandId: result?.id,
+        instanceId,
+        instanceType,
+        instanceName,
+        mediaTitle: getTitle(item),
+      });
       onClose();
     } catch (e) {
       setError(e.message);
@@ -364,7 +372,7 @@ function WarningTag({ messages }) {
 }
 
 // ─── Main QueueItem ───────────────────────────────────────────────────────────
-export default function QueueItem({ item, instanceId, instanceType, onRemove, onRefresh }) {
+export default function QueueItem({ item, instanceId, instanceType, instanceName, onRemove, onRefresh }) {
   const [showImport, setShowImport] = useState(false);
   const [showRemove, setShowRemove] = useState(false);
   const [importBusy, setImportBusy] = useState(false);
@@ -450,8 +458,8 @@ export default function QueueItem({ item, instanceId, instanceType, onRemove, on
           item={item}
           instanceId={instanceId}
           instanceType={instanceType}
+          instanceName={instanceName}
           onClose={() => setShowImport(false)}
-          onDone={onRefresh}
         />
       )}
       {showRemove && (

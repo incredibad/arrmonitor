@@ -36,6 +36,8 @@ export const api = {
   },
   sendCommand: (instanceId, body) =>
     request(`/api/arr/${instanceId}/command`, { method: 'POST', body: JSON.stringify(body) }),
+  getCommand: (instanceId, commandId) =>
+    request(`/api/arr/${instanceId}/command/${commandId}`),
   getManualImportCandidates: (instanceId, downloadId) => {
     const p = new URLSearchParams({ filterExistingFiles: 'false' });
     if (downloadId) p.set('downloadId', downloadId);
