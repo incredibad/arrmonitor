@@ -134,6 +134,10 @@
 .actionDivider { height: 1px; background: var(--divider); }
 
 /* ── Manual Import Modal ─────────── */
+.importModalLabel {
+  font-size: 10px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--accent); margin-bottom: 6px;
+}
 .importSheet { display: flex; flex-direction: column; overflow: hidden; }
 .importBody { overflow-y: auto; max-height: 50dvh; }
 

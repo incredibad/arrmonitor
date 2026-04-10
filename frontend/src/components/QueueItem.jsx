@@ -162,6 +162,7 @@ function ManualImportModal({ item, instanceId, instanceType, onClose, onDone }) 
   }
 
   const title = getTitle(item);
+  const subtitle = getSubtitle(item);
   const selectedCount = Object.values(selected).filter(Boolean).length;
 
   return (
@@ -169,8 +170,9 @@ function ManualImportModal({ item, instanceId, instanceType, onClose, onDone }) 
       <div className={`modal-sheet ${styles.importSheet}`} onClick={e => e.stopPropagation()}>
         <div className="modal-handle" />
         <div className="modal-header">
-          <div className="modal-title">Manual Import</div>
-          <span className="modal-subtitle">{title}</span>
+          <div className={styles.importModalLabel}>Manual Import</div>
+          <div className="modal-title">{title}</div>
+          {subtitle && <span className="modal-subtitle">{subtitle}</span>}
         </div>
 
         <div className={styles.importBody}>
