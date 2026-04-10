@@ -4,6 +4,11 @@ All notable changes are documented here, newest first.
 
 ---
 
+## [1.2.1] — 2026-04-10
+
+### Changed
+- Import status toasts no longer auto-dismiss; they persist until the user manually closes them with ×
+
 ## [1.2.0] — 2026-04-10
 
 ### Added

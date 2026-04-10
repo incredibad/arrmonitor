@@ -5,7 +5,6 @@ import styles from './ImportToastStack.module.css';
 
 const TERMINAL = new Set(['completed', 'failed', 'aborted', 'cancelled']);
 const POLL_MS = 2000;
-const AUTO_DISMISS_MS = 5000;
 
 const STATUS_LABEL = {
   queued:    'Queued…',
@@ -33,8 +32,7 @@ function ImportToast({ toast, onDismiss }) {
         setStatus(s);
         setMessage(data.message || STATUS_LABEL[s] || s);
         if (TERMINAL.has(s)) {
-          timer = setTimeout(() => { if (!cancelled) onDismiss(); }, AUTO_DISMISS_MS);
-          return;
+          return; // stop polling, toast stays until user dismisses
         }
       } catch {}
       if (!cancelled) timer = setTimeout(poll, POLL_MS);
