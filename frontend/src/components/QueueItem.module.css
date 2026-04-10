@@ -134,8 +134,8 @@
 .actionDivider { height: 1px; background: var(--divider); }
 
 /* ── Manual Import Modal ─────────── */
-.importSheet { max-height: 85dvh; display: flex; flex-direction: column; }
-.importBody { flex: 1; overflow-y: auto; }
+.importSheet { display: flex; flex-direction: column; overflow: hidden; }
+.importBody { overflow-y: auto; max-height: 50dvh; }
 
 .importLoading {
   display: flex; align-items: center; justify-content: center;
@@ -190,7 +190,7 @@
 
 .importFooter {
   display: flex; gap: 8px;
-  padding: 10px 16px calc(10px + var(--safe-bottom));
+  padding: 10px 16px;
   border-top: 1px solid var(--divider);
 }
 .importConfirmBtn {

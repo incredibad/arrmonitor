@@ -4,6 +4,11 @@ All notable changes are documented here, newest first.
 
 ---
 
+## [1.1.4] — 2026-04-10
+
+### Changed
+- Modals (remove, manual import, warnings, release title) now appear centered in the screen on both desktop and mobile instead of sliding up as a bottom sheet
+
 ## [1.1.3] — 2026-04-09
 
 ### Changed
