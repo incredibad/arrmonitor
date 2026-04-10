@@ -4,6 +4,11 @@ All notable changes are documented here, newest first.
 
 ---
 
+## [1.2.3] — 2026-04-10
+
+### Fixed
+- Import toast now shows a dismiss (×) button on failed imports so they can be cleared
+
 ## [1.2.2] — 2026-04-10
 
 ### Changed
