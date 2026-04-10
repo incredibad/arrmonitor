@@ -4,6 +4,12 @@ All notable changes are documented here, newest first.
 
 ---
 
+## [1.1.6] — 2026-04-10
+
+### Changed
+- Queue item cards no longer show the episode code/title next to the show name
+- Release filename is now shown in full (wraps on mobile) instead of being truncated with a click-to-expand modal; quality/size/CF tags sit below it
+
 ## [1.1.5] — 2026-04-10
 
 ### Changed

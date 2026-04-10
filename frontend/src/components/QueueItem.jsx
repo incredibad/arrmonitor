@@ -306,35 +306,6 @@ function RemoveModal({ item, onClose, onRemove, onRefresh }) {
   );
 }
 
-// ─── Release Title Tag — truncated with click-to-expand tooltip ─────────────
-function ReleaseTitleTag({ title }) {
-  const [expanded, setExpanded] = useState(false);
-  return (
-    <>
-      <button
-        className={styles.metaFile}
-        onClick={e => { e.stopPropagation(); setExpanded(true); }}
-        title={title}
-      >
-        {title}
-      </button>
-      {expanded && (
-        <div className="modal-backdrop" onClick={() => setExpanded(false)}>
-          <div className="modal-sheet" onClick={e => e.stopPropagation()}>
-            <div className="modal-handle" />
-            <div className="modal-header">
-              <div className="modal-title" style={{ fontSize: 13, wordBreak: 'break-all', fontFamily: 'var(--font-mono)', fontWeight: 400 }}>
-                {title}
-              </div>
-            </div>
-            <button className="modal-cancel" onClick={() => setExpanded(false)}>Close</button>
-          </div>
-        </div>
-      )}
-    </>
-  );
-}
-
 // ─── Warning Tag ──────────────────────────────────────────────────────────────
 function WarningTag({ messages }) {
   const [open, setOpen] = useState(false);
@@ -394,10 +365,9 @@ export default function QueueItem({ item, instanceId, instanceType, onRemove, on
     <>
       <div className={`${styles.item} ${hasError ? styles.hasError : ''}`}>
         <div className={styles.main}>
-          {/* Row 1: title + episode code+name (same weight as title) + status + progress */}
+          {/* Row 1: title + status + progress */}
           <div className={styles.titleRow}>
             <span className={styles.title} title={title}>{title}</span>
-            {subtitle && <span className={styles.episode}>{subtitle}</span>}
             <div className={styles.titleRight}>
               {sem === 'downloading' && (
                 <span className={`${styles.metaTag} ${styles.metaTagAccent}`}>{progress.toFixed(0)}%{eta ? ` · ${eta}` : ''}</span>
@@ -406,9 +376,13 @@ export default function QueueItem({ item, instanceId, instanceType, onRemove, on
             </div>
           </div>
 
-          {/* Row 2: release title (truncated, click for full) + meta tags */}
+          {/* Row 2: full release filename */}
+          {(item.title || item.sourceTitle) && (
+            <div className={styles.releaseTitle}>{item.title || item.sourceTitle}</div>
+          )}
+
+          {/* Row 3: meta tags */}
           <div className={styles.metaRow}>
-            {(item.title || item.sourceTitle) && <ReleaseTitleTag title={item.title || item.sourceTitle} />}
             {quality && <span className={styles.metaTag}>{quality}</span>}
             {sizeStr && <span className={styles.metaTag}>{sizeStr}</span>}
             {cfScore != null && cfScore !== 0 && (
