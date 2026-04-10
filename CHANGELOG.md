@@ -4,6 +4,12 @@ All notable changes are documented here, newest first.
 
 ---
 
+## [1.1.8] — 2026-04-10
+
+### Changed
+- Manual Import modal header now shows the show/movie/artist title and episode subtitle (not the release filename)
+- Candidate rows: release filename now wraps fully instead of truncating; match text (series/episode) removed, leaving only quality/size/CF/unmatched chips
+
 ## [1.1.7] — 2026-04-10
 
 ### Fixed
