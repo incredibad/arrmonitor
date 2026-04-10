@@ -27,12 +27,6 @@
   cursor: default;
 }
 
-.episode {
-  font-size: 14px; font-weight: 500; color: var(--text2);
-  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-  flex: 1; min-width: 0;
-  cursor: default;
-}
 
 /* Right side of title row - progress + status grouped */
 .titleRight {
@@ -41,29 +35,20 @@
 
 .statusChip { flex-shrink: 0 !important; }
 
-/* Row 2: filename + meta tags */
-.metaRow {
-  display: flex; flex-wrap: nowrap; align-items: center;
-  gap: 3px; overflow: hidden;
+/* Row 2: full release filename */
+.releaseTitle {
+  font-size: 10px; font-family: var(--font-mono);
+  color: var(--text3);
+  word-break: break-all;
+  line-height: 1.4;
+  margin-bottom: 3px;
 }
 
-/* Release title tag — truncates, click to expand */
-.metaFile {
-  display: inline-flex; align-items: center;
-  padding: 2px 8px;
-  border-radius: 100px;
-  font-size: 10px; font-family: var(--font-mono);
-  color: var(--text2);
-  background: rgba(255,255,255,0.06);
-  border: 1px solid rgba(255,255,255,0.08);
-  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-  flex-shrink: 1; min-width: 40px; max-width: 55%;
-  cursor: pointer;
-  -webkit-tap-highlight-color: transparent;
-  transition: background 0.12s, border-color 0.12s;
-  text-align: left;
+/* Row 3: meta tags */
+.metaRow {
+  display: flex; flex-wrap: wrap; align-items: center;
+  gap: 3px;
 }
-.metaFile:active { background: rgba(255,255,255,0.10); border-color: rgba(255,255,255,0.12); }
 
 /* Standard meta pill — solid bg, more colour */
 .metaTag {
