@@ -4,6 +4,13 @@ All notable changes are documented here, newest first.
 
 ---
 
+## [1.2.4] — 2026-04-11
+
+### Changed
+- Import toast now uses an SVG `animateTransform` spinner (guaranteed to animate in all browsers)
+- Queue item status updates to "Manually Importing" immediately after the import modal is confirmed
+- Manual import modal header now shows the item's issue/warning messages beneath the title
+
 ## [1.2.3] — 2026-04-10
 
 ### Fixed

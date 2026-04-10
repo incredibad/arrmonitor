@@ -59,16 +59,6 @@
 .stateDone   .statusIcon { color: var(--green); }
 .stateFailed .statusIcon { color: var(--red); }
 
-.spinner {
-  display: block;
-  width: 13px;
-  height: 13px;
-  border: 2px solid var(--border);
-  border-top-color: var(--accent);
-  border-radius: 50%;
-  animation: spin 0.7s linear infinite;
-}
-
 .dismiss {
   flex-shrink: 0;
   display: flex;
