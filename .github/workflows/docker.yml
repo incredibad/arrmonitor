@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - dev
   workflow_dispatch:
 
 jobs:
@@ -27,8 +28,9 @@ jobs:
         id: version
         run: echo "version=$(node -p "require('./backend/package.json').version")" >> "$GITHUB_OUTPUT"
 
-      - name: Extract metadata
-        id: meta
+      - name: Extract metadata (main)
+        id: meta-main
+        if: github.ref == 'refs/heads/main'
         uses: docker/metadata-action@v5
         with:
           images: incredibad/arrmonitor
@@ -37,17 +39,28 @@ jobs:
             type=raw,value=v${{ steps.version.outputs.version }}
             type=sha,prefix=,format=short
 
+      - name: Extract metadata (dev)
+        id: meta-dev
+        if: github.ref == 'refs/heads/dev'
+        uses: docker/metadata-action@v5
+        with:
+          images: incredibad/arrmonitor
+          tags: |
+            type=raw,value=dev
+            type=sha,prefix=dev-,format=short
+
       - name: Build and push
         uses: docker/build-push-action@v5
         with:
           context: .
           push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
+          tags: ${{ github.ref == 'refs/heads/main' && steps.meta-main.outputs.tags || steps.meta-dev.outputs.tags }}
+          labels: ${{ github.ref == 'refs/heads/main' && steps.meta-main.outputs.labels || steps.meta-dev.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
       - name: Create and push git tag
+        if: github.ref == 'refs/heads/main'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"

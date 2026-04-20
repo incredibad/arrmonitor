@@ -4,6 +4,11 @@ All notable changes are documented here, newest first.
 
 ---
 
+## [1.3.1] — 2026-04-20
+
+### Changed
+- CI now builds and pushes `incredibad/arrmonitor:dev` on every push to the `dev` branch (with a `dev-<sha>` tag too); git tagging remains `main`-only
+
 ## [1.3.0] — 2026-04-20
 
 ### Added
