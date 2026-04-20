@@ -4,6 +4,11 @@ All notable changes are documented here, newest first.
 
 ---
 
+## [1.3.2] — 2026-04-20
+
+### Changed
+- Browser tab now shows total active queue count across all instances as `(12) ArrMonitor` instead of issue-only count with warning symbol
+
 ## [1.3.1] — 2026-04-20
 
 ### Changed
