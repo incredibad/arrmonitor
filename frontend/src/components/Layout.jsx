@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
 import { api } from '../lib/api.js';
 import { useNav } from '../lib/navContext.jsx';
+import { useTestMode } from '../lib/testModeContext.jsx';
 import ImportToastStack from './ImportToastStack.jsx';
 import styles from './Layout.module.css';
 
@@ -30,10 +31,11 @@ function useTabNotification() {
 
 export default function Layout({ children }) {
   const { refreshFn, refreshing, handleRefresh, pageTitle } = useNav();
+  const { testMode, toggle: toggleTestMode } = useTestMode();
   useTabNotification();
 
   return (
-    <div className={styles.root}>
+    <div className={`${styles.root} ${testMode ? styles.testModeRoot : ''}`}>
       <header className={styles.topBar}>
         <div className={styles.logoSection}>
           <NavLink to="/" className={styles.logoLink}>
@@ -55,6 +57,13 @@ export default function Layout({ children }) {
               <RefreshIcon />
             </button>
           )}
+          <button
+            className={`${styles.navBtn} ${testMode ? styles.navBtnTestActive : ''}`}
+            onClick={toggleTestMode}
+            title={testMode ? 'Test mode on — click to disable' : 'Enable test mode'}
+          >
+            <FlaskIcon />
+          </button>
           <NavLink to="/" end title="Dashboard"
             className={({ isActive }) => `${styles.navBtn} ${isActive ? styles.navBtnActive : ''}`}>
             <DashIcon />
@@ -70,6 +79,7 @@ export default function Layout({ children }) {
         </div>
       </header>
 
+      {testMode && <div className={styles.testModeBanner}>Test mode — queue data is simulated</div>}
       <div className={styles.content}>{children}</div>
       <ImportToastStack />
     </div>
@@ -79,6 +89,12 @@ export default function Layout({ children }) {
 const RefreshIcon = () => (
   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
     <polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
+  </svg>
+);
+const FlaskIcon = () => (
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M9 3h6M9 3v7l-5 9a1 1 0 0 0 .9 1.5h14.2a1 1 0 0 0 .9-1.5L15 10V3"/>
+    <line x1="6.5" y1="14" x2="17.5" y2="14"/>
   </svg>
 );
 const ActivityIcon = () => (

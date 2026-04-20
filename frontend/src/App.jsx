@@ -2,6 +2,7 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import { NavProvider } from './lib/navContext.jsx';
 import { AuthProvider, useAuth } from './lib/authContext.jsx';
 import { ImportToastProvider } from './lib/importToastContext.jsx';
+import { TestModeProvider } from './lib/testModeContext.jsx';
 import Layout from './components/Layout.jsx';
 import Dashboard from './pages/Dashboard.jsx';
 import InstanceQueue from './pages/InstanceQueue.jsx';
@@ -35,6 +36,7 @@ function AppContent() {
 
   // Authenticated → show app
   return (
+    <TestModeProvider>
     <ImportToastProvider>
     <NavProvider>
       <Layout>
@@ -48,6 +50,7 @@ function AppContent() {
       </Layout>
     </NavProvider>
     </ImportToastProvider>
+    </TestModeProvider>
   );
 }
 

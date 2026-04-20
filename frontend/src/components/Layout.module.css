@@ -120,8 +120,26 @@ body { font-family: var(--font) !important; }
 }
 .navBtn:hover  { background: rgba(255,255,255,0.07); color: var(--text2); }
 .navBtn:active { background: rgba(255,255,255,0.04); }
-.navBtnActive  { color: var(--accent) !important; background: var(--accent-light) !important; }
+.navBtnActive     { color: var(--accent) !important; background: var(--accent-light) !important; }
+.navBtnTestActive { color: var(--accent) !important; background: var(--accent-light) !important; box-shadow: 0 0 0 1px var(--accent-border) inset; }
 .navBtnSpinning svg { animation: spin 0.7s linear infinite; }
+
+.testModeBanner {
+  position: fixed;
+  top: calc(var(--topbar-height) + var(--safe-top));
+  left: 0; right: 0;
+  z-index: 90;
+  background: rgba(245,158,11,0.12);
+  border-bottom: 1px solid rgba(245,158,11,0.25);
+  color: var(--accent);
+  font-size: 11px;
+  font-weight: 500;
+  font-family: var(--font-mono);
+  letter-spacing: 0.04em;
+  text-align: center;
+  padding: 5px 0;
+  pointer-events: none;
+}
 
 .content {
   flex: 1; width: 100%;
@@ -130,4 +148,8 @@ body { font-family: var(--font) !important; }
   background: var(--bg);
   box-shadow: 0 0 60px rgba(0,0,0,0.8);
   min-height: 100dvh;
+}
+
+.testModeRoot .content {
+  padding-top: calc(var(--topbar-height) + var(--safe-top) + 29px);
 }
