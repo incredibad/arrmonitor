@@ -93,6 +93,69 @@ export function useQueue(instanceId, intervalMs = 15000) {
   return { queue, loading, error, lastUpdated, refresh: () => fetchQueue(), removeItem, manualImport };
 }
 
+export function useGlobalQueue(intervalMs = 15000) {
+  const [allRecords, setAllRecords] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [lastUpdated, setLastUpdated] = useState(null);
+  const instancesRef = useRef([]);
+  const hasDataRef = useRef(false);
+
+  const fetchAll = useCallback(async (silent = false) => {
+    const insts = instancesRef.current;
+    if (insts.length === 0) { setLoading(false); return; }
+    if (!silent) setLoading(true);
+    try {
+      const results = await Promise.all(
+        insts.map(inst =>
+          api.getQueue(inst.id)
+            .then(data => ({ inst, data }))
+            .catch(() => ({ inst, data: null }))
+        )
+      );
+      const merged = [];
+      results.forEach(({ inst, data }) => {
+        (data?.records || []).forEach(r => merged.push({ ...r, _instance: inst }));
+      });
+      setAllRecords(sortRecords(merged));
+      setLastUpdated(new Date());
+      hasDataRef.current = true;
+    } catch {
+      if (!hasDataRef.current) setAllRecords([]);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    let cancelled = false;
+    api.getInstances()
+      .then(data => {
+        if (cancelled) return;
+        instancesRef.current = data.filter(i => i.enabled);
+        fetchAll();
+      })
+      .catch(() => setLoading(false));
+
+    const poll = async () => {
+      instancesRef.current.forEach(inst => {
+        api.sendCommand(inst.id, { name: 'RefreshMonitoredDownloads' }).catch(() => {});
+      });
+      await new Promise(r => setTimeout(r, 2000));
+      if (!cancelled) fetchAll(true);
+    };
+
+    const interval = setInterval(poll, intervalMs);
+    return () => { cancelled = true; clearInterval(interval); };
+  }, [fetchAll, intervalMs]);
+
+  const removeItem = useCallback(async (instanceId, itemId, opts) => {
+    await api.deleteQueueItem(instanceId, itemId, opts);
+    await fetchAll(true);
+  }, [fetchAll]);
+
+  return { allRecords, loading, lastUpdated, refresh: () => fetchAll(), removeItem };
+}
+
 export function useInstances() {
   const [instances, setInstances] = useState([]);
   const [loading, setLoading] = useState(true);

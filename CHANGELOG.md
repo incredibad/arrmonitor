@@ -4,6 +4,13 @@ All notable changes are documented here, newest first.
 
 ---
 
+## [1.3.0] — 2026-04-20
+
+### Added
+- Global activity queue at `/activity` — aggregates all enabled instances' queues into a single pageless view with the same status filters (Issues, Downloading, Importing, etc.)
+- Each queue item in the global view shows an instance name badge (colour-coded by type) so you can tell at a glance which instance it belongs to
+- Activity (list) icon in the top nav bar linking to `/activity`
+
 ## [1.2.4] — 2026-04-11
 
 ### Changed

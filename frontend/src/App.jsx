@@ -5,6 +5,7 @@ import { ImportToastProvider } from './lib/importToastContext.jsx';
 import Layout from './components/Layout.jsx';
 import Dashboard from './pages/Dashboard.jsx';
 import InstanceQueue from './pages/InstanceQueue.jsx';
+import GlobalQueue from './pages/GlobalQueue.jsx';
 import Settings from './pages/Settings.jsx';
 import Login from './pages/Login.jsx';
 
@@ -40,6 +41,7 @@ function AppContent() {
         <Routes>
           <Route path="/" element={<Dashboard />} />
           <Route path="/instance/:id" element={<InstanceQueue />} />
+          <Route path="/activity" element={<GlobalQueue />} />
           <Route path="/settings" element={<Settings />} />
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>
