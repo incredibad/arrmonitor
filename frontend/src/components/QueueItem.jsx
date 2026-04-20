@@ -420,22 +420,24 @@ export default function QueueItem({ item, instanceId, instanceType, instanceName
             </div>
           </div>
 
-          {/* Row 2: release title (truncated, click for full) + meta tags */}
+          {/* Row 2: left tags + right-aligned size */}
           <div className={styles.metaRow}>
-            {showInstance && instanceName && (
-              <span className={`chip chip-${instanceType || 'neutral'}`} style={{ flexShrink: 0 }}>{instanceName}</span>
-            )}
-            {(item.title || item.sourceTitle) && <ReleaseTitleTag title={item.title || item.sourceTitle} />}
-            {quality && <span className={styles.metaTag}>{quality}</span>}
-            {sizeStr && <span className={styles.metaTag}>{sizeStr}</span>}
-            {cfScore != null && cfScore !== 0 && (
-              <span className={`${styles.metaTag} ${cfScore > 0 ? styles.metaTagGreen : styles.metaTagRed}`}>
-                CF {cfScore > 0 ? '+' : ''}{cfScore}
-              </span>
-            )}
-            {hasError && item.statusMessages?.length > 0 && (
-              <WarningTag messages={item.statusMessages} />
-            )}
+            <div className={styles.metaLeft}>
+              {showInstance && instanceName && (
+                <span className={`chip chip-${instanceType || 'neutral'}`} style={{ flexShrink: 0 }}>{instanceName}</span>
+              )}
+              {(item.title || item.sourceTitle) && <ReleaseTitleTag title={item.title || item.sourceTitle} />}
+              {quality && <span className={styles.metaTag}>{quality}</span>}
+              {cfScore != null && cfScore !== 0 && (
+                <span className={`${styles.metaTag} ${cfScore > 0 ? styles.metaTagGreen : styles.metaTagRed}`}>
+                  CF {cfScore > 0 ? '+' : ''}{cfScore}
+                </span>
+              )}
+              {hasError && item.statusMessages?.length > 0 && (
+                <WarningTag messages={item.statusMessages} />
+              )}
+            </div>
+            {sizeStr && <span className={styles.metaSize}>{sizeStr}</span>}
           </div>
 
         </div>
