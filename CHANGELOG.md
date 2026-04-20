@@ -4,6 +4,14 @@ All notable changes are documented here, newest first.
 
 ---
 
+## [1.5.7] — 2026-04-20
+
+### Changed
+- Test mode toggle moved from nav bar to Settings page under a new Developer section
+- Main nav bar height increased 48→56px; instance queue and settings sub-bars also taller
+- Sub-bar sticky positions now use the CSS variable so they track the topbar height automatically
+- Settings Add and Save buttons updated to amber to match the rest of the theme
+
 ## [1.5.6] — 2026-04-20
 
 ### Changed

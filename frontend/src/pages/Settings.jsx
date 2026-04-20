@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useInstances } from '../hooks/useQueue.js';
 import { useNav } from '../lib/navContext.jsx';
 import { useAuth } from '../lib/authContext.jsx';
+import { useTestMode } from '../lib/testModeContext.jsx';
 import { api } from '../lib/api.js';
 import styles from './Settings.module.css';
 
@@ -24,6 +25,7 @@ export default function Settings() {
   const { instances, loading, reload } = useInstances();
   const { auth, logout } = useAuth();
   const { clearRefresh, setPageTitle, clearPageTitle } = useNav();
+  const { testMode, toggle: toggleTestMode } = useTestMode();
 
   const [form, setForm] = useState(defaultForm);
   const [errors, setErrors] = useState({});
@@ -287,6 +289,25 @@ export default function Settings() {
               </div>
             </div>
           </form>
+        </div>
+
+        {/* ── Developer ── */}
+        <div className={styles.sectionHeader} style={{ marginTop: 20 }}>
+          <span className={styles.sectionLabel}>Developer</span>
+        </div>
+        <div className={styles.instanceRow}>
+          <button className={styles.toggleBtn} onClick={toggleTestMode} title="Toggle test mode">
+            <div className={`${styles.toggle} ${testMode ? styles.toggleOn : ''}`}>
+              <div className={styles.toggleThumb} />
+            </div>
+          </button>
+          <div className={styles.instInfo}>
+            <div className={styles.instNameRow}>
+              <span className={styles.instName}>Test Mode</span>
+              {testMode && <span className="chip chip-yellow">active</span>}
+            </div>
+            <div className={styles.instUrl}>Populate all queue views with simulated data</div>
+          </div>
         </div>
 
         {/* ── Account ── */}
