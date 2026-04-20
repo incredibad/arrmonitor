@@ -2,7 +2,7 @@
 
 /* ── Sub-bar ──────────────────────────────────────────────────────────────── */
 .subBar {
-  position: sticky; top: 48px; z-index: 40;
+  position: sticky; top: var(--topbar-height); z-index: 40;
   background: rgba(12,11,9,0.92);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
@@ -18,7 +18,7 @@
   display: flex;
   align-items: center;
   flex-wrap: nowrap;
-  min-height: 48px;
+  min-height: 54px;
   padding: 0 8px 0 0;
   gap: 0;
 }
