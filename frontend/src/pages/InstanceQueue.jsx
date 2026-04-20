@@ -83,7 +83,7 @@ export default function InstanceQueue() {
 
   return (
     <div className={styles.page}>
-      <div className={styles.subBar}>
+      <div className={styles.subBar} data-type={instance?.type}>
         <div className={styles.subBarRow}>
           {/* Back button */}
           <button className={styles.backBtn} onClick={() => navigate('/')}>
