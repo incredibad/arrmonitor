@@ -1,5 +1,5 @@
 <p align="center">
-  <img src=".github/logo.png" width="380" alt="ArrMonitor" />
+  <img src=".github/logo.svg" width="260" alt="ArrMonitor" />
 </p>
 
 > [!WARNING]
