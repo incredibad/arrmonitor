@@ -21,7 +21,7 @@ body { font-family: var(--font) !important; }
   width: 100%; max-width: var(--app-max-width);
   height: calc(var(--topbar-height) + var(--safe-top));
   padding-top: var(--safe-top);
-  background: rgba(12,11,9,0.90);
+  background: rgba(8,7,6,0.92);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   border-bottom: 1px solid rgba(255,255,255,0.06);
