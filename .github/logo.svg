@@ -22,7 +22,5 @@
   </g>
 
   <!-- Text: Arr in blue/amber split, Monitor in muted -->
-  <text x="62" y="36" font-family="DM Sans, Inter, sans-serif" font-size="22" font-weight="700" fill="#f5eddf">
-    <tspan fill="#29b6f6">Arr</tspan><tspan fill="#ffa726">Monitor</tspan>
-  </text>
+  <text x="62" y="36" font-family="DM Sans, Inter, sans-serif" font-size="22" font-weight="700" fill="#f5eddf" letter-spacing="1">ARRMONITOR</text>
 </svg>
