@@ -4,6 +4,12 @@ All notable changes are documented here, newest first.
 
 ---
 
+## [1.5.4] — 2026-04-20
+
+### Changed
+- Queue item meta tags (release title, quality, CF score) are more readable — bumped from muted `text3` to `text2` colour with slightly higher background and border contrast
+- File size moved out of the tag row and shown as plain monospace text on the right side of the meta row, below the status chip
+
 ## [1.5.3] — 2026-04-20
 
 ### Changed
