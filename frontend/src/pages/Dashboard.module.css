@@ -34,8 +34,8 @@
 .emptyTitle { font-size: 16px; font-weight: 500; color: var(--text2); }
 .emptySub { font-size: 13px; color: var(--text3); max-width: 280px; line-height: 1.5; }
 .ctaBtn {
-  margin-top: 12px; background: linear-gradient(135deg, #6366f1, #818cf8); color: #fff;
+  margin-top: 12px; background: linear-gradient(135deg, #f59e0b, #fb923c); color: #0d0b09;
   padding: 10px 24px; border-radius: var(--radius-sm);
-  font-size: 14px; font-weight: 500;
-  box-shadow: 0 4px 14px rgba(99,102,241,0.35);
+  font-size: 14px; font-weight: 600;
+  box-shadow: 0 4px 14px rgba(245,158,11,0.30);
 }

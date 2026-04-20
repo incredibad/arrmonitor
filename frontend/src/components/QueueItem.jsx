@@ -438,12 +438,6 @@ export default function QueueItem({ item, instanceId, instanceType, instanceName
             )}
           </div>
 
-          {/* Progress bar — only when downloading */}
-          {sem === 'downloading' && (
-            <div className={styles.progressTrack}>
-              <div className={styles.progressFill} style={{ width: `${Math.min(100, progress)}%` }} />
-            </div>
-          )}
         </div>
 
         {/* Inline action buttons */}
@@ -469,6 +463,12 @@ export default function QueueItem({ item, instanceId, instanceType, instanceName
             <TrashIcon />
           </button>
         </div>
+
+        {sem === 'downloading' && (
+          <div className={styles.progressStrip}>
+            <div className={styles.progressFill} style={{ width: `${Math.min(100, progress)}%` }} />
+          </div>
+        )}
       </div>
 
       {showImport && (

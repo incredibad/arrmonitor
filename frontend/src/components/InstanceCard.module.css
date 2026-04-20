@@ -1,6 +1,8 @@
 .card {
   background: var(--bg2);
   border: 1px solid var(--border);
+  border-left-width: 3px;
+  border-left-color: var(--border);
   border-radius: var(--radius);
   display: flex;
   flex-direction: column;
@@ -9,32 +11,25 @@
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
   transition: background 0.15s, border-color 0.15s, transform 0.15s, box-shadow 0.15s;
-  min-height: 170px;
+  min-height: 160px;
 }
-.card:hover  { background: var(--bg3); border-color: rgba(255,255,255,0.13); transform: translateY(-2px); box-shadow: var(--elevation-2); }
+.card:hover  { background: var(--bg3); transform: translateY(-2px); box-shadow: var(--elevation-2); }
 .card:active { background: var(--bg3); transform: none; box-shadow: var(--elevation-1); }
 
-/* Top accent stripe — full width */
-.stripe {
-  height: 3px;
-  width: 100%;
-  flex-shrink: 0;
-}
-.stripe[data-type="sonarr"]   { background: var(--sonarr);   box-shadow: 0 2px 8px rgba(56,189,248,0.45); }
-.stripe[data-type="radarr"]   { background: var(--radarr);   box-shadow: 0 2px 8px rgba(251,191,36,0.45); }
-.stripe[data-type="lidarr"]   { background: var(--lidarr);   box-shadow: 0 2px 8px rgba(74,222,128,0.45); }
-.stripe[data-type="sportarr"] { background: var(--sportarr); box-shadow: 0 2px 8px rgba(45,212,191,0.45); }
+.card[data-type="sonarr"]   { border-left-color: var(--sonarr); }
+.card[data-type="radarr"]   { border-left-color: var(--radarr); }
+.card[data-type="lidarr"]   { border-left-color: var(--lidarr); }
+.card[data-type="sportarr"] { border-left-color: var(--sportarr); }
 
 .body {
   flex: 1;
-  padding: 14px 14px 12px;
+  padding: 13px 13px 11px;
   display: flex;
   flex-direction: column;
   gap: 8px;
   min-width: 0;
 }
 
-/* Name row */
 .headerRow {
   display: flex;
   align-items: flex-start;
@@ -42,7 +37,7 @@
 }
 
 .name {
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 600;
   color: var(--text);
   flex: 1;
@@ -68,7 +63,6 @@
 }
 .openBtn:hover, .openBtn:active { color: var(--accent); background: var(--accent-light); }
 
-/* Chips row */
 .metaRow {
   display: flex;
   align-items: center;
@@ -76,13 +70,12 @@
   flex-wrap: wrap;
 }
 
-/* Stat tiles — pushed to the bottom */
 .stats {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 6px;
   margin-top: auto;
-  padding-top: 6px;
+  padding-top: 4px;
 }
 
 .stat {
@@ -90,17 +83,17 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 10px 8px 9px;
+  padding: 9px 8px 8px;
   border-radius: var(--radius-sm);
   background: var(--bg3);
   border: 1px solid var(--border);
-  gap: 4px;
+  gap: 3px;
   transition: background 0.2s, border-color 0.2s;
 }
 
 .statVal {
-  font-size: 28px;
-  font-weight: 800;
+  font-size: 26px;
+  font-weight: 700;
   font-family: var(--font-mono);
   color: var(--text);
   line-height: 1;
@@ -114,9 +107,8 @@
   font-weight: 600;
 }
 
-/* Shimmer tiles match the stat grid */
 .shimmer {
-  height: 64px;
+  height: 58px;
   border-radius: var(--radius-sm);
   background: linear-gradient(90deg, var(--bg3) 25%, var(--bg4) 50%, var(--bg3) 75%);
   background-size: 200% 100%;

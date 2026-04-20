@@ -31,7 +31,7 @@ const FILTERS = [
 
 export default function GlobalQueue() {
   const { allRecords, loading, lastUpdated, refresh, removeItem } = useGlobalQueue(15000);
-  const { registerRefresh, clearRefresh } = useNav();
+  const { registerRefresh, clearRefresh, setPageTitle, clearPageTitle } = useNav();
   const [filter, setFilter] = useState('all');
   const [toast, setToast] = useState(null);
 
@@ -39,6 +39,11 @@ export default function GlobalQueue() {
     registerRefresh(refresh);
     return () => clearRefresh();
   }, [refresh]);
+
+  useEffect(() => {
+    setPageTitle('All Queues');
+    return () => clearPageTitle();
+  }, []);
 
   function showToast(msg, type = 'info') {
     setToast({ msg, type });

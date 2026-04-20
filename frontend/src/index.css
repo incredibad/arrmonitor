@@ -1,60 +1,60 @@
 /* Fonts loaded via Layout.module.css */
 
 :root {
-  --bg: #080b14;
-  --bg2: #0e1120;
-  --bg3: #141928;
-  --bg4: #1c2130;
-  --divider: rgba(255,255,255,0.06);
-  --border: rgba(255,255,255,0.09);
-  --text: #eef2ff;
-  --text2: #8892b0;
-  --text3: #4a5270;
+  --bg:  #0c0b09;
+  --bg2: #131110;
+  --bg3: #1b1815;
+  --bg4: #242019;
+  --divider: rgba(255,255,255,0.05);
+  --border:  rgba(255,255,255,0.08);
+  --text:  #f2ead8;
+  --text2: #9e9278;
+  --text3: #584f40;
 
-  /* Status colours - colour-deficiency safe */
-  --status-downloading:    #4ade80;   /* vivid green */
-  --status-downloading-bg: rgba(74,222,128,0.13);
-  --status-paused:         #fbbf24;   /* amber */
-  --status-paused-bg:      rgba(251,191,36,0.13);
-  --status-importing:      #38bdf8;   /* sky blue - actively importing */
-  --status-importing-bg:   rgba(56,189,248,0.13);
-  --status-waiting:        #a78bfa;   /* violet - waiting to import (downloaded, pending) */
-  --status-waiting-bg:     rgba(167,139,250,0.13);
-  --status-issue:          #f87171;   /* red */
-  --status-issue-bg:       rgba(248,113,113,0.13);
-  --status-queue:          #60a5fa;   /* blue - generic queued */
-  --status-queue-bg:       rgba(96,165,250,0.13);
+  /* Status colours */
+  --status-downloading:    #4ade80;
+  --status-downloading-bg: rgba(74,222,128,0.12);
+  --status-paused:         #fbbf24;
+  --status-paused-bg:      rgba(251,191,36,0.12);
+  --status-importing:      #38bdf8;
+  --status-importing-bg:   rgba(56,189,248,0.12);
+  --status-waiting:        #a78bfa;
+  --status-waiting-bg:     rgba(167,139,250,0.12);
+  --status-issue:          #f87171;
+  --status-issue-bg:       rgba(248,113,113,0.12);
+  --status-queue:          #94a3b8;
+  --status-queue-bg:       rgba(148,163,184,0.10);
 
-  --accent: #6366f1;
-  --accent-light: rgba(99,102,241,0.12);
-  --accent-border: rgba(99,102,241,0.40);
-  --green: #4ade80;
-  --green-bg: rgba(74,222,128,0.10);
-  --yellow: #fbbf24;
-  --yellow-bg: rgba(251,191,36,0.10);
-  --red: #f87171;
-  --red-bg: rgba(248,113,113,0.10);
-  --orange: #fb923c;
-  --orange-bg: rgba(251,146,60,0.10);
-  --sonarr: #38bdf8;
-  --sonarr-bg: rgba(56,189,248,0.10);
-  --radarr: #fbbf24;
-  --radarr-bg: rgba(251,191,36,0.10);
-  --lidarr: #4ade80;
-  --lidarr-bg: rgba(74,222,128,0.10);
-  --sportarr: #2dd4bf;
+  --accent:        #f59e0b;
+  --accent-light:  rgba(245,158,11,0.10);
+  --accent-border: rgba(245,158,11,0.30);
+  --green:      #4ade80;
+  --green-bg:   rgba(74,222,128,0.10);
+  --yellow:     #fbbf24;
+  --yellow-bg:  rgba(251,191,36,0.10);
+  --red:        #f87171;
+  --red-bg:     rgba(248,113,113,0.10);
+  --orange:     #fb923c;
+  --orange-bg:  rgba(251,146,60,0.10);
+  --sonarr:     #38bdf8;
+  --sonarr-bg:  rgba(56,189,248,0.10);
+  --radarr:     #fbbf24;
+  --radarr-bg:  rgba(251,191,36,0.10);
+  --lidarr:     #4ade80;
+  --lidarr-bg:  rgba(74,222,128,0.10);
+  --sportarr:   #2dd4bf;
   --sportarr-bg: rgba(45,212,191,0.10);
 
-  --radius: 10px;
-  --radius-sm: 6px;
+  --radius:    10px;
+  --radius-sm:  6px;
   --radius-lg: 14px;
-  --font: 'DM Sans', sans-serif;
+  --font:      'DM Sans', sans-serif;
   --font-mono: 'DM Mono', monospace;
-  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-top:    env(safe-area-inset-top, 0px);
   --safe-bottom: env(safe-area-inset-bottom, 0px);
-  --elevation-1: 0 1px 4px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.04);
-  --elevation-2: 0 4px 12px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.05);
-  --elevation-3: 0 12px 32px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,255,255,0.06);
+  --elevation-1: 0 1px 4px rgba(0,0,0,0.55), 0 0 0 1px rgba(255,255,255,0.04);
+  --elevation-2: 0 4px 12px rgba(0,0,0,0.65), 0 0 0 1px rgba(255,255,255,0.05);
+  --elevation-3: 0 12px 32px rgba(0,0,0,0.75), 0 0 0 1px rgba(255,255,255,0.06);
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -81,7 +81,7 @@ input, select, textarea {
 }
 input:focus, select:focus, textarea:focus {
   border-color: var(--accent);
-  box-shadow: 0 0 0 3px rgba(99,102,241,0.18);
+  box-shadow: 0 0 0 3px rgba(245,158,11,0.16);
 }
 select option { background: var(--bg3); }
 
@@ -102,36 +102,36 @@ select option { background: var(--bg3); }
 .chip-accent   { background: var(--accent-light); color: var(--accent);  border-color: var(--accent-border); }
 .chip-neutral  { background: var(--bg4); color: var(--text2); border-color: var(--border); }
 
-/* Status-specific chips */
+/* Status chips */
 .chip-downloading { background: var(--status-downloading-bg); color: var(--status-downloading); border-color: rgba(74,222,128,0.20); }
 .chip-paused      { background: var(--status-paused-bg);      color: var(--status-paused);      border-color: rgba(251,191,36,0.20); }
 .chip-importing   { background: var(--status-importing-bg);   color: var(--status-importing);   border-color: rgba(56,189,248,0.20); }
 .chip-waiting     { background: var(--status-waiting-bg);     color: var(--status-waiting);     border-color: rgba(167,139,250,0.20); }
 .chip-issue       { background: var(--status-issue-bg);       color: var(--status-issue);       border-color: rgba(248,113,113,0.20); }
-.chip-queued      { background: var(--status-queue-bg);       color: var(--status-queue);       border-color: rgba(96,165,250,0.20); }
+.chip-queued      { background: var(--status-queue-bg);       color: var(--status-queue);       border-color: rgba(148,163,184,0.15); }
 
 /* Animations */
-@keyframes fadeUp   { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
-@keyframes fadeIn   { from { opacity: 0; } to { opacity: 1; } }
-@keyframes spin     { to { transform: rotate(360deg); } }
-@keyframes pulse    { 0%,100% { opacity: 1; } 50% { opacity: 0.45; } }
-@keyframes shimmer  { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+@keyframes fadeUp  { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+@keyframes fadeIn  { from { opacity: 0; } to { opacity: 1; } }
+@keyframes spin    { to { transform: rotate(360deg); } }
+@keyframes pulse   { 0%,100% { opacity: 1; } 50% { opacity: 0.45; } }
+@keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
 
-.fade-up  { animation: fadeUp 0.18s ease; }
-.fade-in  { animation: fadeIn 0.15s ease; }
-.spin     { animation: spin 0.7s linear infinite; }
+.fade-up { animation: fadeUp 0.18s ease; }
+.fade-in { animation: fadeIn 0.15s ease; }
+.spin    { animation: spin 0.7s linear infinite; }
 
 ::-webkit-scrollbar { width: 4px; height: 4px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
 
-/* Centered modal */
+/* Modal */
 .modal-backdrop {
-  position: fixed; inset: 0; background: rgba(0,0,0,0.75);
+  position: fixed; inset: 0; background: rgba(0,0,0,0.80);
   z-index: 200; display: flex; align-items: center; justify-content: center;
   animation: fadeIn 0.15s ease;
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
   padding: 16px;
 }
 .modal-sheet {

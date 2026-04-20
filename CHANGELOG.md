@@ -4,6 +4,16 @@ All notable changes are documented here, newest first.
 
 ---
 
+## [1.4.0] — 2026-04-20
+
+### Changed
+- Full visual overhaul to Noir Amber palette: warm near-black backgrounds, amber/orange accent, cream text — replaces the generic indigo-navy look throughout
+- Instance cards now use a coloured left border accent (3px, type-coloured) instead of the thin top stripe, making sonarr/radarr/lidarr distinction immediately readable
+- Queue item progress bar is now a 2px amber strip pinned to the bottom edge of the card rather than a dedicated third row, making the list significantly denser
+- Topbar now shows the current page/instance name as an uppercase breadcrumb centred between the logo and nav icons
+- All amber-coloured interactive elements (import confirm, CTA button, focus rings, progress glow) updated to match the new accent
+- Logo gradient updated from blue→amber to amber→orange
+
 ## [1.3.2] — 2026-04-20
 
 ### Changed

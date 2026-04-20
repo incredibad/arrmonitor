@@ -38,7 +38,7 @@ export default function InstanceQueue() {
   const instance = instances.find(i => String(i.id) === String(id));
   const { queue, loading, error, lastUpdated, refresh, removeItem } = useQueue(id, 15000);
   const { status, updateAvailable, latestVersion, isLsio } = useInstanceStatus(id, instance?.type);
-  const { registerRefresh, clearRefresh } = useNav();
+  const { registerRefresh, clearRefresh, setPageTitle, clearPageTitle } = useNav();
   const [filter, setFilter] = useState('all');
   const [toast, setToast] = useState(null);
 
@@ -54,6 +54,11 @@ export default function InstanceQueue() {
     registerRefresh(refreshWithCommand);
     return () => clearRefresh();
   }, [id, refresh]);
+
+  useEffect(() => {
+    if (instance?.name) setPageTitle(instance.name);
+    return () => clearPageTitle();
+  }, [instance?.name]);
 
   function showToast(msg, type = 'info') {
     setToast({ msg, type });
