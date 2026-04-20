@@ -386,7 +386,7 @@ function WarningTag({ messages }) {
 }
 
 // ─── Main QueueItem ───────────────────────────────────────────────────────────
-export default function QueueItem({ item, instanceId, instanceType, instanceName, onRemove, onRefresh }) {
+export default function QueueItem({ item, instanceId, instanceType, instanceName, showInstance, onRemove, onRefresh }) {
   const [showImport, setShowImport] = useState(false);
   const [showRemove, setShowRemove] = useState(false);
   const [importBusy, setImportBusy] = useState(false);
@@ -422,6 +422,9 @@ export default function QueueItem({ item, instanceId, instanceType, instanceName
 
           {/* Row 2: release title (truncated, click for full) + meta tags */}
           <div className={styles.metaRow}>
+            {showInstance && instanceName && (
+              <span className={`chip chip-${instanceType || 'neutral'}`} style={{ flexShrink: 0 }}>{instanceName}</span>
+            )}
             {(item.title || item.sourceTitle) && <ReleaseTitleTag title={item.title || item.sourceTitle} />}
             {quality && <span className={styles.metaTag}>{quality}</span>}
             {sizeStr && <span className={styles.metaTag}>{sizeStr}</span>}

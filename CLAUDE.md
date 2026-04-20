@@ -11,16 +11,17 @@ This is non-negotiable — no commit should go out without a version increment i
 
 ## Changelog
 
-**Always update `CHANGELOG.md` before every commit.** Add an entry under the correct version heading (create one if it doesn't exist, using the format `## [x.y.z] — YYYY-MM-DD`) that describes the change concisely. Use `### Added`, `### Changed`, `### Fixed`, or `### Security` sub-sections to match the existing style.
+**Always update `CHANGELOG.md` before every commit.** Add an entry under the correct version heading (create one if it doesn't exist, using the format `## [x.y.z] — YYYY-MM-DD`) that describes the change concisely. Use `### Added`, `### Changed`, or `### Fixed` sub-sections to match the existing style.
 
 This is non-negotiable — no commit should go out without a changelog entry.
 
-## Git & GitHub
+## Pushing
 
-**After every commit, push to GitHub.**
+**Do not push proactively.** Only push to the remote repository when the user explicitly asks you to.
 
-```
-git push origin main
-```
+## Branching workflow
 
-This is non-negotiable — every commit must be pushed immediately after it is created.
+- **`dev`** is the active development branch. All commits go here.
+- **`main`** is stable and release-tagged. Only merge `dev` → `main` when the user confirms changes are tested and ready to ship.
+- When the user asks to "push changes", push to `dev`.
+- When the user asks to cut a release, merge `dev` into `main`, push `main`, then tag the release.
