@@ -1,15 +1,15 @@
 /* Fonts loaded via Layout.module.css */
 
 :root {
-  --bg:  #0c0b09;
-  --bg2: #131110;
-  --bg3: #1b1815;
-  --bg4: #242019;
-  --divider: rgba(255,255,255,0.05);
-  --border:  rgba(255,255,255,0.08);
-  --text:  #f2ead8;
-  --text2: #9e9278;
-  --text3: #584f40;
+  --bg:  #080706;
+  --bg2: #18150f;
+  --bg3: #22201a;
+  --bg4: #2e2a22;
+  --divider: rgba(255,255,255,0.08);
+  --border:  rgba(255,255,255,0.14);
+  --text:  #f5eddf;
+  --text2: #b09878;
+  --text3: #7a6a52;
 
   /* Status colours */
   --status-downloading:    #4ade80;
@@ -52,9 +52,9 @@
   --font-mono: 'DM Mono', monospace;
   --safe-top:    env(safe-area-inset-top, 0px);
   --safe-bottom: env(safe-area-inset-bottom, 0px);
-  --elevation-1: 0 1px 4px rgba(0,0,0,0.55), 0 0 0 1px rgba(255,255,255,0.04);
-  --elevation-2: 0 4px 12px rgba(0,0,0,0.65), 0 0 0 1px rgba(255,255,255,0.05);
-  --elevation-3: 0 12px 32px rgba(0,0,0,0.75), 0 0 0 1px rgba(255,255,255,0.06);
+  --elevation-1: 0 2px 6px rgba(0,0,0,0.70), 0 0 0 1px rgba(255,255,255,0.07);
+  --elevation-2: 0 4px 16px rgba(0,0,0,0.75), 0 0 0 1px rgba(255,255,255,0.08);
+  --elevation-3: 0 12px 36px rgba(0,0,0,0.85), 0 0 0 1px rgba(255,255,255,0.09);
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }

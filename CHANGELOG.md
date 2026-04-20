@@ -4,6 +4,11 @@ All notable changes are documented here, newest first.
 
 ---
 
+## [1.5.8] — 2026-04-20
+
+### Changed
+- Increased contrast throughout: page background darkened to near-black, card/surface backgrounds stepped up significantly so they lift off the page, border opacity raised from 0.08→0.14, elevation shadows strengthened, secondary and tertiary text colours lightened for readability
+
 ## [1.5.7] — 2026-04-20
 
 ### Changed

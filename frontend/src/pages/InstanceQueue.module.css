@@ -3,7 +3,7 @@
 /* ── Sub-bar ──────────────────────────────────────────────────────────────── */
 .subBar {
   position: sticky; top: var(--topbar-height); z-index: 40;
-  background: rgba(12,11,9,0.92);
+  background: rgba(8,7,6,0.94);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border-bottom: 1px solid rgba(255,255,255,0.06);
