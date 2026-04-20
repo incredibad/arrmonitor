@@ -16,12 +16,10 @@ function useTabNotification() {
         await Promise.all(enabled.map(async inst => {
           try {
             const q = await api.getQueue(inst.id);
-            total += (q?.records || []).filter(r =>
-              r.trackedDownloadStatus === 'warning' || r.trackedDownloadStatus === 'error'
-            ).length;
+            total += (q?.records || []).length;
           } catch {}
         }));
-        document.title = total > 0 ? `(${total}) ⚠ ${baseTitle}` : baseTitle;
+        document.title = total > 0 ? `(${total}) ${baseTitle}` : baseTitle;
       } catch { document.title = baseTitle; }
     }
     checkErrors();
