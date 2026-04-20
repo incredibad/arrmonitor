@@ -4,6 +4,12 @@ All notable changes are documented here, newest first.
 
 ---
 
+## [1.5.6] — 2026-04-20
+
+### Changed
+- Nav bar: removed darker logo background and vertical divider, increased logo section and nav button padding for a cleaner unified look
+- Topbar now shows "Dashboard" and "Settings" page titles alongside the existing instance name and "All Queues" titles
+
 ## [1.5.5] — 2026-04-20
 
 ### Changed
