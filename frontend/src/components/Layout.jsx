@@ -29,10 +29,10 @@ function useTabNotification() {
             });
           } catch {}
         }));
-        const parts = [];
-        if (queued > 0) parts.push(`(${queued})`);
-        if (issues > 0) parts.push(`⚠${issues}`);
-        document.title = parts.length > 0 ? `${parts.join(' ')} ${baseTitle}` : baseTitle;
+        let title = baseTitle;
+        if (issues > 0) title = `⚠${issues} ${baseTitle}`;
+        else if (queued > 0) title = `(${queued}) ${baseTitle}`;
+        document.title = title;
       } catch { document.title = baseTitle; }
     }
     checkErrors();

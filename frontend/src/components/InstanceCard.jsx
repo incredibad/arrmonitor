@@ -23,8 +23,8 @@ export default function InstanceCard({ instance }) {
   const { status, updateAvailable, latestVersion, isLsio } = useInstanceStatus(instance.id, instance.type);
 
   const records    = queue?.records || [];
-  const totalItems = queue?.totalRecords ?? 0;
   const issues     = records.filter(r => getSemanticStatus(r) === 'issue').length;
+  const totalItems = records.filter(r => getSemanticStatus(r) !== 'issue').length;
 
   return (
     <div className={styles.card} data-type={instance.type} onClick={() => navigate(`/instance/${instance.id}`)}>

@@ -4,6 +4,12 @@ All notable changes are documented here, newest first.
 
 ---
 
+## [1.5.3] — 2026-04-20
+
+### Changed
+- Instance cards: "In Queue" stat no longer counts issue items (they are already shown separately in the Issues stat)
+- Browser tab: issue count now overrides the queue count — if issues exist only `⚠N ArrMonitor` is shown; the queue count only appears when there are no issues
+
 ## [1.5.2] — 2026-04-20
 
 ### Changed
