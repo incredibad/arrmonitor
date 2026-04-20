@@ -29,7 +29,7 @@ function useTabNotification() {
 }
 
 export default function Layout({ children }) {
-  const { refreshFn, refreshing, handleRefresh } = useNav();
+  const { refreshFn, refreshing, handleRefresh, pageTitle } = useNav();
   useTabNotification();
 
   return (
@@ -43,6 +43,7 @@ export default function Layout({ children }) {
         </div>
 
         <div className={styles.barSpacer} />
+        {pageTitle && <span className={styles.barTitle}>{pageTitle}</span>}
 
         <div className={styles.navBtns}>
           {refreshFn && (

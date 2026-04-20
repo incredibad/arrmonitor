@@ -27,9 +27,7 @@ export default function InstanceCard({ instance }) {
   const issues     = records.filter(r => getSemanticStatus(r) === 'issue').length;
 
   return (
-    <div className={styles.card} onClick={() => navigate(`/instance/${instance.id}`)}>
-      <div className={styles.stripe} data-type={instance.type} />
-
+    <div className={styles.card} data-type={instance.type} onClick={() => navigate(`/instance/${instance.id}`)}>
       <div className={styles.body}>
         <div className={styles.headerRow}>
           <span className={styles.name}>{instance.name}</span>

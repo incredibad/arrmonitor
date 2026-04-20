@@ -3,12 +3,14 @@ import { createContext, useContext, useState, useCallback } from 'react';
 const NavContext = createContext(null);
 
 export function NavProvider({ children }) {
-  const [navContent, setNavContent] = useState(null);   // sub-bar content (instance/settings info)
-  const [refreshFn, setRefreshFn] = useState(null);     // refresh callback for nav button
+  const [navContent, setNavContent] = useState(null);
+  const [pageTitle, setPageTitle] = useState(null);
+  const [refreshFn, setRefreshFn] = useState(null);
   const [refreshing, setRefreshing] = useState(false);
 
   const setNav = useCallback((content) => setNavContent(content), []);
   const clearNav = useCallback(() => setNavContent(null), []);
+  const clearPageTitle = useCallback(() => setPageTitle(null), []);
 
   const registerRefresh = useCallback((fn) => setRefreshFn(() => fn), []);
   const clearRefresh = useCallback(() => setRefreshFn(null), []);
@@ -20,7 +22,11 @@ export function NavProvider({ children }) {
   }
 
   return (
-    <NavContext.Provider value={{ navContent, setNav, clearNav, refreshFn, refreshing, handleRefresh, registerRefresh, clearRefresh }}>
+    <NavContext.Provider value={{
+      navContent, setNav, clearNav,
+      pageTitle, setPageTitle, clearPageTitle,
+      refreshFn, refreshing, handleRefresh, registerRefresh, clearRefresh,
+    }}>
       {children}
     </NavContext.Provider>
   );
