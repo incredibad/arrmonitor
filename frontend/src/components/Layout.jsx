@@ -13,14 +13,26 @@ function useTabNotification() {
       try {
         const instances = await api.getInstances();
         const enabled = instances.filter(i => i.enabled);
-        let total = 0;
+        let queued = 0, issues = 0;
         await Promise.all(enabled.map(async inst => {
           try {
             const q = await api.getQueue(inst.id);
-            total += (q?.records || []).length;
+            (q?.records || []).forEach(r => {
+              const s = r.trackedDownloadStatus?.toLowerCase();
+              const t = r.trackedDownloadState?.toLowerCase();
+              const st = r.status?.toLowerCase();
+              if (s === 'warning' || s === 'error' || st === 'failed' || t === 'failed' || t === 'failedpending') {
+                issues++;
+              } else {
+                queued++;
+              }
+            });
           } catch {}
         }));
-        document.title = total > 0 ? `(${total}) ${baseTitle}` : baseTitle;
+        const parts = [];
+        if (queued > 0) parts.push(`(${queued})`);
+        if (issues > 0) parts.push(`⚠${issues}`);
+        document.title = parts.length > 0 ? `${parts.join(' ')} ${baseTitle}` : baseTitle;
       } catch { document.title = baseTitle; }
     }
     checkErrors();

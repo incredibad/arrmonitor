@@ -4,6 +4,11 @@ All notable changes are documented here, newest first.
 
 ---
 
+## [1.5.1] — 2026-04-20
+
+### Changed
+- Browser tab now shows issue items separately from the queue count: `(8) ⚠3 ArrMonitor` — issue items no longer inflate the main queue number
+
 ## [1.5.0] — 2026-04-20
 
 ### Added
