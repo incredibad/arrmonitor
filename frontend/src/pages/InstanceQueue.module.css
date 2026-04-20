@@ -3,11 +3,15 @@
 /* ── Sub-bar ──────────────────────────────────────────────────────────────── */
 .subBar {
   position: sticky; top: 48px; z-index: 40;
-  background: rgba(14,17,32,0.90);
+  background: rgba(12,11,9,0.92);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border-bottom: 1px solid rgba(255,255,255,0.06);
 }
+.subBar[data-type="sonarr"]   { background: rgba(10,22,32,0.94); border-bottom-color: rgba(56,189,248,0.14); }
+.subBar[data-type="radarr"]   { background: rgba(28,21,4,0.94);  border-bottom-color: rgba(251,191,36,0.14); }
+.subBar[data-type="lidarr"]   { background: rgba(7,25,13,0.94);  border-bottom-color: rgba(74,222,128,0.14); }
+.subBar[data-type="sportarr"] { background: rgba(4,24,22,0.94);  border-bottom-color: rgba(45,212,191,0.14); }
 
 /* Single flex row — info on left, filters on right */
 .subBarRow {

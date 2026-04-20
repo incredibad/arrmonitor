@@ -4,6 +4,11 @@ All notable changes are documented here, newest first.
 
 ---
 
+## [1.5.2] — 2026-04-20
+
+### Changed
+- Instance queue sub-bar now uses a dark tint of the app's brand colour as its background (dark blue for Sonarr, dark amber for Radarr, dark green for Lidarr, dark teal for Sportarr), with a matching coloured bottom border
+
 ## [1.5.1] — 2026-04-20
 
 ### Changed
