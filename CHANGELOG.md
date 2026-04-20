@@ -4,6 +4,11 @@ All notable changes are documented here, newest first.
 
 ---
 
+## [1.5.5] — 2026-04-20
+
+### Changed
+- Increased padding and spacing throughout: dashboard grid gap 12→16px, content padding 16→20px, instance card body padding and stat tile padding, queue item internal padding, and queue list gap and padding
+
 ## [1.5.4] — 2026-04-20
 
 ### Changed

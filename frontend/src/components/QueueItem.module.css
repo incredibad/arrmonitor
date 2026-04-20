@@ -13,7 +13,7 @@
   box-shadow: 0 0 0 1px rgba(248,113,113,0.10), var(--elevation-1);
 }
 
-.main { flex: 1; padding: 6px 8px 8px; min-width: 0; }
+.main { flex: 1; padding: 8px 10px 10px; min-width: 0; }
 
 /* Row 1: title + episode + right-aligned status+progress */
 .titleRow {
