@@ -8,7 +8,7 @@ import styles from './Dashboard.module.css';
 
 export default function Dashboard() {
   const { instances, loading, reload } = useInstances();
-  const { registerRefresh, clearRefresh } = useNav();
+  const { registerRefresh, clearRefresh, setPageTitle, clearPageTitle } = useNav();
   const navigate = useNavigate();
   const enabled = instances.filter(i => i.enabled);
 
@@ -26,6 +26,11 @@ export default function Dashboard() {
     registerRefresh(refreshAll);
     return () => clearRefresh();
   }, [enabled.length]);
+
+  useEffect(() => {
+    setPageTitle('Dashboard');
+    return () => clearPageTitle();
+  }, []);
 
   return (
     <div className={styles.page}>

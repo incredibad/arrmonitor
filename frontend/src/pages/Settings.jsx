@@ -23,7 +23,7 @@ function validate(form, isEdit) {
 export default function Settings() {
   const { instances, loading, reload } = useInstances();
   const { auth, logout } = useAuth();
-  const { clearRefresh } = useNav();
+  const { clearRefresh, setPageTitle, clearPageTitle } = useNav();
 
   const [form, setForm] = useState(defaultForm);
   const [errors, setErrors] = useState({});
@@ -39,7 +39,11 @@ export default function Settings() {
   const [pwSuccess, setPwSuccess] = useState(false);
   const [pwLoading, setPwLoading] = useState(false);
 
-  useEffect(() => { clearRefresh(); }, []);
+  useEffect(() => {
+    clearRefresh();
+    setPageTitle('Settings');
+    return () => clearPageTitle();
+  }, []);
 
   function handleChange(e) {
     const { name, value } = e.target;
