@@ -1,5 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { api } from '../lib/api.js';
+import { useTestMode } from '../lib/testModeContext.jsx';
+import { MOCK_ITEMS, MOCK_GLOBAL_ITEMS, MOCK_INSTANCES, mockQueueForInstance } from '../lib/mockQueue.js';
 
 // Detect if an instance is running a LinuxServer.io build
 // Their Dockerfile writes packageAuthor containing "linuxserver.io"
@@ -39,6 +41,7 @@ function sortRecords(records) {
 }
 
 export function useQueue(instanceId, intervalMs = 15000) {
+  const { testMode } = useTestMode();
   const [queue, setQueue] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -46,6 +49,14 @@ export function useQueue(instanceId, intervalMs = 15000) {
   const hasDataRef = useRef(false);
 
   const fetchQueue = useCallback(async (silent = false) => {
+    if (testMode) {
+      const records = sortRecords(mockQueueForInstance(instanceId));
+      setQueue({ records, totalRecords: records.length });
+      setError(null);
+      setLastUpdated(new Date());
+      setLoading(false);
+      return;
+    }
     if (!instanceId) return;
     if (!silent) setLoading(true);
     try {
@@ -62,38 +73,39 @@ export function useQueue(instanceId, intervalMs = 15000) {
     } finally {
       setLoading(false);
     }
-  }, [instanceId]);
+  }, [instanceId, testMode]);
 
-  // Auto-poll: trigger arr's own refresh first, then fetch our queue
   useEffect(() => {
-    fetchQueue(); // initial load — no arr refresh needed, just get current state
+    fetchQueue();
+    if (testMode) return;
 
     const poll = async () => {
-      // Fire-and-forget arr refresh — if it fails, we still fetch our data
       api.sendCommand(instanceId, { name: 'RefreshMonitoredDownloads' }).catch(() => {});
-      // Give arr 2s to process before we fetch
       await new Promise(r => setTimeout(r, 2000));
       fetchQueue(true);
     };
 
     const interval = setInterval(poll, intervalMs);
     return () => clearInterval(interval);
-  }, [fetchQueue, instanceId, intervalMs]);
+  }, [fetchQueue, instanceId, intervalMs, testMode]);
 
   const removeItem = useCallback(async (itemId, opts) => {
+    if (testMode) return;
     await api.deleteQueueItem(instanceId, itemId, opts);
-    await fetchQueue(true); // refresh list after action
-  }, [instanceId, fetchQueue]);
+    await fetchQueue(true);
+  }, [instanceId, fetchQueue, testMode]);
 
   const manualImport = useCallback(async () => {
+    if (testMode) return;
     await api.sendCommand(instanceId, { name: 'ManualImport', importMode: 'auto' });
-    setTimeout(() => fetchQueue(true), 2000); // give it a moment then refresh
-  }, [instanceId, fetchQueue]);
+    setTimeout(() => fetchQueue(true), 2000);
+  }, [instanceId, fetchQueue, testMode]);
 
   return { queue, loading, error, lastUpdated, refresh: () => fetchQueue(), removeItem, manualImport };
 }
 
 export function useGlobalQueue(intervalMs = 15000) {
+  const { testMode } = useTestMode();
   const [allRecords, setAllRecords] = useState(null);
   const [loading, setLoading] = useState(true);
   const [lastUpdated, setLastUpdated] = useState(null);
@@ -101,6 +113,12 @@ export function useGlobalQueue(intervalMs = 15000) {
   const hasDataRef = useRef(false);
 
   const fetchAll = useCallback(async (silent = false) => {
+    if (testMode) {
+      setAllRecords(sortRecords(MOCK_GLOBAL_ITEMS));
+      setLastUpdated(new Date());
+      setLoading(false);
+      return;
+    }
     const insts = instancesRef.current;
     if (insts.length === 0) { setLoading(false); return; }
     if (!silent) setLoading(true);
@@ -124,9 +142,10 @@ export function useGlobalQueue(intervalMs = 15000) {
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [testMode]);
 
   useEffect(() => {
+    if (testMode) { fetchAll(); return; }
     let cancelled = false;
     api.getInstances()
       .then(data => {
@@ -146,12 +165,13 @@ export function useGlobalQueue(intervalMs = 15000) {
 
     const interval = setInterval(poll, intervalMs);
     return () => { cancelled = true; clearInterval(interval); };
-  }, [fetchAll, intervalMs]);
+  }, [fetchAll, intervalMs, testMode]);
 
   const removeItem = useCallback(async (instanceId, itemId, opts) => {
+    if (testMode) return;
     await api.deleteQueueItem(instanceId, itemId, opts);
     await fetchAll(true);
-  }, [fetchAll]);
+  }, [fetchAll, testMode]);
 
   return { allRecords, loading, lastUpdated, refresh: () => fetchAll(), removeItem };
 }

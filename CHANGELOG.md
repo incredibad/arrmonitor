@@ -4,6 +4,13 @@ All notable changes are documented here, newest first.
 
 ---
 
+## [1.5.0] — 2026-04-20
+
+### Added
+- Test mode: click the flask icon in the nav bar to populate all queue views with simulated items covering every status (Downloading, Importing, Waiting, Paused, Issues, Queued) across Sonarr, Radarr, and Lidarr — no real data is fetched or modified while active
+- Test mode persists across page reloads (localStorage) and shows an amber banner below the topbar as a clear indicator it is on
+- Remove/import actions are no-ops in test mode so nothing real is triggered
+
 ## [1.4.0] — 2026-04-20
 
 ### Changed
