@@ -4,6 +4,11 @@ All notable changes are documented here, newest first.
 
 ---
 
+## [1.6.4] — 2026-04-23
+
+### Added
+- Bundled Sportarr logo from sportarr.net as static asset
+
 ## [1.6.3] — 2026-04-23
 
 ### Fixed

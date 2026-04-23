@@ -70,7 +70,7 @@ function Stat({ label, value, color, bg, active }) {
   );
 }
 
-const BUNDLED_LOGOS = { sonarr: '/logos/sonarr.png', radarr: '/logos/radarr.png', lidarr: '/logos/lidarr.png' };
+const BUNDLED_LOGOS = { sonarr: '/logos/sonarr.png', radarr: '/logos/radarr.png', lidarr: '/logos/lidarr.png', sportarr: '/logos/sportarr.png' };
 
 function AppLogo({ id, type }) {
   const [failed, setFailed] = useState(false);
