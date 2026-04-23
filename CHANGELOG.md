@@ -4,6 +4,12 @@ All notable changes are documented here, newest first.
 
 ---
 
+## [1.7.1] — 2026-04-24
+
+### Changed
+- Top bar removed entirely; logo moved to the top of the slide-in nav drawer
+- Refresh button moved to a floating button group in the bottom-right corner, sitting to the left of the hamburger button
+
 ## [1.7.0] — 2026-04-24
 
 ### Changed
