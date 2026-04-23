@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQueue, useInstanceStatus } from '../hooks/useQueue.js';
+import { useLayout } from '../lib/layoutContext.jsx';
 import styles from './InstanceCard.module.css';
 
 function getSemanticStatus(item) {
@@ -22,13 +23,16 @@ export default function InstanceCard({ instance }) {
   const navigate = useNavigate();
   const { queue, loading, error } = useQueue(instance.id, 30000);
   const { status, updateAvailable } = useInstanceStatus(instance.id, instance.type);
+  const { horizontalLayout } = useLayout();
 
   const records    = queue?.records || [];
   const issues     = records.filter(r => getSemanticStatus(r) === 'issue').length;
   const totalItems = records.filter(r => getSemanticStatus(r) !== 'issue').length;
 
+  const cardClass = `${styles.card} ${horizontalLayout ? styles.cardH : ''}`;
+
   return (
-    <div className={styles.card} data-type={instance.type} onClick={() => navigate(`/instance/${instance.id}`)}>
+    <div className={cardClass} data-type={instance.type} onClick={() => navigate(`/instance/${instance.id}`)}>
       <div className={styles.body}>
         <div className={styles.headerRow}>
           <AppLogo id={instance.id} type={instance.type} />

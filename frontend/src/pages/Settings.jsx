@@ -4,6 +4,7 @@ import { useSabnzbdInstances } from '../hooks/useSabnzbd.js';
 import { useNav } from '../lib/navContext.jsx';
 import { useAuth } from '../lib/authContext.jsx';
 import { useTestMode } from '../lib/testModeContext.jsx';
+import { useLayout } from '../lib/layoutContext.jsx';
 import { api } from '../lib/api.js';
 import styles from './Settings.module.css';
 
@@ -29,6 +30,7 @@ export default function Settings() {
   const { auth, logout } = useAuth();
   const { clearRefresh, setPageTitle, clearPageTitle } = useNav();
   const { testMode, toggle: toggleTestMode } = useTestMode();
+  const { horizontalLayout, toggleHorizontal } = useLayout();
 
   const [tab, setTab] = useState('apps');
 
@@ -479,10 +481,29 @@ export default function Settings() {
       {tab === 'display' && (
         <div className={styles.section}>
           <div className={styles.sectionHeader}>
+            <span className={styles.sectionLabel}>Layout</span>
+          </div>
+
+          <div className={styles.instanceRow}>
+            <button className={styles.toggleBtn} onClick={toggleHorizontal} title="Toggle horizontal orientation">
+              <div className={`${styles.toggle} ${horizontalLayout ? styles.toggleOn : ''}`}>
+                <div className={styles.toggleThumb} />
+              </div>
+            </button>
+            <div className={styles.instInfo}>
+              <div className={styles.instNameRow}>
+                <span className={styles.instName}>Horizontal Orientation</span>
+                {horizontalLayout && <span className="chip chip-accent">on</span>}
+              </div>
+              <div className={styles.instUrl}>Download clients left (40%), instances right (60%) with inline cards</div>
+            </div>
+          </div>
+
+          <div className={styles.sectionHeader} style={{ marginTop: 8 }}>
             <span className={styles.sectionLabel}>Developer</span>
           </div>
 
-          <div className={`${styles.instanceRow}`}>
+          <div className={styles.instanceRow}>
             <button className={styles.toggleBtn} onClick={toggleTestMode} title="Toggle test mode">
               <div className={`${styles.toggle} ${testMode ? styles.toggleOn : ''}`}>
                 <div className={styles.toggleThumb} />

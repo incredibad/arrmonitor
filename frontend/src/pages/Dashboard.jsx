@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useInstances } from '../hooks/useQueue.js';
 import { useSabnzbdInstances } from '../hooks/useSabnzbd.js';
 import { useNav } from '../lib/navContext.jsx';
+import { useLayout } from '../lib/layoutContext.jsx';
 import { api } from '../lib/api.js';
 import InstanceCard from '../components/InstanceCard.jsx';
 import SabnzbdCard from '../components/SabnzbdCard.jsx';
@@ -12,16 +13,15 @@ export default function Dashboard() {
   const { instances, loading, reload } = useInstances();
   const { instances: sabInstances } = useSabnzbdInstances();
   const { registerRefresh, clearRefresh, setPageTitle, clearPageTitle } = useNav();
+  const { horizontalLayout } = useLayout();
   const navigate = useNavigate();
   const enabled    = instances.filter(i => i.enabled);
   const enabledSab = sabInstances.filter(i => i.enabled);
 
   async function refreshAll() {
-    // Trigger RefreshMonitoredDownloads on each instance first, then reload instance list
     await Promise.allSettled(
       enabled.map(inst => api.sendCommand(inst.id, { name: 'RefreshMonitoredDownloads' }).catch(() => {}))
     );
-    // Small delay to let arr apps process the refresh
     await new Promise(r => setTimeout(r, 1500));
     reload();
   }
@@ -36,12 +36,20 @@ export default function Dashboard() {
     return () => clearPageTitle();
   }, []);
 
-  return (
-    <div className={styles.page}>
-      <div className={styles.content}>
-        {loading ? (
-          [1,2,3].map(i => <div key={i} className={styles.skeleton} />)
-        ) : enabled.length === 0 && enabledSab.length === 0 ? (
+  if (loading) {
+    return (
+      <div className={styles.page}>
+        <div className={styles.content}>
+          {[1,2,3].map(i => <div key={i} className={styles.skeleton} />)}
+        </div>
+      </div>
+    );
+  }
+
+  if (enabled.length === 0 && enabledSab.length === 0) {
+    return (
+      <div className={styles.page}>
+        <div className={styles.content}>
           <div className={styles.empty}>
             <div className={styles.emptyIcon}>
               <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" opacity="0.3">
@@ -52,29 +60,65 @@ export default function Dashboard() {
             <p className={styles.emptySub}>Add your Sonarr, Radarr, or Lidarr instances in Settings to get started.</p>
             <button className={styles.ctaBtn} onClick={() => navigate('/settings')}>Go to Settings</button>
           </div>
-        ) : (
-          <>
-            {enabledSab.length > 0 && (
-              <div className={styles.section}>
-                <div className={styles.sectionLabel}>Download Clients</div>
-                <div className={styles.list}>
-                  {enabledSab.map(instance => (
-                    <SabnzbdCard key={`sab-${instance.id}`} instance={instance} />
-                  ))}
-                </div>
-              </div>
-            )}
-            {enabled.length > 0 && (
-              <div className={styles.section}>
-                {enabledSab.length > 0 && <div className={styles.sectionLabel}>Instances</div>}
-                <div className={styles.list}>
-                  {enabled.map(instance => (
-                    <InstanceCard key={instance.id} instance={instance} />
-                  ))}
-                </div>
-              </div>
-            )}
-          </>
+        </div>
+      </div>
+    );
+  }
+
+  if (horizontalLayout) {
+    return (
+      <div className={styles.page}>
+        <div className={styles.twoCol}>
+          <div className={styles.colClients}>
+            {enabledSab.length > 0 && <div className={styles.sectionLabel}>Download Clients</div>}
+            <div className={styles.clientList}>
+              {enabledSab.map(instance => (
+                <SabnzbdCard key={`sab-${instance.id}`} instance={instance} />
+              ))}
+              {enabledSab.length === 0 && (
+                <p className={styles.colEmpty}>No download clients configured.</p>
+              )}
+            </div>
+          </div>
+
+          <div className={styles.colInstances}>
+            {enabled.length > 0 && <div className={styles.sectionLabel}>Instances</div>}
+            <div className={styles.instanceList}>
+              {enabled.map(instance => (
+                <InstanceCard key={instance.id} instance={instance} />
+              ))}
+              {enabled.length === 0 && (
+                <p className={styles.colEmpty}>No instances configured.</p>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className={styles.page}>
+      <div className={styles.content}>
+        {enabledSab.length > 0 && (
+          <div className={styles.section}>
+            <div className={styles.sectionLabel}>Download Clients</div>
+            <div className={styles.list}>
+              {enabledSab.map(instance => (
+                <SabnzbdCard key={`sab-${instance.id}`} instance={instance} />
+              ))}
+            </div>
+          </div>
+        )}
+        {enabled.length > 0 && (
+          <div className={styles.section}>
+            {enabledSab.length > 0 && <div className={styles.sectionLabel}>Instances</div>}
+            <div className={styles.list}>
+              {enabled.map(instance => (
+                <InstanceCard key={instance.id} instance={instance} />
+              ))}
+            </div>
+          </div>
         )}
       </div>
     </div>
