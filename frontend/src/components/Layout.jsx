@@ -8,50 +8,62 @@ import styles from './Layout.module.css';
 
 function useTabNotification() {
   useEffect(() => {
-    const baseTitle = 'ArrMonitor';
-    async function checkErrors() {
+    const BASE = 'ArrMonitor';
+    async function checkStatus() {
       try {
         const [instances, sabInstances] = await Promise.all([
           api.getInstances(),
           api.getSabnzbdInstances().catch(() => []),
         ]);
-        const enabled = instances.filter(i => i.enabled);
-        let queued = 0, issues = 0, sabActive = false;
+
+        let total = 0, issues = 0;
+        let sabStatus = '', sabSpeed = '', sabSizeLeft = '';
 
         await Promise.all([
-          ...enabled.map(async inst => {
+          ...instances.filter(i => i.enabled).map(async inst => {
             try {
               const q = await api.getQueue(inst.id);
               (q?.records || []).forEach(r => {
                 const s = r.trackedDownloadStatus?.toLowerCase();
                 const t = r.trackedDownloadState?.toLowerCase();
                 const st = r.status?.toLowerCase();
-                if (s === 'warning' || s === 'error' || st === 'failed' || t === 'failed' || t === 'failedpending') {
-                  issues++;
-                } else {
-                  queued++;
-                }
+                if (s === 'warning' || s === 'error' || st === 'failed' || t === 'failed' || t === 'failedpending') issues++;
+                else total++;
               });
             } catch {}
           }),
           ...sabInstances.filter(i => i.enabled).map(async inst => {
             try {
               const q = await api.getSabnzbdQueue(inst.id);
-              if (q?.status === 'Downloading' && q?.noofslots > 0) sabActive = true;
+              if (!q) return;
+              total += q.noofslots || 0;
+              if (!sabStatus && (q.status === 'Downloading' || q.status === 'Paused')) {
+                sabStatus = q.status;
+                sabSpeed = q.speed || '';
+                sabSizeLeft = q.sizeleft || '';
+              }
             } catch {}
           }),
         ]);
 
-        let title = baseTitle;
-        if (issues > 0) title = `⚠${issues} ${baseTitle}`;
-        else if (queued > 0) title = `(${queued}) ${baseTitle}`;
-        if (sabActive) title = `⬇ ${title}`;
+        const parts = [];
+        if (sabStatus === 'Downloading') {
+          if (sabSpeed) parts.push(`${sabSpeed}/s`);
+          if (sabSizeLeft) parts.push(`${sabSizeLeft} left`);
+        } else if (sabStatus === 'Paused') {
+          parts.push('Paused');
+          if (sabSizeLeft) parts.push(`${sabSizeLeft} left`);
+        }
+        if (total > 0) parts.push(`(${total})`);
+
+        let title = parts.length ? `${parts.join(' - ')} - ${BASE}` : BASE;
+        if (issues > 0) title = `⚠ ${title}`;
         document.title = title;
-      } catch { document.title = baseTitle; }
+      } catch { document.title = BASE; }
     }
-    checkErrors();
-    const t = setInterval(checkErrors, 30000);
-    return () => { clearInterval(t); document.title = baseTitle; };
+    checkStatus();
+    const t = setInterval(checkStatus, 10000);
+    return () => { clearInterval(t); document.title = BASE; };
   }, []);
 }
 
