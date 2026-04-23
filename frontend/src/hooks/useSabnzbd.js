@@ -1,6 +1,31 @@
 import { useState, useEffect, useCallback } from 'react';
 import { api } from '../lib/api.js';
 
+function useVisibilityInterval(callback, ms) {
+  useEffect(() => {
+    let interval = null;
+
+    function start() {
+      callback();
+      interval = setInterval(callback, ms);
+    }
+    function stop() {
+      clearInterval(interval);
+      interval = null;
+    }
+    function onVisibility() {
+      document.hidden ? stop() : start();
+    }
+
+    if (!document.hidden) start();
+    document.addEventListener('visibilitychange', onVisibility);
+    return () => {
+      stop();
+      document.removeEventListener('visibilitychange', onVisibility);
+    };
+  }, [callback, ms]);
+}
+
 export function useSabnzbdInstances() {
   const [instances, setInstances] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -16,7 +41,7 @@ export function useSabnzbdInstances() {
   return { instances, loading, reload: load };
 }
 
-export function useSabnzbdQueue(instanceId, intervalMs = 15000) {
+export function useSabnzbdQueue(instanceId) {
   const [queue, setQueue] = useState(null);
   const [history, setHistory] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -39,11 +64,7 @@ export function useSabnzbdQueue(instanceId, intervalMs = 15000) {
     setLoading(false);
   }, [instanceId]);
 
-  useEffect(() => {
-    refresh();
-    const t = setInterval(refresh, intervalMs);
-    return () => clearInterval(t);
-  }, [refresh, intervalMs]);
+  useVisibilityInterval(refresh, 2000);
 
-  return { queue, history, loading, error, lastUpdated, refresh };
+  return { queue, setQueue, history, loading, error, lastUpdated, refresh };
 }

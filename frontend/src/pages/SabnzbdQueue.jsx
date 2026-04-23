@@ -12,7 +12,7 @@ export default function SabnzbdQueue() {
   const { id } = useParams();
   const navigate = useNavigate();
   const { instances } = useSabnzbdInstances();
-  const { queue, history, loading, error, lastUpdated, refresh } = useSabnzbdQueue(id, 15000);
+  const { queue, setQueue, history, loading, error, lastUpdated, refresh } = useSabnzbdQueue(id);
   const { registerRefresh, clearRefresh, setPageTitle, clearPageTitle } = useNav();
   const [filter, setFilter] = useState('all');
   const [acting, setActing] = useState(false);
@@ -36,14 +36,16 @@ export default function SabnzbdQueue() {
   }
 
   async function handlePause() {
+    setQueue(q => q ? { ...q, status: 'Paused' } : q);
     setActing(true);
-    try { await api.pauseSabnzbd(id); showToast('Paused'); refresh(); } catch (e) { showToast(e.message, 'error'); }
+    try { await api.pauseSabnzbd(id); showToast('Paused'); } catch (e) { showToast(e.message, 'error'); }
     setActing(false);
   }
 
   async function handleResume() {
+    setQueue(q => q ? { ...q, status: 'Downloading' } : q);
     setActing(true);
-    try { await api.resumeSabnzbd(id); showToast('Resumed'); refresh(); } catch (e) { showToast(e.message, 'error'); }
+    try { await api.resumeSabnzbd(id); showToast('Resumed'); } catch (e) { showToast(e.message, 'error'); }
     setActing(false);
   }
 
