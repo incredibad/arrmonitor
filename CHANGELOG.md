@@ -4,10 +4,10 @@ All notable changes are documented here, newest first.
 
 ---
 
-## [1.6.2] — 2026-04-23
+## [1.6.3] — 2026-04-23
 
 ### Fixed
-- Instance card logos now proxy through the backend (`/api/instances/:id/logo`) so they load regardless of whether the instance URL is directly reachable from the browser
+- Instance card logos (Sonarr, Radarr, Lidarr) now use bundled static assets (`/logos/*.png`) downloaded from official GitHub repos, eliminating any dependency on instance reachability from the browser; Sportarr falls back to inline SVG
 
 ## [1.6.1] — 2026-04-23
 

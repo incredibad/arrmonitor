@@ -70,13 +70,16 @@ function Stat({ label, value, color, bg, active }) {
   );
 }
 
+const BUNDLED_LOGOS = { sonarr: '/logos/sonarr.png', radarr: '/logos/radarr.png', lidarr: '/logos/lidarr.png' };
+
 function AppLogo({ id, type }) {
   const [failed, setFailed] = useState(false);
-  if (!failed) {
+  const src = BUNDLED_LOGOS[type];
+  if (src && !failed) {
     return (
       <img
         className={styles.appLogo}
-        src={`/api/instances/${id}/logo`}
+        src={src}
         width="16" height="16"
         alt={type}
         onError={() => setFailed(true)}
