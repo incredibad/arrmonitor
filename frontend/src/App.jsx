@@ -3,6 +3,7 @@ import { NavProvider } from './lib/navContext.jsx';
 import { AuthProvider, useAuth } from './lib/authContext.jsx';
 import { ImportToastProvider } from './lib/importToastContext.jsx';
 import { TestModeProvider } from './lib/testModeContext.jsx';
+import { LayoutProvider } from './lib/layoutContext.jsx';
 import Layout from './components/Layout.jsx';
 import Dashboard from './pages/Dashboard.jsx';
 import InstanceQueue from './pages/InstanceQueue.jsx';
@@ -37,6 +38,7 @@ function AppContent() {
 
   // Authenticated → show app
   return (
+    <LayoutProvider>
     <TestModeProvider>
     <ImportToastProvider>
     <NavProvider>
@@ -53,6 +55,7 @@ function AppContent() {
     </NavProvider>
     </ImportToastProvider>
     </TestModeProvider>
+    </LayoutProvider>
   );
 }
 

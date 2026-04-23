@@ -47,3 +47,57 @@
   font-size: 14px; font-weight: 600;
   box-shadow: 0 4px 14px rgba(245,158,11,0.30);
 }
+
+/* ── Horizontal orientation layout ── */
+.twoCol {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 20px;
+  padding: 20px;
+  min-height: calc(100dvh - 48px);
+}
+
+.colClients {
+  width: 40%;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.colInstances {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.clientList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.instanceList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.colEmpty {
+  font-size: 13px;
+  color: var(--text3);
+  padding: 16px 0;
+}
+
+/* Collapse to single column on narrow screens regardless of setting */
+@media (max-width: 700px) {
+  .twoCol {
+    flex-direction: column;
+  }
+  .colClients {
+    width: 100%;
+  }
+}

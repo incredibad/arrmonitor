@@ -4,6 +4,11 @@ All notable changes are documented here, newest first.
 
 ---
 
+## [1.9.0] — 2026-04-24
+
+### Added
+- Horizontal Orientation toggle in Settings → Display tab: splits the dashboard into a 40% download clients column and a 60% instances column; instance cards switch to an inline layout with header info on the left and stat boxes on the right; collapses to single-column on screens narrower than 700 px; persists across reloads via localStorage
+
 ## [1.8.0] — 2026-04-24
 
 ### Changed

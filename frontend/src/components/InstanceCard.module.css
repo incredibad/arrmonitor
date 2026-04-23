@@ -126,3 +126,28 @@
   text-align: center;
   padding: 8px 0;
 }
+
+/* ── Horizontal card variant ── */
+.cardH .body {
+  flex-direction: row;
+  align-items: center;
+  padding: 14px 16px;
+  gap: 16px;
+}
+
+.cardH .headerRow {
+  flex: 1;
+  min-width: 0;
+}
+
+.cardH .stats {
+  flex-shrink: 0;
+  width: 180px;
+  margin-top: 0;
+  padding-top: 0;
+  gap: 6px;
+}
+
+.cardH .shimmer {
+  height: 52px;
+}
