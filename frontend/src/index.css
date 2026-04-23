@@ -1,15 +1,15 @@
 /* Fonts loaded via Layout.module.css */
 
 :root {
-  --bg:  #080706;
-  --bg2: #18150f;
-  --bg3: #22201a;
-  --bg4: #2e2a22;
-  --divider: rgba(255,255,255,0.08);
-  --border:  rgba(255,255,255,0.14);
-  --text:  #f5eddf;
-  --text2: #b09878;
-  --text3: #7a6a52;
+  --bg:  #0d1117;
+  --bg2: #161b22;
+  --bg3: #1c2128;
+  --bg4: #21262d;
+  --divider: rgba(255,255,255,0.07);
+  --border:  rgba(255,255,255,0.12);
+  --text:  #e6edf3;
+  --text2: #8b949e;
+  --text3: #4d5e6f;
 
   /* Status colours */
   --status-downloading:    #4ade80;
@@ -47,9 +47,9 @@
   --sabnzbd:    #818cf8;
   --sabnzbd-bg: rgba(129,140,248,0.10);
 
-  --radius:    10px;
-  --radius-sm:  6px;
-  --radius-lg: 14px;
+  --radius:    3px;
+  --radius-sm: 3px;
+  --radius-lg: 4px;
   --font:      'DM Sans', sans-serif;
   --font-mono: 'DM Mono', monospace;
   --safe-top:    env(safe-area-inset-top, 0px);
@@ -90,7 +90,7 @@ select option { background: var(--bg3); }
 /* Chips */
 .chip {
   display: inline-flex; align-items: center;
-  padding: 2px 8px; border-radius: 100px;
+  padding: 2px 7px; border-radius: 3px;
   font-size: 11px; font-weight: 500; letter-spacing: 0.03em; line-height: 18px;
   border: 1px solid transparent;
 }

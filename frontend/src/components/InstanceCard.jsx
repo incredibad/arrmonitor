@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQueue, useInstanceStatus } from '../hooks/useQueue.js';
 import styles from './InstanceCard.module.css';
@@ -30,7 +31,7 @@ export default function InstanceCard({ instance }) {
     <div className={styles.card} data-type={instance.type} onClick={() => navigate(`/instance/${instance.id}`)}>
       <div className={styles.body}>
         <div className={styles.headerRow}>
-          <AppIcon type={instance.type} />
+          <AppLogo url={instance.url} type={instance.type} />
           <span className={styles.name}>{instance.name}</span>
           {status?.ok && (
             <span className={styles.version} style={updateAvailable ? { color: 'var(--accent)' } : undefined}>
@@ -69,10 +70,22 @@ function Stat({ label, value, color, bg, active }) {
   );
 }
 
-function AppIcon({ type }) {
+function AppLogo({ url, type }) {
+  const [failed, setFailed] = useState(false);
+  if (!failed) {
+    return (
+      <img
+        className={styles.appLogo}
+        src={`${url}/Content/Images/logo.png`}
+        width="16" height="16"
+        alt={type}
+        onError={() => setFailed(true)}
+      />
+    );
+  }
   const color = `var(--${type})`;
   if (type === 'sonarr') return (
-    <svg className={styles.appIcon} style={{ color }} width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <svg className={styles.appLogo} style={{ color }} width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
       <path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/>
       <path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/>
       <path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/>
@@ -80,19 +93,19 @@ function AppIcon({ type }) {
     </svg>
   );
   if (type === 'radarr') return (
-    <svg className={styles.appIcon} style={{ color }} width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <svg className={styles.appLogo} style={{ color }} width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
       <path d="M15 10l4.553-2.069A1 1 0 0 1 21 8.847v6.306a1 1 0 0 1-1.447.894L15 14"/>
       <rect x="2" y="7" width="13" height="10" rx="2"/>
     </svg>
   );
   if (type === 'lidarr') return (
-    <svg className={styles.appIcon} style={{ color }} width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <svg className={styles.appLogo} style={{ color }} width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
       <path d="M9 18V5l12-2v13"/>
       <circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/>
     </svg>
   );
   if (type === 'sportarr') return (
-    <svg className={styles.appIcon} style={{ color }} width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <svg className={styles.appLogo} style={{ color }} width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
       <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/>
       <path d="M4 22h16"/>
       <path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/>
