@@ -4,6 +4,11 @@ All notable changes are documented here, newest first.
 
 ---
 
+## [1.6.16] — 2026-04-23
+
+### Changed
+- Browser tab title now shows `Idle` when SABnzbd is configured but nothing is downloading, paused, or processing
+
 ## [1.6.15] — 2026-04-23
 
 ### Fixed
