@@ -1,7 +1,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@500;600&family=DM+Sans:wght@400;500;700&family=DM+Mono:wght@400;500&display=swap');
 
 :root {
-  --topbar-height: 56px;
+  /* Zero'd — no topbar; sub-bar sticky positions reference this var */
+  --topbar-height: 0px;
   --font: 'DM Sans', sans-serif;
   --font-mono: 'DM Mono', monospace;
 }
@@ -15,111 +16,9 @@ body { font-family: var(--font) !important; }
   background: var(--bg);
 }
 
-.topBar {
-  position: fixed; top: 0;
-  width: 100%;
-  height: calc(var(--topbar-height) + var(--safe-top));
-  padding-top: var(--safe-top);
-  background: rgba(8,7,6,0.92);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border-bottom: 1px solid rgba(255,255,255,0.06);
-  display: flex; align-items: stretch;
-  z-index: 100;
-  box-shadow: 0 1px 0 rgba(255,255,255,0.03), 0 4px 24px rgba(0,0,0,0.6);
-  overflow: hidden;
-}
-
-.logoSection {
-  display: flex; align-items: center;
-  padding: 0 20px;
-  flex-shrink: 0;
-}
-
-.logoLink {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  text-decoration: none;
-}
-
-.logoIcon {
-  width: 26px;
-  height: 26px;
-  border-radius: 6px;
-  flex-shrink: 0;
-}
-
-.logo {
-  font-family: 'Oswald', sans-serif;
-  font-size: 17px;
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  line-height: 1;
-  white-space: nowrap;
-  color: #f5eddf;
-}
-
-.barTitle {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  font-family: 'Oswald', sans-serif;
-  font-size: 13px;
-  font-weight: 500;
-  letter-spacing: 0.07em;
-  color: var(--text3);
-  white-space: nowrap;
-  pointer-events: none;
-  text-transform: uppercase;
-  top: 50%;
-  margin-top: calc(var(--safe-top) / 2);
-  transform: translate(-50%, -50%);
-}
-
-/* Thin vertical divider between logo and context */
-.barDivider {
-  width: 1px;
-  background: var(--divider);
-  align-self: stretch;
-  flex-shrink: 0;
-}
-
-/* Context section — takes remaining space, clips overflow */
-.contextSection {
-  flex: 1;
-  min-width: 0;
-  display: flex;
-  align-items: center;
-  padding: 0 12px;
-  overflow: hidden;
-}
-
-.barSpacer { flex: 1; }
-
-/* Nav icon buttons */
-.navBtns {
-  display: flex; align-items: center;
-  gap: 4px; padding: 0 12px;
-  flex-shrink: 0;
-}
-
-.navBtn {
-  display: flex; align-items: center; justify-content: center;
-  width: 36px; height: 36px; border-radius: 8px;
-  color: var(--text3);
-  transition: background 0.15s, color 0.15s;
-  -webkit-tap-highlight-color: transparent;
-}
-.navBtn:hover  { background: rgba(255,255,255,0.07); color: var(--text2); }
-.navBtn:active { background: rgba(255,255,255,0.04); }
-.navBtnActive     { color: var(--accent) !important; background: var(--accent-light) !important; }
-.navBtnTestActive { color: var(--accent) !important; background: var(--accent-light) !important; box-shadow: 0 0 0 1px var(--accent-border) inset; }
-.navBtnSpinning svg { animation: spin 0.7s linear infinite; }
-
 .testModeBanner {
   position: fixed;
-  top: calc(var(--topbar-height) + var(--safe-top));
+  top: var(--safe-top);
   left: 0; right: 0;
   z-index: 90;
   background: rgba(245,158,11,0.12);
@@ -136,38 +35,46 @@ body { font-family: var(--font) !important; }
 
 .content {
   flex: 1; width: 100%;
-  padding-top: calc(var(--topbar-height) + var(--safe-top));
+  padding-top: var(--safe-top);
   background: var(--bg);
   min-height: 100dvh;
 }
 
 .testModeRoot .content {
-  padding-top: calc(var(--topbar-height) + var(--safe-top) + 29px);
+  padding-top: calc(var(--safe-top) + 29px);
 }
 
-/* Floating action button (hamburger / close) */
-.fab {
+/* Floating button group — bottom-right corner */
+.fabGroup {
   position: fixed;
   bottom: calc(24px + env(safe-area-inset-bottom, 0px));
   right: calc(24px + env(safe-area-inset-right, 0px));
+  display: flex; flex-direction: row;
+  align-items: center; gap: 10px;
+  z-index: 300;
+}
+
+.fab {
   width: 48px; height: 48px;
   border-radius: 50%;
   background: var(--bg3);
   border: 1px solid var(--border);
   color: var(--text2);
   display: flex; align-items: center; justify-content: center;
-  z-index: 300;
   box-shadow: 0 4px 20px rgba(0,0,0,0.55);
   transition: background 0.15s, color 0.15s, border-color 0.15s, transform 0.12s;
   -webkit-tap-highlight-color: transparent;
 }
 .fab:hover { background: rgba(255,255,255,0.1); color: var(--text1); }
 .fab:active { transform: scale(0.93); }
+
 .fabOpen {
   background: var(--accent-light);
   border-color: var(--accent-border);
   color: var(--accent);
 }
+
+.fabSpinning svg { animation: spin 0.7s linear infinite; }
 
 /* Backdrop overlay when drawer is open */
 .drawerBackdrop {
@@ -189,12 +96,37 @@ body { font-family: var(--font) !important; }
   transform: translateX(100%);
   transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
   display: flex; flex-direction: column;
-  padding-top: calc(var(--safe-top) + 20px);
   padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px));
   overflow-y: auto;
   box-shadow: -8px 0 32px rgba(0,0,0,0.5);
 }
 .drawerOpen { transform: translateX(0); }
+
+/* Logo block at the top of the drawer */
+.drawerLogo {
+  display: flex; align-items: center;
+  gap: 10px;
+  padding: calc(var(--safe-top) + 20px) 20px 20px;
+  text-decoration: none;
+  flex-shrink: 0;
+}
+.drawerLogoIcon {
+  width: 28px; height: 28px;
+  border-radius: 6px; flex-shrink: 0;
+}
+.drawerLogoText {
+  font-family: 'Oswald', sans-serif;
+  font-size: 18px; font-weight: 600;
+  letter-spacing: 0.08em; line-height: 1;
+  color: #f5eddf; white-space: nowrap;
+}
+
+.drawerDivider {
+  height: 1px;
+  background: var(--border);
+  flex-shrink: 0;
+  margin: 0 12px;
+}
 
 .drawerNav {
   display: flex; flex-direction: column;

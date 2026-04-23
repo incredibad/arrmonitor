@@ -108,7 +108,7 @@ function useTabNotification() {
 }
 
 export default function Layout({ children }) {
-  const { refreshFn, refreshing, handleRefresh, pageTitle } = useNav();
+  const { refreshFn, refreshing, handleRefresh } = useNav();
   const { testMode } = useTestMode();
   const [menuOpen, setMenuOpen] = useState(false);
   useTabNotification();
@@ -117,36 +117,17 @@ export default function Layout({ children }) {
 
   return (
     <div className={`${styles.root} ${testMode ? styles.testModeRoot : ''}`}>
-      <header className={styles.topBar}>
-        <div className={styles.logoSection}>
-          <NavLink to="/" className={styles.logoLink} onClick={closeMenu}>
-            <img src="/favicon.svg" alt="" className={styles.logoIcon} />
-            <span className={styles.logo}>ARRMONITOR</span>
-          </NavLink>
-        </div>
-
-        <div className={styles.barSpacer} />
-        {pageTitle && <span className={styles.barTitle}>{pageTitle}</span>}
-
-        <div className={styles.navBtns}>
-          {refreshFn && (
-            <button
-              className={`${styles.navBtn} ${refreshing ? styles.navBtnSpinning : ''}`}
-              onClick={handleRefresh}
-              title="Refresh"
-            >
-              <RefreshIcon />
-            </button>
-          )}
-        </div>
-      </header>
-
       {testMode && <div className={styles.testModeBanner}>Test mode — queue data is simulated</div>}
       <div className={styles.content}>{children}</div>
       <ImportToastStack />
 
       {menuOpen && <div className={styles.drawerBackdrop} onClick={closeMenu} />}
       <div className={`${styles.drawer} ${menuOpen ? styles.drawerOpen : ''}`} aria-hidden={!menuOpen}>
+        <NavLink to="/" onClick={closeMenu} className={styles.drawerLogo}>
+          <img src="/favicon.svg" alt="" className={styles.drawerLogoIcon} />
+          <span className={styles.drawerLogoText}>ARRMONITOR</span>
+        </NavLink>
+        <div className={styles.drawerDivider} />
         <nav className={styles.drawerNav}>
           <NavLink to="/" end onClick={closeMenu}
             className={({ isActive }) => `${styles.drawerItem} ${isActive ? styles.drawerItemActive : ''}`}>
@@ -163,13 +144,24 @@ export default function Layout({ children }) {
         </nav>
       </div>
 
-      <button
-        className={`${styles.fab} ${menuOpen ? styles.fabOpen : ''}`}
-        onClick={() => setMenuOpen(o => !o)}
-        aria-label={menuOpen ? 'Close menu' : 'Open menu'}
-      >
-        {menuOpen ? <CloseIcon /> : <HamburgerIcon />}
-      </button>
+      <div className={styles.fabGroup}>
+        {refreshFn && (
+          <button
+            className={`${styles.fab} ${refreshing ? styles.fabSpinning : ''}`}
+            onClick={handleRefresh}
+            title="Refresh"
+          >
+            <RefreshIcon />
+          </button>
+        )}
+        <button
+          className={`${styles.fab} ${menuOpen ? styles.fabOpen : ''}`}
+          onClick={() => setMenuOpen(o => !o)}
+          aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+        >
+          {menuOpen ? <CloseIcon /> : <HamburgerIcon />}
+        </button>
+      </div>
     </div>
   );
 }
