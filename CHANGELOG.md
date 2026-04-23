@@ -4,6 +4,11 @@ All notable changes are documented here, newest first.
 
 ---
 
+## [1.6.17] — 2026-04-23
+
+### Fixed
+- Tab title queue count now only includes arr instances; SABnzbd slot count is excluded
+
 ## [1.6.16] — 2026-04-23
 
 ### Changed

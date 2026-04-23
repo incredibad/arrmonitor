@@ -56,7 +56,7 @@ function useTabNotification() {
         }));
 
         const hasSab = sabInstances.some(i => i.enabled);
-        const total = arrTotal + sabTotal;
+        const total = arrTotal;
         const parts = [];
         if (sabStatus === 'Downloading') {
           if (sabSpeed) parts.push(sabSpeed.replace(/([KMGT])$/, '$1B/s'));
