@@ -40,7 +40,7 @@ export default function SabnzbdCard({ instance }) {
   const [pauseForOpen, setPauseForOpen] = useState(false);
   const [customMins, setCustomMins] = useState('');
 
-  const status      = queue?.status || '';
+  const status        = queue?.status || '';
   const isDownloading = status === 'Downloading';
   const isPaused      = status === 'Paused';
   const speed         = queue?.speed || '';
@@ -55,10 +55,8 @@ export default function SabnzbdCard({ instance }) {
     setActing(false);
   }
 
-  function stopAndNavigate() { navigate(`/sabnzbd/${instance.id}`); }
-
   return (
-    <div className={styles.card} onClick={stopAndNavigate}>
+    <div className={styles.card} onClick={() => navigate(`/sabnzbd/${instance.id}`)}>
       <div className={styles.body}>
 
         <div className={styles.headerRow}>
@@ -76,45 +74,39 @@ export default function SabnzbdCard({ instance }) {
           {err    && <span className="chip chip-red">offline</span>}
         </div>
 
-        {isDownloading && (speed || timeleft) && (
-          <div className={styles.speedRow}>
-            {speed && <><span className={styles.speedArrow}>↓</span><span className={styles.speed}>{speed}</span></>}
-            {timeleft && timeleft !== '0:00:00' && <span className={styles.eta}>ETA {timeleft}</span>}
-          </div>
-        )}
+        {/* Actions always occupy the same space — empty when idle */}
+        <div className={styles.actions} onClick={e => e.stopPropagation()}>
+          {isPaused && (
+            <button className={styles.actionBtn} onClick={() => act(() => api.resumeSabnzbd(instance.id))} disabled={acting}>
+              <ResumeIcon /> Resume
+            </button>
+          )}
+          {isDownloading && (
+            <>
+              <button className={styles.actionBtn} onClick={() => act(() => api.pauseSabnzbd(instance.id))} disabled={acting}>
+                <PauseIcon /> Pause
+              </button>
+              <button className={styles.actionBtn} onClick={() => setPauseForOpen(true)} disabled={acting}>
+                <ClockIcon /> Pause for…
+              </button>
+            </>
+          )}
+        </div>
 
+        {/* 3 stat boxes — always the same layout */}
         <div className={styles.stats}>
           {queue ? (
             <>
-              <Stat label="In Queue"  value={queueCount}          active={queueCount > 0} />
-              <Stat label="Size Left" value={sizeleft || '—'} small active={queueCount > 0} />
+              <Stat label="Download" value={isDownloading && speed ? speed : '—'} small active={isDownloading && !!speed} />
+              <Stat label={sizeleft ? `IN QUEUE · ${sizeleft}` : 'IN QUEUE'} value={queueCount} active={queueCount > 0} />
+              <Stat label="ETA" value={isDownloading && timeleft && timeleft !== '0:00:00' ? timeleft : '—'} small active={isDownloading && !!timeleft && timeleft !== '0:00:00'} />
             </>
           ) : !err ? (
-            <><div className={styles.shimmer} /><div className={styles.shimmer} /></>
+            <><div className={styles.shimmer} /><div className={styles.shimmer} /><div className={styles.shimmer} /></>
           ) : (
             <span className={styles.errText}>Could not connect</span>
           )}
         </div>
-
-        {(isDownloading || isPaused) && (
-          <div className={styles.actions} onClick={e => e.stopPropagation()}>
-            {isPaused && (
-              <button className={styles.actionBtn} onClick={() => act(() => api.resumeSabnzbd(instance.id))} disabled={acting}>
-                <ResumeIcon /> Resume
-              </button>
-            )}
-            {isDownloading && (
-              <>
-                <button className={styles.actionBtn} onClick={() => act(() => api.pauseSabnzbd(instance.id))} disabled={acting}>
-                  <PauseIcon /> Pause
-                </button>
-                <button className={styles.actionBtn} onClick={() => setPauseForOpen(true)} disabled={acting}>
-                  <ClockIcon /> Pause for…
-                </button>
-              </>
-            )}
-          </div>
-        )}
       </div>
 
       {pauseForOpen && (
@@ -160,9 +152,7 @@ export default function SabnzbdCard({ instance }) {
 
 function StatusChip({ status, pauseInt }) {
   if (status === 'Downloading') return <span className="chip chip-downloading">downloading</span>;
-  if (status === 'Paused') {
-    return <span className="chip chip-paused">{pauseInt > 0 ? `paused · ${pauseInt}m` : 'paused'}</span>;
-  }
+  if (status === 'Paused') return <span className="chip chip-paused">{pauseInt > 0 ? `paused · ${pauseInt}m` : 'paused'}</span>;
   if (status === 'Idle') return <span className="chip chip-neutral">idle</span>;
   return null;
 }

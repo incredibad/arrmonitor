@@ -64,23 +64,39 @@
   flex-wrap: wrap;
 }
 
-.speedRow {
+/* Fixed-height row so card height never shifts — empty when idle */
+.actions {
   display: flex;
   align-items: center;
   gap: 6px;
-  font-size: 12px;
-  font-family: var(--font-mono);
+  min-height: 26px;
 }
-.speedArrow { color: var(--sabnzbd); font-size: 14px; line-height: 1; }
-.speed { color: var(--text2); }
-.eta   { color: var(--text3); }
 
+.actionBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  border-radius: var(--radius-sm);
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text2);
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  -webkit-tap-highlight-color: transparent;
+  transition: color 0.12s, background 0.12s, border-color 0.12s;
+  flex-shrink: 0;
+}
+.actionBtn:hover:not(:disabled) { color: var(--sabnzbd); border-color: var(--sabnzbd); background: var(--sabnzbd-bg); }
+.actionBtn:disabled { opacity: 0.5; cursor: default; }
+
+/* 3-column stats — same vertical weight as InstanceCard's 2-column */
 .stats {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr;
   gap: 8px;
   margin-top: auto;
-  padding-top: 6px;
+  padding-top: 2px;
 }
 
 .stat {
@@ -88,39 +104,52 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 12px 8px 11px;
+  padding: 10px 6px 9px;
   border-radius: var(--radius-sm);
   background: var(--bg3);
   border: 1px solid var(--border);
-  gap: 4px;
+  gap: 3px;
   transition: background 0.2s, border-color 0.2s;
+  min-width: 0;
+  overflow: hidden;
 }
 
 .statVal {
-  font-size: 26px;
+  font-size: 22px;
   font-weight: 700;
   font-family: var(--font-mono);
   color: var(--text);
   line-height: 1;
 }
+/* For text values like "12.5 MB/s" or "0:23:14" */
 .statValSm {
-  font-size: 15px;
+  font-size: 12px;
   font-weight: 600;
-  font-family: var(--font);
+  font-family: var(--font-mono);
+  color: var(--text);
   line-height: 1.2;
   text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
 }
 
 .statLabel {
-  font-size: 9px;
+  font-size: 8px;
   color: var(--text2);
   text-transform: uppercase;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.06em;
   font-weight: 600;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
 }
 
 .shimmer {
-  height: 58px;
+  height: 52px;
   border-radius: var(--radius-sm);
   background: linear-gradient(90deg, var(--bg3) 25%, var(--bg4) 50%, var(--bg3) 75%);
   background-size: 200% 100%;
@@ -135,27 +164,3 @@
   text-align: center;
   padding: 8px 0;
 }
-
-.actions {
-  display: flex;
-  gap: 6px;
-  padding-top: 2px;
-}
-
-.actionBtn {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  padding: 5px 10px;
-  border-radius: var(--radius-sm);
-  font-size: 12px;
-  font-weight: 500;
-  color: var(--text2);
-  background: var(--bg3);
-  border: 1px solid var(--border);
-  -webkit-tap-highlight-color: transparent;
-  transition: color 0.12s, background 0.12s, border-color 0.12s;
-  flex-shrink: 0;
-}
-.actionBtn:hover:not(:disabled) { color: var(--sabnzbd); border-color: var(--sabnzbd); background: var(--sabnzbd-bg); }
-.actionBtn:disabled { opacity: 0.5; cursor: default; }
