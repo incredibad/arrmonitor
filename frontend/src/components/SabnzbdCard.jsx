@@ -13,11 +13,17 @@ const PAUSE_PRESETS = [
 
 function usePoll(instanceId) {
   const [queue, setQueue] = useState(null);
+  const [processing, setProcessing] = useState([]);
   const [err, setErr] = useState(null);
 
   const refresh = useCallback(async () => {
     try {
-      setQueue(await api.getSabnzbdQueue(instanceId));
+      const [q, hist] = await Promise.all([
+        api.getSabnzbdQueue(instanceId),
+        api.getSabnzbdHistory(instanceId).catch(() => []),
+      ]);
+      setQueue(q);
+      setProcessing(hist || []);
       setErr(null);
     } catch (e) {
       setErr(e.message);
@@ -34,12 +40,12 @@ function usePoll(instanceId) {
     return () => { stop(); document.removeEventListener('visibilitychange', onVisibility); };
   }, [refresh]);
 
-  return { queue, setQueue, err, refresh };
+  return { queue, setQueue, processing, err, refresh };
 }
 
 export default function SabnzbdCard({ instance }) {
   const navigate = useNavigate();
-  const { queue, setQueue, err } = usePoll(instance.id);
+  const { queue, setQueue, processing, err } = usePoll(instance.id);
   const [version, setVersion] = useState(null);
   const [acting, setActing] = useState(false);
   const [pauseForOpen, setPauseForOpen] = useState(false);
@@ -52,10 +58,30 @@ export default function SabnzbdCard({ instance }) {
   const status        = queue?.status || '';
   const isDownloading = status === 'Downloading';
   const isPaused      = status === 'Paused';
+  const isProcessing  = isPaused && processing.length > 0;
   const speed         = queue?.speed || '';
   const sizeleft      = queue?.sizeleft || '';
   const timeleft      = queue?.timeleft || '';
   const queueCount    = queue?.noofslots ?? 0;
+
+  const statusLabel = isDownloading ? 'Downloading'
+    : isProcessing  ? 'Processing'
+    : isPaused      ? 'Paused'
+    : queue         ? 'Idle'
+    : null;
+
+  const statusName = isDownloading
+    ? (queue?.slots?.[0]?.filename || '')
+    : isProcessing
+    ? (processing[0]?.name || '')
+    : '';
+
+  const truncated = statusName.length > 32 ? statusName.slice(0, 32) + '…' : statusName;
+
+  const chipClass = isDownloading ? 'chip-downloading'
+    : isProcessing  ? 'chip-importing'
+    : isPaused      ? 'chip-paused'
+    : 'chip-queued';
 
   async function act(fn, optimisticStatus) {
     if (optimisticStatus && queue) setQueue(q => ({ ...q, status: optimisticStatus }));
@@ -94,6 +120,14 @@ export default function SabnzbdCard({ instance }) {
             <ExternalIcon />
           </a>
         </div>
+
+        {statusLabel && (
+          <div className={styles.statusRow}>
+            <span className={`chip ${chipClass}`}>
+              {statusLabel}{truncated ? ` (${truncated})` : ''}
+            </span>
+          </div>
+        )}
 
         {/* 3 stat boxes — always the same layout */}
         <div className={styles.stats}>

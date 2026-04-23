@@ -44,6 +44,11 @@
 
 .appIcon { flex-shrink: 0; width: 16px; height: 16px; object-fit: contain; }
 
+.statusRow {
+  display: flex;
+  align-items: center;
+}
+
 .version {
   font-size: 11px;
   color: var(--text3);

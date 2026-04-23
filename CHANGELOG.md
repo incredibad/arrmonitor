@@ -4,6 +4,11 @@ All notable changes are documented here, newest first.
 
 ---
 
+## [1.6.7] — 2026-04-23
+
+### Added
+- SABnzbd card now shows a permanent status chip below the heading: `Idle` (grey), `Downloading (name)` (green), `Paused` (amber), or `Processing (name)` (blue) when paused but actively post-processing a download
+
 ## [1.6.6] — 2026-04-23
 
 ### Fixed
