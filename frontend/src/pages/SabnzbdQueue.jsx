@@ -80,9 +80,10 @@ export default function SabnzbdQueue() {
 
           <div className={iqStyles.instanceInfo}>
             <div className={iqStyles.instanceNameRow}>
+              {instance && <span className={iqStyles.instanceName}>{instance.name}</span>}
               {instance && (
                 <a href={instance.url} target="_blank" rel="noopener noreferrer" className={iqStyles.openLink} onClick={e => e.stopPropagation()}>
-                  <span className={iqStyles.instanceName}>{instance.name}</span>
+                  Open
                   <ExternalIcon />
                 </a>
               )}
