@@ -79,6 +79,8 @@ export default function QbittorrentQueue() {
   const pausedCount = list.filter(t => PAUSED.has(t.state)).length;
   const errorCount  = list.filter(t => ERROR.has(t.state)).length;
   const isDownloading = dlCount > 0;
+  const hasPaused = pausedCount > 0;
+  const hasActive = dlCount > 0 || seedCount > 0;
 
   const filtered =
     filter === 'downloading' ? list.filter(t => DOWNLOADING.has(t.state)) :
@@ -140,12 +142,16 @@ export default function QbittorrentQueue() {
                 </button>
               );
             })}
-            <button className={styles.controlBtn} onClick={handlePauseAll} disabled={acting}>
-              <PauseIcon /> Pause All
-            </button>
-            <button className={styles.controlBtn} onClick={handleResumeAll} disabled={acting}>
-              <ResumeIcon /> Resume All
-            </button>
+            {hasActive && (
+              <button className={styles.controlBtn} onClick={handlePauseAll} disabled={acting}>
+                <PauseIcon /> Pause All
+              </button>
+            )}
+            {hasPaused && (
+              <button className={styles.controlBtn} onClick={handleResumeAll} disabled={acting}>
+                <ResumeIcon /> Resume All
+              </button>
+            )}
           </div>
         </div>
       </div>

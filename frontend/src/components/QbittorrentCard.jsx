@@ -68,6 +68,7 @@ export default function QbittorrentCard({ instance }) {
   const list = torrents || [];
   const isDownloading = list.some(t => DOWNLOADING.has(t.state));
   const isSeeding     = !isDownloading && list.some(t => SEEDING.has(t.state));
+  const hasPaused     = list.some(t => PAUSED.has(t.state));
   const hasAny        = list.length > 0;
 
   const statusLabel = !torrents ? null
@@ -115,16 +116,16 @@ export default function QbittorrentCard({ instance }) {
           <span className={styles.name}>{instance.name}</span>
           {version && <span className={styles.version}>v{version}</span>}
           <div className={styles.headerActions} onClick={e => e.stopPropagation()}>
-            {(isDownloading || (hasAny && !isSeeding)) && (
+            {(isDownloading || isSeeding) && (
               <button className={styles.actionBtn} onClick={() => act(() => api.pauseAllQbittorrent(instance.id))} disabled={acting}>
                 <PauseIcon /> Pause
               </button>
             )}
-            {isSeeding || (!isDownloading && hasAny) ? (
+            {hasPaused && (
               <button className={styles.actionBtn} onClick={() => act(() => api.resumeAllQbittorrent(instance.id))} disabled={acting}>
                 <ResumeIcon /> Resume
               </button>
-            ) : null}
+            )}
           </div>
           <a href={instance.url} target="_blank" rel="noopener noreferrer"
             className={styles.openBtn} onClick={e => e.stopPropagation()} title="Open qBittorrent">

@@ -4,6 +4,11 @@ All notable changes are documented here, newest first.
 
 ---
 
+## [1.10.1] — 2026-04-24
+
+### Fixed
+- qBittorrent Pause/Resume buttons now only appear when relevant: Pause shows when torrents are actively downloading or seeding; Resume shows only when paused torrents exist
+
 ## [1.10.0] — 2026-04-24
 
 ### Added
