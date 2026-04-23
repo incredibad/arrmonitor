@@ -83,6 +83,17 @@ export default function SabnzbdCard({ instance }) {
     : isPaused      ? 'chip-paused'
     : 'chip-queued';
 
+  const statColor = isDownloading ? 'var(--status-downloading)'
+    : isProcessing  ? 'var(--status-importing)'
+    : isPaused      ? 'var(--status-paused)'
+    : null;
+  const statBg = isDownloading ? 'var(--status-downloading-bg)'
+    : isProcessing  ? 'var(--status-importing-bg)'
+    : isPaused      ? 'var(--status-paused-bg)'
+    : null;
+
+  const formattedSpeed = speed ? speed.replace(/([KMGT])$/, '$1B/s') : '';
+
   async function act(fn, optimisticStatus) {
     if (optimisticStatus && queue) setQueue(q => ({ ...q, status: optimisticStatus }));
     setActing(true);
@@ -133,9 +144,9 @@ export default function SabnzbdCard({ instance }) {
         <div className={styles.stats}>
           {queue ? (
             <>
-              <Stat label="Download" value={isDownloading && speed ? speed : '—'} small active={isDownloading && !!speed} />
-              <Stat label={sizeleft ? `IN QUEUE · ${sizeleft}` : 'IN QUEUE'} value={queueCount} active={queueCount > 0} />
-              <Stat label="ETA" value={isDownloading && timeleft && timeleft !== '0:00:00' ? timeleft : '—'} small active={isDownloading && !!timeleft && timeleft !== '0:00:00'} />
+              <Stat label="Download" value={isDownloading && formattedSpeed ? formattedSpeed : '—'} small active={isDownloading && !!speed} color={statColor} bg={statBg} />
+              <Stat label={sizeleft ? `IN QUEUE · ${sizeleft}` : 'IN QUEUE'} value={queueCount} active={queueCount > 0} color={statColor} bg={statBg} />
+              <Stat label="ETA" value={isDownloading && timeleft && timeleft !== '0:00:00' ? timeleft : '—'} small active={isDownloading && !!timeleft && timeleft !== '0:00:00'} color={statColor} bg={statBg} />
             </>
           ) : !err ? (
             <><div className={styles.shimmer} /><div className={styles.shimmer} /><div className={styles.shimmer} /></>
@@ -186,13 +197,13 @@ export default function SabnzbdCard({ instance }) {
   );
 }
 
-function Stat({ label, value, active, small }) {
+function Stat({ label, value, active, small, color, bg }) {
   return (
-    <div className={styles.stat} style={active ? { background: 'var(--sabnzbd-bg)', borderColor: 'var(--sabnzbd)' } : undefined}>
-      <span className={`${styles.statVal} ${small ? styles.statValSm : ''}`} style={active ? { color: 'var(--sabnzbd)' } : undefined}>
+    <div className={styles.stat} style={active && color ? { background: bg, borderColor: color } : undefined}>
+      <span className={`${styles.statVal} ${small ? styles.statValSm : ''}`} style={active && color ? { color } : undefined}>
         {value}
       </span>
-      <span className={styles.statLabel} style={active ? { color: 'var(--sabnzbd)' } : undefined}>{label}</span>
+      <span className={styles.statLabel} style={active && color ? { color } : undefined}>{label}</span>
     </div>
   );
 }

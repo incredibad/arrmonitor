@@ -4,6 +4,12 @@ All notable changes are documented here, newest first.
 
 ---
 
+## [1.6.10] — 2026-04-23
+
+### Changed
+- SABnzbd card speed now displays as `MB/s` / `KB/s` instead of bare `M` / `K`
+- SABnzbd stat box colours now match the status chip: green when downloading, amber when paused, blue when processing
+
 ## [1.6.9] — 2026-04-23
 
 ### Changed
