@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useInstances } from '../hooks/useQueue.js';
 import { useSabnzbdInstances } from '../hooks/useSabnzbd.js';
+import { useQbittorrentInstances } from '../hooks/useQbittorrent.js';
 import { useNav } from '../lib/navContext.jsx';
 import { useAuth } from '../lib/authContext.jsx';
 import { useTestMode } from '../lib/testModeContext.jsx';
@@ -11,6 +12,7 @@ import styles from './Settings.module.css';
 const TYPES = ['sonarr', 'radarr', 'lidarr', 'sportarr'];
 const defaultForm    = { name: '', type: 'sonarr', url: '', api_key: '', external_url: '' };
 const defaultSabForm = { name: '', url: '', api_key: '' };
+const defaultQbForm  = { name: '', url: '', username: '', password: '' };
 
 function validate(form, isEdit) {
   const errors = {};
@@ -27,6 +29,7 @@ function validate(form, isEdit) {
 export default function Settings() {
   const { instances, loading, reload } = useInstances();
   const { instances: sabInstances, loading: sabLoading, reload: reloadSab } = useSabnzbdInstances();
+  const { instances: qbInstances, loading: qbLoading, reload: reloadQb } = useQbittorrentInstances();
   const { auth, logout } = useAuth();
   const { clearRefresh, setPageTitle, clearPageTitle } = useNav();
   const { testMode, toggle: toggleTestMode } = useTestMode();
@@ -52,6 +55,15 @@ export default function Settings() {
   const [sabTestResult, setSabTestResult] = useState(null);
   const [showSabForm, setShowSabForm] = useState(false);
 
+  const [qbForm, setQbForm]       = useState(defaultQbForm);
+  const [qbErrors, setQbErrors]   = useState({});
+  const [qbEditId, setQbEditId]   = useState(null);
+  const [qbSaving, setQbSaving]   = useState(false);
+  const [qbSaveError, setQbSaveError] = useState(null);
+  const [qbTesting, setQbTesting] = useState(false);
+  const [qbTestResult, setQbTestResult] = useState(null);
+  const [showQbForm, setShowQbForm] = useState(false);
+
   const [pwForm, setPwForm] = useState({ current: '', next: '', confirm: '' });
   const [pwError, setPwError] = useState(null);
   const [pwSuccess, setPwSuccess] = useState(false);
@@ -66,6 +78,7 @@ export default function Settings() {
   function switchTab(t) {
     cancelForm();
     cancelSabForm();
+    cancelQbForm();
     setTab(t);
   }
 
@@ -247,6 +260,90 @@ export default function Settings() {
     reloadSab();
   }
 
+  function validateQb(form) {
+    const errs = {};
+    if (!form.name.trim()) errs.name = 'Name is required';
+    if (!form.url.trim()) {
+      errs.url = 'URL is required';
+    } else {
+      try { new URL(form.url); } catch { errs.url = 'Enter a valid URL (e.g. http://192.168.1.100:8080)'; }
+    }
+    return errs;
+  }
+
+  function handleQbChange(e) {
+    const { name, value } = e.target;
+    setQbForm(f => ({ ...f, [name]: value }));
+    if (qbErrors[name]) setQbErrors(e => ({ ...e, [name]: undefined }));
+    setQbTestResult(null);
+  }
+
+  async function handleQbTest() {
+    const errs = validateQb(qbForm);
+    if (Object.keys(errs).length) { setQbErrors(errs); return; }
+    setQbTesting(true); setQbTestResult(null);
+    try {
+      if (qbEditId) {
+        const result = await api.testQbittorrent(qbEditId);
+        setQbTestResult(result.ok ? { ok: true, msg: `Connected · v${result.version}` } : { ok: false, msg: result.error });
+      } else {
+        const inst = await api.createQbittorrentInstance(qbForm);
+        try {
+          const result = await api.testQbittorrent(inst.id);
+          setQbTestResult(result.ok ? { ok: true, msg: `Connected · v${result.version}` } : { ok: false, msg: result.error });
+        } finally {
+          await api.deleteQbittorrentInstance(inst.id);
+        }
+      }
+    } catch (e) {
+      setQbTestResult({ ok: false, msg: e.message });
+    } finally {
+      setQbTesting(false);
+    }
+  }
+
+  async function handleQbSave() {
+    const errs = validateQb(qbForm);
+    if (Object.keys(errs).length) { setQbErrors(errs); return; }
+    setQbSaving(true); setQbSaveError(null);
+    try {
+      if (qbEditId) {
+        await api.updateQbittorrentInstance(qbEditId, qbForm);
+      } else {
+        await api.createQbittorrentInstance(qbForm);
+      }
+      cancelQbForm(); reloadQb();
+    } catch (e) {
+      setQbSaveError(e.message);
+    } finally {
+      setQbSaving(false);
+    }
+  }
+
+  function startQbEdit(inst) {
+    setQbEditId(inst.id);
+    setQbForm({ name: inst.name, url: inst.url, username: inst.username || '', password: '' });
+    setQbErrors({}); setQbTestResult(null); setQbSaveError(null);
+    setShowQbForm(true);
+  }
+
+  function cancelQbForm() {
+    setQbForm(defaultQbForm); setQbEditId(null);
+    setQbErrors({}); setQbTestResult(null); setQbSaveError(null);
+    setShowQbForm(false);
+  }
+
+  async function handleQbDelete(id) {
+    if (!confirm('Remove this qBittorrent instance?')) return;
+    await api.deleteQbittorrentInstance(id);
+    reloadQb();
+  }
+
+  async function toggleQbEnabled(inst) {
+    await api.updateQbittorrentInstance(inst.id, { enabled: !inst.enabled });
+    reloadQb();
+  }
+
   async function handleChangePassword(e) {
     e.preventDefault();
     setPwError(null);
@@ -422,6 +519,81 @@ export default function Settings() {
                   <div className={styles.instActions}>
                     <button className={styles.editBtn} onClick={() => startSabEdit(inst)}><EditIcon /></button>
                     <button className={styles.deleteBtn} onClick={() => handleSabDelete(inst.id)}><TrashIcon /></button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* ── qBittorrent ── */}
+          <div className={styles.sectionHeader} style={{ marginTop: 8 }}>
+            <span className={styles.sectionLabel}>qBittorrent</span>
+            {!showQbForm && (
+              <button className={styles.addBtn} onClick={() => setShowQbForm(true)}>
+                <PlusIcon /> Add
+              </button>
+            )}
+          </div>
+
+          {showQbForm && (
+            <div className={styles.formCard}>
+              <div className={styles.formTitle}>{qbEditId ? 'Edit qBittorrent' : 'New qBittorrent Instance'}</div>
+              <Field label="Name" error={qbErrors.name}>
+                <input name="name" value={qbForm.name} onChange={handleQbChange} placeholder="My qBittorrent" autoComplete="off" />
+              </Field>
+              <Field label="URL" error={qbErrors.url}>
+                <input name="url" value={qbForm.url} onChange={handleQbChange} placeholder="http://192.168.1.100:8080" autoComplete="off" />
+              </Field>
+              <Field label="Username (optional)" hint="Leave blank if Web UI auth is disabled">
+                <input name="username" value={qbForm.username} onChange={handleQbChange} placeholder="admin" autoComplete="off" />
+              </Field>
+              <Field label="Password (optional)">
+                <input name="password" type="password" value={qbForm.password} onChange={handleQbChange}
+                  placeholder={qbEditId ? 'Leave blank to keep existing' : 'Web UI password'} autoComplete="new-password" />
+              </Field>
+              {qbTestResult && (
+                <div className={`${styles.testResult} ${qbTestResult.ok ? styles.testOk : styles.testFail}`}>
+                  {qbTestResult.ok ? '✓' : '✗'} {qbTestResult.msg}
+                </div>
+              )}
+              {qbSaveError && <div className={styles.saveError}>{qbSaveError}</div>}
+              <div className={styles.formActions}>
+                <button className={styles.testBtn} onClick={handleQbTest} disabled={qbTesting}>
+                  {qbTesting ? 'Testing…' : 'Test Connection'}
+                </button>
+                <div className={styles.formActionsRight}>
+                  <button className={styles.cancelBtn} onClick={cancelQbForm}>Cancel</button>
+                  <button className={styles.saveBtn} onClick={handleQbSave} disabled={qbSaving}>
+                    {qbSaving ? 'Saving…' : qbEditId ? 'Update' : 'Save'}
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {qbLoading ? (
+            <div className={styles.loadingText}>Loading…</div>
+          ) : qbInstances.length === 0 && !showQbForm ? (
+            <div className={styles.emptyText}>No qBittorrent instances configured yet.</div>
+          ) : (
+            <div className={styles.instanceList}>
+              {qbInstances.map(inst => (
+                <div key={inst.id} className={`${styles.instanceRow} ${!inst.enabled ? styles.disabled : ''}`}>
+                  <button className={styles.toggleBtn} onClick={() => toggleQbEnabled(inst)} title={inst.enabled ? 'Disable' : 'Enable'}>
+                    <div className={`${styles.toggle} ${inst.enabled ? styles.toggleOn : ''}`}>
+                      <div className={styles.toggleThumb} />
+                    </div>
+                  </button>
+                  <div className={styles.instInfo}>
+                    <div className={styles.instNameRow}>
+                      <span className={styles.instName}>{inst.name}</span>
+                      <span className="chip chip-qbittorrent">qbittorrent</span>
+                    </div>
+                    <div className={styles.instUrl}>{inst.url}</div>
+                  </div>
+                  <div className={styles.instActions}>
+                    <button className={styles.editBtn} onClick={() => startQbEdit(inst)}><EditIcon /></button>
+                    <button className={styles.deleteBtn} onClick={() => handleQbDelete(inst.id)}><TrashIcon /></button>
                   </div>
                 </div>
               ))}

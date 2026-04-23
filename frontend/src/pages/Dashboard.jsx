@@ -2,21 +2,26 @@ import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useInstances } from '../hooks/useQueue.js';
 import { useSabnzbdInstances } from '../hooks/useSabnzbd.js';
+import { useQbittorrentInstances } from '../hooks/useQbittorrent.js';
 import { useNav } from '../lib/navContext.jsx';
 import { useLayout } from '../lib/layoutContext.jsx';
 import { api } from '../lib/api.js';
 import InstanceCard from '../components/InstanceCard.jsx';
 import SabnzbdCard from '../components/SabnzbdCard.jsx';
+import QbittorrentCard from '../components/QbittorrentCard.jsx';
 import styles from './Dashboard.module.css';
 
 export default function Dashboard() {
   const { instances, loading, reload } = useInstances();
   const { instances: sabInstances } = useSabnzbdInstances();
+  const { instances: qbInstances } = useQbittorrentInstances();
   const { registerRefresh, clearRefresh, setPageTitle, clearPageTitle } = useNav();
   const { horizontalLayout } = useLayout();
   const navigate = useNavigate();
   const enabled    = instances.filter(i => i.enabled);
   const enabledSab = sabInstances.filter(i => i.enabled);
+  const enabledQb  = qbInstances.filter(i => i.enabled);
+  const allClients = [...enabledSab.map(i => ({ ...i, _client: 'sab' })), ...enabledQb.map(i => ({ ...i, _client: 'qb' }))];
 
   async function refreshAll() {
     await Promise.allSettled(
@@ -46,7 +51,7 @@ export default function Dashboard() {
     );
   }
 
-  if (enabled.length === 0 && enabledSab.length === 0) {
+  if (enabled.length === 0 && allClients.length === 0) {
     return (
       <div className={styles.page}>
         <div className={styles.content}>
@@ -70,26 +75,19 @@ export default function Dashboard() {
       <div className={styles.page}>
         <div className={styles.twoCol}>
           <div className={styles.colClients}>
-            {enabledSab.length > 0 && <div className={styles.sectionLabel}>Download Clients</div>}
+            {allClients.length > 0 && <div className={styles.sectionLabel}>Download Clients</div>}
             <div className={styles.clientList}>
-              {enabledSab.map(instance => (
-                <SabnzbdCard key={`sab-${instance.id}`} instance={instance} />
-              ))}
-              {enabledSab.length === 0 && (
-                <p className={styles.colEmpty}>No download clients configured.</p>
-              )}
+              {enabledSab.map(instance => <SabnzbdCard key={`sab-${instance.id}`} instance={instance} />)}
+              {enabledQb.map(instance => <QbittorrentCard key={`qb-${instance.id}`} instance={instance} />)}
+              {allClients.length === 0 && <p className={styles.colEmpty}>No download clients configured.</p>}
             </div>
           </div>
 
           <div className={styles.colInstances}>
             {enabled.length > 0 && <div className={styles.sectionLabel}>Instances</div>}
             <div className={styles.instanceList}>
-              {enabled.map(instance => (
-                <InstanceCard key={instance.id} instance={instance} />
-              ))}
-              {enabled.length === 0 && (
-                <p className={styles.colEmpty}>No instances configured.</p>
-              )}
+              {enabled.map(instance => <InstanceCard key={instance.id} instance={instance} />)}
+              {enabled.length === 0 && <p className={styles.colEmpty}>No instances configured.</p>}
             </div>
           </div>
         </div>
@@ -100,23 +98,20 @@ export default function Dashboard() {
   return (
     <div className={styles.page}>
       <div className={styles.content}>
-        {enabledSab.length > 0 && (
+        {allClients.length > 0 && (
           <div className={styles.section}>
             <div className={styles.sectionLabel}>Download Clients</div>
             <div className={styles.list}>
-              {enabledSab.map(instance => (
-                <SabnzbdCard key={`sab-${instance.id}`} instance={instance} />
-              ))}
+              {enabledSab.map(instance => <SabnzbdCard key={`sab-${instance.id}`} instance={instance} />)}
+              {enabledQb.map(instance => <QbittorrentCard key={`qb-${instance.id}`} instance={instance} />)}
             </div>
           </div>
         )}
         {enabled.length > 0 && (
           <div className={styles.section}>
-            {enabledSab.length > 0 && <div className={styles.sectionLabel}>Instances</div>}
+            {allClients.length > 0 && <div className={styles.sectionLabel}>Instances</div>}
             <div className={styles.list}>
-              {enabled.map(instance => (
-                <InstanceCard key={instance.id} instance={instance} />
-              ))}
+              {enabled.map(instance => <InstanceCard key={instance.id} instance={instance} />)}
             </div>
           </div>
         )}

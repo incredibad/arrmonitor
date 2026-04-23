@@ -9,6 +9,7 @@ import Dashboard from './pages/Dashboard.jsx';
 import InstanceQueue from './pages/InstanceQueue.jsx';
 import GlobalQueue from './pages/GlobalQueue.jsx';
 import SabnzbdQueue from './pages/SabnzbdQueue.jsx';
+import QbittorrentQueue from './pages/QbittorrentQueue.jsx';
 import Settings from './pages/Settings.jsx';
 import Login from './pages/Login.jsx';
 
@@ -48,6 +49,7 @@ function AppContent() {
           <Route path="/instance/:id" element={<InstanceQueue />} />
           <Route path="/activity" element={<GlobalQueue />} />
           <Route path="/sabnzbd/:id" element={<SabnzbdQueue />} />
+          <Route path="/qbittorrent/:id" element={<QbittorrentQueue />} />
           <Route path="/settings" element={<Settings />} />
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>

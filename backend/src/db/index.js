@@ -80,6 +80,20 @@ export async function initDb() {
     );
   `);
 
+  // qBittorrent instances table
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS qbittorrent_instances (
+      id SERIAL PRIMARY KEY,
+      name TEXT NOT NULL,
+      url TEXT NOT NULL,
+      username TEXT NOT NULL DEFAULT '',
+      password TEXT NOT NULL DEFAULT '',
+      enabled BOOLEAN DEFAULT true,
+      created_at TIMESTAMPTZ DEFAULT NOW(),
+      updated_at TIMESTAMPTZ DEFAULT NOW()
+    );
+  `);
+
   console.log('Database initialized');
 }
 

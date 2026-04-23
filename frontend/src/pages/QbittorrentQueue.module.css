@@ -1,0 +1,76 @@
+.controlBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 9px;
+  border-radius: 100px;
+  font-size: 11px;
+  font-weight: 500;
+  white-space: nowrap;
+  flex-shrink: 0;
+  -webkit-tap-highlight-color: transparent;
+  transition: opacity 0.15s;
+  color: var(--qbittorrent);
+  background: var(--qbittorrent-bg);
+  border: 1px solid rgba(61,155,233,0.30);
+}
+.controlBtn:disabled { opacity: 0.5; cursor: default; }
+
+.item {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  transition: background 0.12s;
+}
+.item:hover { background: var(--bg3); }
+
+.itemMain {
+  padding: 9px 12px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.itemHeader {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  min-width: 0;
+}
+
+.itemName {
+  font-size: 13px;
+  color: var(--text);
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  line-height: 1.4;
+}
+
+.stateChip { flex-shrink: 0; }
+
+.progressTrack {
+  height: 3px;
+  background: var(--bg4);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.progressFill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--qbittorrent), #7dd3fc);
+  border-radius: 2px;
+  transition: width 0.4s ease;
+}
+
+.itemMeta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  font-size: 11px;
+  color: var(--text3);
+  font-family: var(--font-mono);
+}

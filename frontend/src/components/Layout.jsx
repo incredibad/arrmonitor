@@ -33,12 +33,14 @@ function useTabNotification() {
       } catch {}
     }
 
-    // Fast-changing data: SABnzbd speed/status (refresh every 2s)
-    let sabInstances = [];
-    async function refreshSab() {
+    // Fast-changing data: SABnzbd + qBittorrent speed/status (refresh every 2s)
+    let sabInstances = [], qbInstances = [];
+    async function refreshClients() {
       try {
         if (!sabInstances.length) sabInstances = await api.getSabnzbdInstances().catch(() => []);
-        let sabStatus = '', sabSpeed = '', sabSizeLeft = '', sabTotal = 0;
+        if (!qbInstances.length) qbInstances = await api.getQbittorrentInstances().catch(() => []);
+
+        let sabStatus = '', sabSpeed = '', sabSizeLeft = '';
         await Promise.all(sabInstances.filter(i => i.enabled).map(async inst => {
           try {
             const [q, hist] = await Promise.all([
@@ -46,7 +48,6 @@ function useTabNotification() {
               api.getSabnzbdHistory(inst.id).catch(() => []),
             ]);
             if (!q) return;
-            sabTotal += q.noofslots || 0;
             if (!sabStatus && (q.status === 'Downloading' || q.status === 'Paused')) {
               sabStatus = (q.status === 'Paused' && hist?.length) ? 'Processing' : q.status;
               sabSpeed = q.speed || '';
@@ -55,9 +56,19 @@ function useTabNotification() {
           } catch {}
         }));
 
+        let qbDlSpeed = 0, qbIsDownloading = false;
+        await Promise.all(qbInstances.filter(i => i.enabled).map(async inst => {
+          try {
+            const t = await api.getQbittorrentTransfer(inst.id);
+            if (t?.dl_info_speed > 0) { qbDlSpeed += t.dl_info_speed; qbIsDownloading = true; }
+          } catch {}
+        }));
+
         const hasSab = sabInstances.some(i => i.enabled);
+        const hasQb = qbInstances.some(i => i.enabled);
         const total = arrTotal;
         const parts = [];
+
         if (sabStatus === 'Downloading') {
           if (sabSpeed) parts.push(sabSpeed.replace(/([KMGT])$/, '$1B/s'));
           if (sabSizeLeft) parts.push(`${sabSizeLeft} left`);
@@ -70,6 +81,14 @@ function useTabNotification() {
         } else if (hasSab) {
           parts.push('Idle');
         }
+
+        if (qbIsDownloading) {
+          const mbps = qbDlSpeed / 1024 / 1024;
+          parts.push(mbps >= 1 ? `${mbps.toFixed(1)} MB/s` : `${Math.round(qbDlSpeed / 1024)} KB/s`);
+        } else if (hasQb && !hasSab) {
+          parts.push('Idle');
+        }
+
         if (total > 0) parts.push(`(${total})`);
 
         let title = parts.length ? `${parts.join(' - ')} - ${BASE}` : BASE;
@@ -85,17 +104,17 @@ function useTabNotification() {
       clearInterval(arrTimer);
       clearInterval(sabTimer);
       arrTimer = setInterval(refreshArr, hidden ? 10000 : 30000);
-      sabTimer = setInterval(refreshSab, hidden ? 10000 : 2000);
+      sabTimer = setInterval(refreshClients, hidden ? 10000 : 2000);
     }
 
     function onVisibility() {
       refreshArr();
-      refreshSab();
+      refreshClients();
       startTimers();
     }
 
     refreshArr();
-    refreshSab();
+    refreshClients();
     startTimers();
     document.addEventListener('visibilitychange', onVisibility);
     return () => {

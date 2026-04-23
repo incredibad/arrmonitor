@@ -4,6 +4,11 @@ All notable changes are documented here, newest first.
 
 ---
 
+## [1.10.0] — 2026-04-24
+
+### Added
+- qBittorrent support: add and manage qBittorrent instances in Settings → Apps; dashboard card shows global DL/UL speed, downloading/seeding counts, and ETA; dedicated queue page with All/Downloading/Seeding/Paused/Error filter tabs and global Pause All / Resume All controls; optional authentication (leave username/password blank for unauthenticated Web UI); v4 and v5 API compatibility; tab title includes qBittorrent download speed alongside SABnzbd
+
 ## [1.9.0] — 2026-04-24
 
 ### Added
