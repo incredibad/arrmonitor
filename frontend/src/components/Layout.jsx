@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { api } from '../lib/api.js';
 import { useNav } from '../lib/navContext.jsx';
@@ -110,13 +110,16 @@ function useTabNotification() {
 export default function Layout({ children }) {
   const { refreshFn, refreshing, handleRefresh, pageTitle } = useNav();
   const { testMode } = useTestMode();
+  const [menuOpen, setMenuOpen] = useState(false);
   useTabNotification();
+
+  const closeMenu = () => setMenuOpen(false);
 
   return (
     <div className={`${styles.root} ${testMode ? styles.testModeRoot : ''}`}>
       <header className={styles.topBar}>
         <div className={styles.logoSection}>
-          <NavLink to="/" className={styles.logoLink}>
+          <NavLink to="/" className={styles.logoLink} onClick={closeMenu}>
             <img src="/favicon.svg" alt="" className={styles.logoIcon} />
             <span className={styles.logo}>ARRMONITOR</span>
           </NavLink>
@@ -135,24 +138,38 @@ export default function Layout({ children }) {
               <RefreshIcon />
             </button>
           )}
-          <NavLink to="/" end title="Dashboard"
-            className={({ isActive }) => `${styles.navBtn} ${isActive ? styles.navBtnActive : ''}`}>
-            <DashIcon />
-          </NavLink>
-          <NavLink to="/activity" title="All Queues"
-            className={({ isActive }) => `${styles.navBtn} ${isActive ? styles.navBtnActive : ''}`}>
-            <ActivityIcon />
-          </NavLink>
-          <NavLink to="/settings" title="Settings"
-            className={({ isActive }) => `${styles.navBtn} ${isActive ? styles.navBtnActive : ''}`}>
-            <SettingsIcon />
-          </NavLink>
         </div>
       </header>
 
       {testMode && <div className={styles.testModeBanner}>Test mode — queue data is simulated</div>}
       <div className={styles.content}>{children}</div>
       <ImportToastStack />
+
+      {menuOpen && <div className={styles.drawerBackdrop} onClick={closeMenu} />}
+      <div className={`${styles.drawer} ${menuOpen ? styles.drawerOpen : ''}`} aria-hidden={!menuOpen}>
+        <nav className={styles.drawerNav}>
+          <NavLink to="/" end onClick={closeMenu}
+            className={({ isActive }) => `${styles.drawerItem} ${isActive ? styles.drawerItemActive : ''}`}>
+            <DashIcon /> Dashboard
+          </NavLink>
+          <NavLink to="/activity" onClick={closeMenu}
+            className={({ isActive }) => `${styles.drawerItem} ${isActive ? styles.drawerItemActive : ''}`}>
+            <ActivityIcon /> All Queues
+          </NavLink>
+          <NavLink to="/settings" onClick={closeMenu}
+            className={({ isActive }) => `${styles.drawerItem} ${isActive ? styles.drawerItemActive : ''}`}>
+            <SettingsIcon /> Settings
+          </NavLink>
+        </nav>
+      </div>
+
+      <button
+        className={`${styles.fab} ${menuOpen ? styles.fabOpen : ''}`}
+        onClick={() => setMenuOpen(o => !o)}
+        aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+      >
+        {menuOpen ? <CloseIcon /> : <HamburgerIcon />}
+      </button>
     </div>
   );
 }
@@ -160,6 +177,16 @@ export default function Layout({ children }) {
 const RefreshIcon = () => (
   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
     <polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
+  </svg>
+);
+const HamburgerIcon = () => (
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
+  </svg>
+);
+const CloseIcon = () => (
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+    <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
   </svg>
 );
 const ActivityIcon = () => (

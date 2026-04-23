@@ -4,6 +4,12 @@ All notable changes are documented here, newest first.
 
 ---
 
+## [1.7.0] — 2026-04-24
+
+### Changed
+- Navigation links (Dashboard, All Queues, Settings) moved out of the top bar into a floating slide-in drawer, opened and closed by a hamburger button fixed to the bottom-right corner
+- Dashboard and all pages are now full-width — the 1100 px max-width container and the centred box-shadow boxing have been removed
+
 ## [1.6.17] — 2026-04-23
 
 ### Fixed
