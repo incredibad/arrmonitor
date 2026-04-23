@@ -4,6 +4,11 @@ All notable changes are documented here, newest first.
 
 ---
 
+## [1.8.0] — 2026-04-24
+
+### Changed
+- Settings page split into three tabs: Apps (arr instances + SABnzbd), Account (password + sign out), Display (developer/test mode toggle)
+
 ## [1.7.1] — 2026-04-24
 
 ### Changed

@@ -238,16 +238,31 @@
   line-height: 1.5;
 }
 
-.subBar {
+.tabBar {
   position: sticky; top: var(--topbar-height); z-index: 40;
-  display: flex; align-items: center;
-  background: var(--bg2); border-bottom: 1px solid var(--divider);
-  padding: 0 16px;
-  height: 46px;
+  display: flex;
+  background: var(--bg2);
+  border-bottom: 1px solid var(--divider);
+  padding: 0 4px;
 }
 
-.subBarTitle {
-  font-size: 13px; font-weight: 500; color: var(--text2);
+.tab {
+  flex: 1;
+  padding: 14px 0;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text3);
+  text-align: center;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  transition: color 0.15s, border-color 0.15s;
+  -webkit-tap-highlight-color: transparent;
+}
+.tab:active { color: var(--text2); }
+
+.tabActive {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
 }
 
 .logoutRow {
