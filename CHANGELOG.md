@@ -4,6 +4,12 @@ All notable changes are documented here, newest first.
 
 ---
 
+## [1.6.9] — 2026-04-23
+
+### Changed
+- External link buttons on cards now have a visible border and background so they read as buttons rather than floating icons
+- Queue page sub-bar external links replaced with labelled "Open ↗" buttons matching the same bordered style; instance name is no longer part of the link target
+
 ## [1.6.8] — 2026-04-23
 
 ### Changed

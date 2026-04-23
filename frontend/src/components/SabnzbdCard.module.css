@@ -68,15 +68,16 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 22px; height: 22px;
+  width: 24px; height: 24px;
   border-radius: var(--radius-sm);
-  color: var(--text3);
+  color: var(--text2);
+  background: var(--bg3);
+  border: 1px solid var(--border);
   flex-shrink: 0;
-  transition: color 0.12s, background 0.12s;
+  transition: color 0.12s, background 0.12s, border-color 0.12s;
   -webkit-tap-highlight-color: transparent;
-  margin-top: 1px;
 }
-.openBtn:hover, .openBtn:active { color: var(--accent); background: var(--accent-light); }
+.openBtn:hover, .openBtn:active { color: var(--accent); background: var(--accent-light); border-color: var(--accent-border); }
 
 .actionBtn {
   display: inline-flex;
