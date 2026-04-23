@@ -58,7 +58,7 @@ function useTabNotification() {
         const total = arrTotal + sabTotal;
         const parts = [];
         if (sabStatus === 'Downloading') {
-          if (sabSpeed) parts.push(`${sabSpeed}/s`);
+          if (sabSpeed) parts.push(sabSpeed.replace(/([KMGT])$/, '$1B/s'));
           if (sabSizeLeft) parts.push(`${sabSizeLeft} left`);
         } else if (sabStatus === 'Processing') {
           parts.push('Processing');
