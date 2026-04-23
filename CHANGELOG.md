@@ -4,6 +4,11 @@ All notable changes are documented here, newest first.
 
 ---
 
+## [1.6.5] — 2026-04-23
+
+### Changed
+- Browser tab title now shows SABnzbd speed/size/queue info: `22 MB/s - 22.4 GB left - (15) - ArrMonitor` when downloading, `Paused - 22.4 GB left - (15) - ArrMonitor` when paused; total item count includes both arr and SABnzbd queues; `⚠` prefix still appears when there are issues; removed `⬇` prefix; polls every 10 s
+
 ## [1.6.4] — 2026-04-23
 
 ### Added
