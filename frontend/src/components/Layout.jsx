@@ -9,43 +9,50 @@ import styles from './Layout.module.css';
 function useTabNotification() {
   useEffect(() => {
     const BASE = 'ArrMonitor';
-    async function checkStatus() {
+
+    // Slow-changing data: arr queue counts and issue flags (refresh every 30s)
+    let arrTotal = 0, arrIssues = 0;
+    async function refreshArr() {
       try {
-        const [instances, sabInstances] = await Promise.all([
-          api.getInstances(),
-          api.getSabnzbdInstances().catch(() => []),
-        ]);
-
+        const instances = await api.getInstances();
         let total = 0, issues = 0;
-        let sabStatus = '', sabSpeed = '', sabSizeLeft = '';
+        await Promise.all(instances.filter(i => i.enabled).map(async inst => {
+          try {
+            const q = await api.getQueue(inst.id);
+            (q?.records || []).forEach(r => {
+              const s = r.trackedDownloadStatus?.toLowerCase();
+              const t = r.trackedDownloadState?.toLowerCase();
+              const st = r.status?.toLowerCase();
+              if (s === 'warning' || s === 'error' || st === 'failed' || t === 'failed' || t === 'failedpending') issues++;
+              else total++;
+            });
+          } catch {}
+        }));
+        arrTotal = total;
+        arrIssues = issues;
+      } catch {}
+    }
 
-        await Promise.all([
-          ...instances.filter(i => i.enabled).map(async inst => {
-            try {
-              const q = await api.getQueue(inst.id);
-              (q?.records || []).forEach(r => {
-                const s = r.trackedDownloadStatus?.toLowerCase();
-                const t = r.trackedDownloadState?.toLowerCase();
-                const st = r.status?.toLowerCase();
-                if (s === 'warning' || s === 'error' || st === 'failed' || t === 'failed' || t === 'failedpending') issues++;
-                else total++;
-              });
-            } catch {}
-          }),
-          ...sabInstances.filter(i => i.enabled).map(async inst => {
-            try {
-              const q = await api.getSabnzbdQueue(inst.id);
-              if (!q) return;
-              total += q.noofslots || 0;
-              if (!sabStatus && (q.status === 'Downloading' || q.status === 'Paused')) {
-                sabStatus = q.status;
-                sabSpeed = q.speed || '';
-                sabSizeLeft = q.sizeleft || '';
-              }
-            } catch {}
-          }),
-        ]);
+    // Fast-changing data: SABnzbd speed/status (refresh every 2s)
+    let sabInstances = [];
+    async function refreshSab() {
+      try {
+        if (!sabInstances.length) sabInstances = await api.getSabnzbdInstances().catch(() => []);
+        let sabStatus = '', sabSpeed = '', sabSizeLeft = '', sabTotal = 0;
+        await Promise.all(sabInstances.filter(i => i.enabled).map(async inst => {
+          try {
+            const q = await api.getSabnzbdQueue(inst.id);
+            if (!q) return;
+            sabTotal += q.noofslots || 0;
+            if (!sabStatus && (q.status === 'Downloading' || q.status === 'Paused')) {
+              sabStatus = q.status;
+              sabSpeed = q.speed || '';
+              sabSizeLeft = q.sizeleft || '';
+            }
+          } catch {}
+        }));
 
+        const total = arrTotal + sabTotal;
         const parts = [];
         if (sabStatus === 'Downloading') {
           if (sabSpeed) parts.push(`${sabSpeed}/s`);
@@ -57,13 +64,20 @@ function useTabNotification() {
         if (total > 0) parts.push(`(${total})`);
 
         let title = parts.length ? `${parts.join(' - ')} - ${BASE}` : BASE;
-        if (issues > 0) title = `⚠ ${title}`;
+        if (arrIssues > 0) title = `⚠ ${title}`;
         document.title = title;
-      } catch { document.title = BASE; }
+      } catch {}
     }
-    checkStatus();
-    const t = setInterval(checkStatus, 10000);
-    return () => { clearInterval(t); document.title = BASE; };
+
+    refreshArr();
+    refreshSab();
+    const arrTimer = setInterval(refreshArr, 30000);
+    const sabTimer = setInterval(refreshSab, 2000);
+    return () => {
+      clearInterval(arrTimer);
+      clearInterval(sabTimer);
+      document.title = BASE;
+    };
   }, []);
 }
 
