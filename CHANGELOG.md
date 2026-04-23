@@ -4,6 +4,11 @@ All notable changes are documented here, newest first.
 
 ---
 
+## [1.6.6] — 2026-04-23
+
+### Fixed
+- SABnzbd card now shows the official SABnzbd logo (bundled SVG) instead of a generic download icon
+
 ## [1.6.5] — 2026-04-23
 
 ### Changed
