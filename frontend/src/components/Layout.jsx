@@ -55,6 +55,7 @@ function useTabNotification() {
           } catch {}
         }));
 
+        const hasSab = sabInstances.some(i => i.enabled);
         const total = arrTotal + sabTotal;
         const parts = [];
         if (sabStatus === 'Downloading') {
@@ -66,6 +67,8 @@ function useTabNotification() {
         } else if (sabStatus === 'Paused') {
           parts.push('Paused');
           if (sabSizeLeft) parts.push(`${sabSizeLeft} left`);
+        } else if (hasSab) {
+          parts.push('Idle');
         }
         if (total > 0) parts.push(`(${total})`);
 
