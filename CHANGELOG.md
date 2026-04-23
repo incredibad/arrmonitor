@@ -4,6 +4,11 @@ All notable changes are documented here, newest first.
 
 ---
 
+## [1.6.14] — 2026-04-23
+
+### Changed
+- Browser tab title now shows "Processing" instead of "Paused" when SABnzbd is paused but actively post-processing items, matching the card's behaviour
+
 ## [1.6.13] — 2026-04-23
 
 ### Changed

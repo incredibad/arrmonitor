@@ -41,11 +41,14 @@ function useTabNotification() {
         let sabStatus = '', sabSpeed = '', sabSizeLeft = '', sabTotal = 0;
         await Promise.all(sabInstances.filter(i => i.enabled).map(async inst => {
           try {
-            const q = await api.getSabnzbdQueue(inst.id);
+            const [q, hist] = await Promise.all([
+              api.getSabnzbdQueue(inst.id),
+              api.getSabnzbdHistory(inst.id).catch(() => []),
+            ]);
             if (!q) return;
             sabTotal += q.noofslots || 0;
             if (!sabStatus && (q.status === 'Downloading' || q.status === 'Paused')) {
-              sabStatus = q.status;
+              sabStatus = (q.status === 'Paused' && hist?.length) ? 'Processing' : q.status;
               sabSpeed = q.speed || '';
               sabSizeLeft = q.sizeleft || '';
             }
@@ -56,6 +59,9 @@ function useTabNotification() {
         const parts = [];
         if (sabStatus === 'Downloading') {
           if (sabSpeed) parts.push(`${sabSpeed}/s`);
+          if (sabSizeLeft) parts.push(`${sabSizeLeft} left`);
+        } else if (sabStatus === 'Processing') {
+          parts.push('Processing');
           if (sabSizeLeft) parts.push(`${sabSizeLeft} left`);
         } else if (sabStatus === 'Paused') {
           parts.push('Paused');
