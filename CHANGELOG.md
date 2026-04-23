@@ -4,6 +4,14 @@ All notable changes are documented here, newest first.
 
 ---
 
+## [1.10.3] — 2026-04-24
+
+### Changed
+- qBittorrent speed box uses download/upload arrow icons instead of DL/UL text; speeds always shown as "0 KB/s" rather than a dash when zero
+- qBittorrent count box replaced with two inline rows (large number + small label) for Downloading and Seeding counts
+- SABnzbd download speed always shown (was hidden when not actively downloading); shows "0 KB/s" when idle; queue count shows 0 not a dash
+- Stat box text is muted (var(--text3)) on both cards when the client is idle
+
 ## [1.10.2] — 2026-04-24
 
 ### Changed

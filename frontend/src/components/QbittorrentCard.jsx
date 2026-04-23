@@ -146,10 +146,8 @@ export default function QbittorrentCard({ instance }) {
                 dlBps={dlSpeed} ulBps={ulSpeed}
                 active={active} color={statColor} bg={statBg}
               />
-              <Stat
-                label="DOWNLOADING"
-                value={dlCount}
-                sublabel={`${seedCount} SEEDING`}
+              <CountStat
+                dlCount={dlCount} seedCount={seedCount}
                 active={active} color={statColor} bg={statBg}
               />
               <Stat
@@ -170,19 +168,33 @@ export default function QbittorrentCard({ instance }) {
 }
 
 function SpeedStat({ dlBps, ulBps, active, color, bg }) {
-  const c = active && color ? { color } : undefined;
-  const dl = dlBps ? formatSpeed(dlBps) : '—';
-  const ul = ulBps ? formatSpeed(ulBps) : '—';
+  const c = { color: active && color ? color : 'var(--text3)' };
   return (
     <div className={styles.stat} style={active && color ? { background: bg, borderColor: color } : undefined}>
-      <span className={styles.speedLine} style={c}>{dl} DL</span>
-      <span className={styles.speedLine} style={c}>{ul} UL</span>
+      <div className={styles.speedLine} style={c}><DlArrow />{formatSpeed(dlBps)}</div>
+      <div className={styles.speedLine} style={c}><UlArrow />{formatSpeed(ulBps)}</div>
+    </div>
+  );
+}
+
+function CountStat({ dlCount, seedCount, active, color, bg }) {
+  const c = { color: active && color ? color : 'var(--text3)' };
+  return (
+    <div className={styles.stat} style={active && color ? { background: bg, borderColor: color } : undefined}>
+      <div className={styles.countRow}>
+        <span className={styles.countNum} style={c}>{dlCount}</span>
+        <span className={styles.countLabel} style={c}>Downloading</span>
+      </div>
+      <div className={styles.countRow}>
+        <span className={styles.countNum} style={c}>{seedCount}</span>
+        <span className={styles.countLabel} style={c}>Seeding</span>
+      </div>
     </div>
   );
 }
 
 function Stat({ label, value, sublabel, active, small, color, bg }) {
-  const c = active && color ? { color } : undefined;
+  const c = { color: active && color ? color : 'var(--text3)' };
   return (
     <div className={styles.stat} style={active && color ? { background: bg, borderColor: color } : undefined}>
       <span className={`${styles.statVal} ${small ? styles.statValSm : ''}`} style={c}>{value}</span>
@@ -192,6 +204,16 @@ function Stat({ label, value, sublabel, active, small, color, bg }) {
   );
 }
 
+const DlArrow = () => (
+  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+    <line x1="12" y1="5" x2="12" y2="19"/><polyline points="7 14 12 19 17 14"/>
+  </svg>
+);
+const UlArrow = () => (
+  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+    <line x1="12" y1="19" x2="12" y2="5"/><polyline points="7 10 12 5 17 10"/>
+  </svg>
+);
 const ExternalIcon = () => (
   <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
     <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>

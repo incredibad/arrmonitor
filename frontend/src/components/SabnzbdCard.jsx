@@ -92,7 +92,9 @@ export default function SabnzbdCard({ instance }) {
     : isPaused      ? 'var(--status-paused-bg)'
     : null;
 
-  const formattedSpeed = speed ? speed.replace(/([KMGT])$/, '$1B/s') : '';
+  const formattedSpeed = (speed && !speed.startsWith('0 '))
+    ? speed.replace(/([KMGT])$/, '$1B/s')
+    : '0 KB/s';
 
   async function act(fn, optimisticStatus) {
     if (optimisticStatus && queue) setQueue(q => ({ ...q, status: optimisticStatus }));
@@ -144,8 +146,8 @@ export default function SabnzbdCard({ instance }) {
         <div className={styles.stats}>
           {queue ? (
             <>
-              <Stat label="Download" value={isDownloading && formattedSpeed ? formattedSpeed : '—'} small active={!!statColor} color={statColor} bg={statBg} />
-              <Stat label="IN QUEUE" value={queueCount || '—'} sublabel={queueCount > 0 && sizeleft ? `${sizeleft} left` : undefined} active={!!statColor} color={statColor} bg={statBg} />
+              <Stat label="DOWNLOAD" value={formattedSpeed} small active={!!statColor} color={statColor} bg={statBg} />
+              <Stat label="IN QUEUE" value={queueCount} sublabel={queueCount > 0 && sizeleft ? `${sizeleft} left` : undefined} active={!!statColor} color={statColor} bg={statBg} />
               <Stat label="ETA" value={isDownloading && timeleft && timeleft !== '0:00:00' ? timeleft : '—'} small active={!!statColor} color={statColor} bg={statBg} />
             </>
           ) : !err ? (
@@ -198,7 +200,7 @@ export default function SabnzbdCard({ instance }) {
 }
 
 function Stat({ label, value, active, small, color, bg, sublabel }) {
-  const c = active && color ? { color } : undefined;
+  const c = { color: active && color ? color : 'var(--text3)' };
   return (
     <div className={styles.stat} style={active && color ? { background: bg, borderColor: color } : undefined}>
       <span className={`${styles.statVal} ${small ? styles.statValSm : ''}`} style={c}>{value}</span>
