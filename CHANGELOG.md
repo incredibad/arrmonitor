@@ -4,6 +4,11 @@ All notable changes are documented here, newest first.
 
 ---
 
+## [1.6.15] — 2026-04-23
+
+### Fixed
+- Browser tab title now shows `MB/s` instead of `M/s`
+
 ## [1.6.14] — 2026-04-23
 
 ### Changed
