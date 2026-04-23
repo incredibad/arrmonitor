@@ -25,17 +25,21 @@ function usePoll(instanceId) {
   }, [instanceId]);
 
   useEffect(() => {
-    refresh();
-    const t = setInterval(refresh, 30000);
-    return () => clearInterval(t);
+    let interval = null;
+    function start() { refresh(); interval = setInterval(refresh, 2000); }
+    function stop()  { clearInterval(interval); interval = null; }
+    function onVisibility() { document.hidden ? stop() : start(); }
+    if (!document.hidden) start();
+    document.addEventListener('visibilitychange', onVisibility);
+    return () => { stop(); document.removeEventListener('visibilitychange', onVisibility); };
   }, [refresh]);
 
-  return { queue, err, refresh };
+  return { queue, setQueue, err, refresh };
 }
 
 export default function SabnzbdCard({ instance }) {
   const navigate = useNavigate();
-  const { queue, err } = usePoll(instance.id);
+  const { queue, setQueue, err } = usePoll(instance.id);
   const [acting, setActing] = useState(false);
   const [pauseForOpen, setPauseForOpen] = useState(false);
   const [customMins, setCustomMins] = useState('');
@@ -49,7 +53,8 @@ export default function SabnzbdCard({ instance }) {
   const queueCount    = queue?.noofslots ?? 0;
   const pauseInt      = parseInt(queue?.pause_int) || 0;
 
-  async function act(fn) {
+  async function act(fn, optimisticStatus) {
+    if (optimisticStatus && queue) setQueue(q => ({ ...q, status: optimisticStatus }));
     setActing(true);
     try { await fn(); } catch {}
     setActing(false);
@@ -77,13 +82,13 @@ export default function SabnzbdCard({ instance }) {
         {/* Actions always occupy the same space — empty when idle */}
         <div className={styles.actions} onClick={e => e.stopPropagation()}>
           {isPaused && (
-            <button className={styles.actionBtn} onClick={() => act(() => api.resumeSabnzbd(instance.id))} disabled={acting}>
+            <button className={styles.actionBtn} onClick={() => act(() => api.resumeSabnzbd(instance.id), 'Downloading')} disabled={acting}>
               <ResumeIcon /> Resume
             </button>
           )}
           {isDownloading && (
             <>
-              <button className={styles.actionBtn} onClick={() => act(() => api.pauseSabnzbd(instance.id))} disabled={acting}>
+              <button className={styles.actionBtn} onClick={() => act(() => api.pauseSabnzbd(instance.id), 'Paused')} disabled={acting}>
                 <PauseIcon /> Pause
               </button>
               <button className={styles.actionBtn} onClick={() => setPauseForOpen(true)} disabled={acting}>
