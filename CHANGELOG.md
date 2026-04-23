@@ -4,6 +4,14 @@ All notable changes are documented here, newest first.
 
 ---
 
+## [1.6.1] — 2026-04-23
+
+### Changed
+- Instance cards now show the app's own logo image (fetched from the instance URL) with SVG fallback; SABnzbd card uses consistent 16px download icon
+- Removed fixed `min-height` from instance and SABnzbd cards so card height is determined by content
+- Colour scheme updated to cool steel-grey palette matching Sonarr/Radarr aesthetics (`--bg #0d1117`, `--text #e6edf3`)
+- Border radius reduced to 3 px across all elements (cards, chips, inputs, modals)
+
 ## [1.6.0] — 2026-04-23
 
 ### Added
