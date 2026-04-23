@@ -69,13 +69,30 @@ function useTabNotification() {
       } catch {}
     }
 
+    let arrTimer, sabTimer;
+
+    function startTimers() {
+      const hidden = document.hidden;
+      clearInterval(arrTimer);
+      clearInterval(sabTimer);
+      arrTimer = setInterval(refreshArr, hidden ? 10000 : 30000);
+      sabTimer = setInterval(refreshSab, hidden ? 10000 : 2000);
+    }
+
+    function onVisibility() {
+      refreshArr();
+      refreshSab();
+      startTimers();
+    }
+
     refreshArr();
     refreshSab();
-    const arrTimer = setInterval(refreshArr, 30000);
-    const sabTimer = setInterval(refreshSab, 2000);
+    startTimers();
+    document.addEventListener('visibilitychange', onVisibility);
     return () => {
       clearInterval(arrTimer);
       clearInterval(sabTimer);
+      document.removeEventListener('visibilitychange', onVisibility);
       document.title = BASE;
     };
   }, []);
