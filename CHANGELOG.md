@@ -4,6 +4,11 @@ All notable changes are documented here, newest first.
 
 ---
 
+## [1.6.8] — 2026-04-23
+
+### Changed
+- Browser tab title now uses two independent polling loops: SABnzbd refreshes every 2 s (matching the dashboard card) while arr queue counts refresh every 30 s, so speed and status update in near real-time
+
 ## [1.6.7] — 2026-04-23
 
 ### Added
