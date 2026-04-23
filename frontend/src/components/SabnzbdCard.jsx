@@ -40,9 +40,14 @@ function usePoll(instanceId) {
 export default function SabnzbdCard({ instance }) {
   const navigate = useNavigate();
   const { queue, setQueue, err } = usePoll(instance.id);
+  const [version, setVersion] = useState(null);
   const [acting, setActing] = useState(false);
   const [pauseForOpen, setPauseForOpen] = useState(false);
   const [customMins, setCustomMins] = useState('');
+
+  useEffect(() => {
+    api.testSabnzbd(instance.id).then(r => { if (r?.ok) setVersion(r.version); }).catch(() => {});
+  }, [instance.id]);
 
   const status        = queue?.status || '';
   const isDownloading = status === 'Downloading';
@@ -51,7 +56,6 @@ export default function SabnzbdCard({ instance }) {
   const sizeleft      = queue?.sizeleft || '';
   const timeleft      = queue?.timeleft || '';
   const queueCount    = queue?.noofslots ?? 0;
-  const pauseInt      = parseInt(queue?.pause_int) || 0;
 
   async function act(fn, optimisticStatus) {
     if (optimisticStatus && queue) setQueue(q => ({ ...q, status: optimisticStatus }));
@@ -65,21 +69,10 @@ export default function SabnzbdCard({ instance }) {
       <div className={styles.body}>
 
         <div className={styles.headerRow}>
+          <DownloadIcon />
           <span className={styles.name}>{instance.name}</span>
-          <a href={instance.url} target="_blank" rel="noopener noreferrer"
-            className={styles.openBtn} onClick={e => e.stopPropagation()} title="Open SABnzbd">
-            <ExternalIcon />
-          </a>
-        </div>
-
-        <div className={styles.metaRow}>
-          <div className={styles.metaTags}>
-            <span className="chip chip-sabnzbd">sabnzbd</span>
-            {queue  && <StatusChip status={status} pauseInt={pauseInt} />}
-            {!queue && !err && <span className="chip chip-neutral">…</span>}
-            {err    && <span className="chip chip-red">offline</span>}
-          </div>
-          <div className={styles.metaActions} onClick={e => e.stopPropagation()}>
+          {version && <span className={styles.version}>v{version}</span>}
+          <div className={styles.headerActions} onClick={e => e.stopPropagation()}>
             {isPaused && (
               <button className={styles.actionBtn} onClick={() => act(() => api.resumeSabnzbd(instance.id), 'Downloading')} disabled={acting}>
                 <ResumeIcon /> Resume
@@ -96,6 +89,10 @@ export default function SabnzbdCard({ instance }) {
               </>
             )}
           </div>
+          <a href={instance.url} target="_blank" rel="noopener noreferrer"
+            className={styles.openBtn} onClick={e => e.stopPropagation()} title="Open SABnzbd">
+            <ExternalIcon />
+          </a>
         </div>
 
         {/* 3 stat boxes — always the same layout */}
@@ -155,13 +152,6 @@ export default function SabnzbdCard({ instance }) {
   );
 }
 
-function StatusChip({ status, pauseInt }) {
-  if (status === 'Downloading') return <span className="chip chip-downloading">downloading</span>;
-  if (status === 'Paused') return <span className="chip chip-paused">{pauseInt > 0 ? `paused · ${pauseInt}m` : 'paused'}</span>;
-  if (status === 'Idle') return <span className="chip chip-neutral">idle</span>;
-  return null;
-}
-
 function Stat({ label, value, active, small }) {
   return (
     <div className={styles.stat} style={active ? { background: 'var(--sabnzbd-bg)', borderColor: 'var(--sabnzbd)' } : undefined}>
@@ -173,6 +163,13 @@ function Stat({ label, value, active, small }) {
   );
 }
 
+const DownloadIcon = () => (
+  <svg className={styles.appIcon} style={{ color: 'var(--sabnzbd)' }} width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+    <polyline points="7 10 12 15 17 10"/>
+    <line x1="12" y1="15" x2="12" y2="3"/>
+  </svg>
+);
 const ExternalIcon = () => (
   <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
     <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
