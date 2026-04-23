@@ -144,9 +144,9 @@ export default function SabnzbdCard({ instance }) {
         <div className={styles.stats}>
           {queue ? (
             <>
-              <Stat label="Download" value={isDownloading && formattedSpeed ? formattedSpeed : '—'} small active={isDownloading && !!speed} color={statColor} bg={statBg} />
-              <Stat label="IN QUEUE" value={queueCount} sublabel={sizeleft ? `${sizeleft} left` : undefined} active={queueCount > 0} color={statColor} bg={statBg} />
-              <Stat label="ETA" value={isDownloading && timeleft && timeleft !== '0:00:00' ? timeleft : '—'} small active={isDownloading && !!timeleft && timeleft !== '0:00:00'} color={statColor} bg={statBg} />
+              <Stat label="Download" value={isDownloading && formattedSpeed ? formattedSpeed : '—'} small active={!!statColor} color={statColor} bg={statBg} />
+              <Stat label="IN QUEUE" value={queueCount} sublabel={sizeleft ? `${sizeleft} left` : undefined} active={!!statColor} color={statColor} bg={statBg} />
+              <Stat label="ETA" value={isDownloading && timeleft && timeleft !== '0:00:00' ? timeleft : '—'} small active={!!statColor} color={statColor} bg={statBg} />
             </>
           ) : !err ? (
             <><div className={styles.shimmer} /><div className={styles.shimmer} /><div className={styles.shimmer} /></>

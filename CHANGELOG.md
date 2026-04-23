@@ -4,6 +4,11 @@ All notable changes are documented here, newest first.
 
 ---
 
+## [1.6.12] — 2026-04-23
+
+### Changed
+- All three SABnzbd stat boxes now always reflect the status chip colour together rather than each lighting up independently based on their own content
+
 ## [1.6.11] — 2026-04-23
 
 ### Changed
