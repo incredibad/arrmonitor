@@ -4,6 +4,11 @@ All notable changes are documented here, newest first.
 
 ---
 
+## [1.6.11] — 2026-04-23
+
+### Changed
+- SABnzbd queue stat box now shows three lines: large queue count, small "IN QUEUE" label, and medium "12.7 GB left" size remaining
+
 ## [1.6.10] — 2026-04-23
 
 ### Changed
