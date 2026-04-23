@@ -67,6 +67,19 @@ export async function initDb() {
     END $$;
   `);
 
+  // SABnzbd instances table
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS sabnzbd_instances (
+      id SERIAL PRIMARY KEY,
+      name TEXT NOT NULL,
+      url TEXT NOT NULL,
+      api_key TEXT NOT NULL,
+      enabled BOOLEAN DEFAULT true,
+      created_at TIMESTAMPTZ DEFAULT NOW(),
+      updated_at TIMESTAMPTZ DEFAULT NOW()
+    );
+  `);
+
   console.log('Database initialized');
 }
 
