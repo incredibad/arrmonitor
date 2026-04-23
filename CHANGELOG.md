@@ -4,6 +4,11 @@ All notable changes are documented here, newest first.
 
 ---
 
+## [1.6.2] — 2026-04-23
+
+### Fixed
+- Instance card logos now proxy through the backend (`/api/instances/:id/logo`) so they load regardless of whether the instance URL is directly reachable from the browser
+
 ## [1.6.1] — 2026-04-23
 
 ### Changed
