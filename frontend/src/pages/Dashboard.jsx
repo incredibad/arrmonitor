@@ -53,14 +53,28 @@ export default function Dashboard() {
             <button className={styles.ctaBtn} onClick={() => navigate('/settings')}>Go to Settings</button>
           </div>
         ) : (
-          <div className={styles.list}>
-            {enabled.map(instance => (
-              <InstanceCard key={instance.id} instance={instance} />
-            ))}
-            {enabledSab.map(instance => (
-              <SabnzbdCard key={`sab-${instance.id}`} instance={instance} />
-            ))}
-          </div>
+          <>
+            {enabledSab.length > 0 && (
+              <div className={styles.section}>
+                <div className={styles.sectionLabel}>Download Clients</div>
+                <div className={styles.list}>
+                  {enabledSab.map(instance => (
+                    <SabnzbdCard key={`sab-${instance.id}`} instance={instance} />
+                  ))}
+                </div>
+              </div>
+            )}
+            {enabled.length > 0 && (
+              <div className={styles.section}>
+                {enabledSab.length > 0 && <div className={styles.sectionLabel}>Instances</div>}
+                <div className={styles.list}>
+                  {enabled.map(instance => (
+                    <InstanceCard key={instance.id} instance={instance} />
+                  ))}
+                </div>
+              </div>
+            )}
+          </>
         )}
       </div>
     </div>

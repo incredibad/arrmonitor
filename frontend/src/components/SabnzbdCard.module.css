@@ -60,25 +60,33 @@
 .metaRow {
   display: flex;
   align-items: center;
-  gap: 4px;
-  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 6px;
+  min-width: 0;
 }
 
-/* Fixed-height row so card height never shifts — empty when idle */
-.actions {
+.metaTags {
   display: flex;
   align-items: center;
-  gap: 6px;
-  min-height: 26px;
+  gap: 4px;
+  flex-wrap: wrap;
+  min-width: 0;
+}
+
+.metaActions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
 }
 
 .actionBtn {
   display: inline-flex;
   align-items: center;
-  gap: 5px;
-  padding: 4px 10px;
+  gap: 4px;
+  padding: 3px 8px;
   border-radius: var(--radius-sm);
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 500;
   color: var(--text2);
   background: var(--bg3);
@@ -89,6 +97,22 @@
 }
 .actionBtn:hover:not(:disabled) { color: var(--sabnzbd); border-color: var(--sabnzbd); background: var(--sabnzbd-bg); }
 .actionBtn:disabled { opacity: 0.5; cursor: default; }
+
+.actionBtnIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px; height: 22px;
+  border-radius: var(--radius-sm);
+  color: var(--text3);
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  -webkit-tap-highlight-color: transparent;
+  transition: color 0.12s, background 0.12s, border-color 0.12s;
+  flex-shrink: 0;
+}
+.actionBtnIcon:hover:not(:disabled) { color: var(--sabnzbd); border-color: var(--sabnzbd); background: var(--sabnzbd-bg); }
+.actionBtnIcon:disabled { opacity: 0.5; cursor: default; }
 
 /* 3-column stats — same vertical weight as InstanceCard's 2-column */
 .stats {
