@@ -146,15 +146,35 @@
 }
 
 .speedLine {
+  display: flex;
+  align-items: center;
+  gap: 5px;
   font-size: 15px;
   font-weight: 700;
   font-family: var(--font-mono);
-  color: var(--text);
   white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 100%;
-  line-height: 1.35;
+  line-height: 1.4;
+}
+
+.countRow {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.countNum {
+  font-size: 20px;
+  font-weight: 700;
+  font-family: var(--font-mono);
+  line-height: 1;
+}
+
+.countLabel {
+  font-size: 8px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  line-height: 1;
 }
 
 .shimmer {
