@@ -4,6 +4,12 @@ All notable changes are documented here, newest first.
 
 ---
 
+## [1.10.2] — 2026-04-24
+
+### Changed
+- qBittorrent card speed box replaced with two larger lines ("2.4 MB/s DL" / "512 KB/s UL"), showing "— DL" / "— UL" when speed is zero
+- SABnzbd card queue count shows "—" instead of 0 when the queue is empty; size-left sublabel hidden when queue is empty
+
 ## [1.10.1] — 2026-04-24
 
 ### Fixed

@@ -142,11 +142,9 @@ export default function QbittorrentCard({ instance }) {
         <div className={styles.stats}>
           {torrents ? (
             <>
-              <Stat
-                label="↓ DOWNLOAD"
-                value={formatSpeed(dlSpeed)}
-                sublabel={`↑ ${formatSpeed(ulSpeed)}`}
-                small active={active} color={statColor} bg={statBg}
+              <SpeedStat
+                dlBps={dlSpeed} ulBps={ulSpeed}
+                active={active} color={statColor} bg={statBg}
               />
               <Stat
                 label="DOWNLOADING"
@@ -167,6 +165,18 @@ export default function QbittorrentCard({ instance }) {
           )}
         </div>
       </div>
+    </div>
+  );
+}
+
+function SpeedStat({ dlBps, ulBps, active, color, bg }) {
+  const c = active && color ? { color } : undefined;
+  const dl = dlBps ? formatSpeed(dlBps) : '—';
+  const ul = ulBps ? formatSpeed(ulBps) : '—';
+  return (
+    <div className={styles.stat} style={active && color ? { background: bg, borderColor: color } : undefined}>
+      <span className={styles.speedLine} style={c}>{dl} DL</span>
+      <span className={styles.speedLine} style={c}>{ul} UL</span>
     </div>
   );
 }

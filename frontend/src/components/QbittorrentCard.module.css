@@ -145,6 +145,18 @@
   margin-top: 1px;
 }
 
+.speedLine {
+  font-size: 15px;
+  font-weight: 700;
+  font-family: var(--font-mono);
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+  line-height: 1.35;
+}
+
 .shimmer {
   height: 62px;
   border-radius: var(--radius-sm);
