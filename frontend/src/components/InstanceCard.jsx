@@ -31,7 +31,7 @@ export default function InstanceCard({ instance }) {
     <div className={styles.card} data-type={instance.type} onClick={() => navigate(`/instance/${instance.id}`)}>
       <div className={styles.body}>
         <div className={styles.headerRow}>
-          <AppLogo url={instance.url} type={instance.type} />
+          <AppLogo id={instance.id} type={instance.type} />
           <span className={styles.name}>{instance.name}</span>
           {status?.ok && (
             <span className={styles.version} style={updateAvailable ? { color: 'var(--accent)' } : undefined}>
@@ -70,13 +70,13 @@ function Stat({ label, value, color, bg, active }) {
   );
 }
 
-function AppLogo({ url, type }) {
+function AppLogo({ id, type }) {
   const [failed, setFailed] = useState(false);
   if (!failed) {
     return (
       <img
         className={styles.appLogo}
-        src={`${url}/Content/Images/logo.png`}
+        src={`/api/instances/${id}/logo`}
         width="16" height="16"
         alt={type}
         onError={() => setFailed(true)}

@@ -52,6 +52,23 @@ router.patch('/:id', async (req, res) => {
   }
 });
 
+router.get('/:id/logo', async (req, res) => {
+  try {
+    const { rows } = await pool.query('SELECT url FROM instances WHERE id = $1', [req.params.id]);
+    if (!rows.length) return res.status(404).end();
+    const logoUrl = `${rows[0].url}/Content/Images/logo.png`;
+    const upstream = await fetch(logoUrl, { signal: AbortSignal.timeout(5000) });
+    if (!upstream.ok) return res.status(404).end();
+    const ct = upstream.headers.get('content-type') || 'image/png';
+    const buf = await upstream.arrayBuffer();
+    res.setHeader('content-type', ct);
+    res.setHeader('cache-control', 'public, max-age=86400');
+    res.send(Buffer.from(buf));
+  } catch {
+    res.status(404).end();
+  }
+});
+
 router.delete('/:id', async (req, res) => {
   try {
     await pool.query('DELETE FROM instances WHERE id = $1', [req.params.id]);
