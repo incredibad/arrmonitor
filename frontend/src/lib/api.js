@@ -62,4 +62,15 @@ export const api = {
   pauseSabnzbd: (id) => request(`/api/sabnzbd/${id}/pause`, { method: 'POST' }),
   resumeSabnzbd: (id) => request(`/api/sabnzbd/${id}/resume`, { method: 'POST' }),
   pauseSabnzbdFor: (id, minutes) => request(`/api/sabnzbd/${id}/pausefor`, { method: 'POST', body: JSON.stringify({ minutes }) }),
+
+  // qBittorrent
+  getQbittorrentInstances: () => request('/api/qbittorrent'),
+  createQbittorrentInstance: (body) => request('/api/qbittorrent', { method: 'POST', body: JSON.stringify(body) }),
+  updateQbittorrentInstance: (id, body) => request(`/api/qbittorrent/${id}`, { method: 'PATCH', body: JSON.stringify(body) }),
+  deleteQbittorrentInstance: (id) => request(`/api/qbittorrent/${id}`, { method: 'DELETE' }),
+  testQbittorrent: (id) => request(`/api/qbittorrent/${id}/test`),
+  getQbittorrentTorrents: (id) => request(`/api/qbittorrent/${id}/torrents`),
+  getQbittorrentTransfer: (id) => request(`/api/qbittorrent/${id}/transfer`),
+  pauseAllQbittorrent: (id) => request(`/api/qbittorrent/${id}/pauseAll`, { method: 'POST' }),
+  resumeAllQbittorrent: (id) => request(`/api/qbittorrent/${id}/resumeAll`, { method: 'POST' }),
 };
