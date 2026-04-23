@@ -4,6 +4,11 @@ All notable changes are documented here, newest first.
 
 ---
 
+## [1.6.13] — 2026-04-23
+
+### Changed
+- Browser tab title polls every 2 s (SABnzbd) / 30 s (arr) when the window is active, and slows to 10 s for both when the window is in the background
+
 ## [1.6.12] — 2026-04-23
 
 ### Changed
