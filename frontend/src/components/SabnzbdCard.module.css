@@ -42,7 +42,7 @@
   line-height: 1.3;
 }
 
-.appIcon { flex-shrink: 0; }
+.appIcon { flex-shrink: 0; width: 16px; height: 16px; object-fit: contain; }
 
 .version {
   font-size: 11px;

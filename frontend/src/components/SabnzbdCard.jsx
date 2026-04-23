@@ -69,7 +69,7 @@ export default function SabnzbdCard({ instance }) {
       <div className={styles.body}>
 
         <div className={styles.headerRow}>
-          <DownloadIcon />
+          <img className={styles.appIcon} src="/logos/sabnzbd.svg" width="16" height="16" alt="SABnzbd" />
           <span className={styles.name}>{instance.name}</span>
           {version && <span className={styles.version}>v{version}</span>}
           <div className={styles.headerActions} onClick={e => e.stopPropagation()}>
