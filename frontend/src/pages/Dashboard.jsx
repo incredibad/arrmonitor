@@ -1,16 +1,20 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useInstances } from '../hooks/useQueue.js';
+import { useSabnzbdInstances } from '../hooks/useSabnzbd.js';
 import { useNav } from '../lib/navContext.jsx';
 import { api } from '../lib/api.js';
 import InstanceCard from '../components/InstanceCard.jsx';
+import SabnzbdCard from '../components/SabnzbdCard.jsx';
 import styles from './Dashboard.module.css';
 
 export default function Dashboard() {
   const { instances, loading, reload } = useInstances();
+  const { instances: sabInstances } = useSabnzbdInstances();
   const { registerRefresh, clearRefresh, setPageTitle, clearPageTitle } = useNav();
   const navigate = useNavigate();
-  const enabled = instances.filter(i => i.enabled);
+  const enabled    = instances.filter(i => i.enabled);
+  const enabledSab = sabInstances.filter(i => i.enabled);
 
   async function refreshAll() {
     // Trigger RefreshMonitoredDownloads on each instance first, then reload instance list
@@ -37,7 +41,7 @@ export default function Dashboard() {
       <div className={styles.content}>
         {loading ? (
           [1,2,3].map(i => <div key={i} className={styles.skeleton} />)
-        ) : enabled.length === 0 ? (
+        ) : enabled.length === 0 && enabledSab.length === 0 ? (
           <div className={styles.empty}>
             <div className={styles.emptyIcon}>
               <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" opacity="0.3">
@@ -52,6 +56,9 @@ export default function Dashboard() {
           <div className={styles.list}>
             {enabled.map(instance => (
               <InstanceCard key={instance.id} instance={instance} />
+            ))}
+            {enabledSab.map(instance => (
+              <SabnzbdCard key={`sab-${instance.id}`} instance={instance} />
             ))}
           </div>
         )}

@@ -50,4 +50,16 @@ export const api = {
   getLsioImages: () => request('/api/arr/lsio/images'),
 
   getInstanceUpdates: (id) => request(`/api/arr/${id}/update`),
+
+  // SABnzbd
+  getSabnzbdInstances: () => request('/api/sabnzbd'),
+  createSabnzbdInstance: (body) => request('/api/sabnzbd', { method: 'POST', body: JSON.stringify(body) }),
+  updateSabnzbdInstance: (id, body) => request(`/api/sabnzbd/${id}`, { method: 'PATCH', body: JSON.stringify(body) }),
+  deleteSabnzbdInstance: (id) => request(`/api/sabnzbd/${id}`, { method: 'DELETE' }),
+  testSabnzbd: (id) => request(`/api/sabnzbd/${id}/test`),
+  getSabnzbdQueue: (id) => request(`/api/sabnzbd/${id}/queue`),
+  getSabnzbdHistory: (id) => request(`/api/sabnzbd/${id}/history`),
+  pauseSabnzbd: (id) => request(`/api/sabnzbd/${id}/pause`, { method: 'POST' }),
+  resumeSabnzbd: (id) => request(`/api/sabnzbd/${id}/resume`, { method: 'POST' }),
+  pauseSabnzbdFor: (id, minutes) => request(`/api/sabnzbd/${id}/pausefor`, { method: 'POST', body: JSON.stringify({ minutes }) }),
 };

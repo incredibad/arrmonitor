@@ -4,6 +4,16 @@ All notable changes are documented here, newest first.
 
 ---
 
+## [1.6.0] — 2026-04-23
+
+### Added
+- SABnzbd integration: dashboard card showing speed, queue count, size remaining, and status
+- SABnzbd queue page (`/sabnzbd/:id`) with active downloads (progress bars, ETA) and post-processing history (extracting, repairing, verifying, moving)
+- Pause, Resume, and Pause For (5m/15m/30m/1h/3h/custom) controls on both the dashboard card and queue page
+- SABnzbd instance management in Settings (add, edit, delete, enable/disable, test connection)
+- `⬇` prefix in browser tab title when SABnzbd is actively downloading
+- Indigo (`#818cf8`) colour theme for SABnzbd across cards, chips, and sub-bar tint
+
 ## [1.5.8] — 2026-04-20
 
 ### Changed

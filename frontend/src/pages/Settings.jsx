@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useInstances } from '../hooks/useQueue.js';
+import { useSabnzbdInstances } from '../hooks/useSabnzbd.js';
 import { useNav } from '../lib/navContext.jsx';
 import { useAuth } from '../lib/authContext.jsx';
 import { useTestMode } from '../lib/testModeContext.jsx';
@@ -7,7 +8,8 @@ import { api } from '../lib/api.js';
 import styles from './Settings.module.css';
 
 const TYPES = ['sonarr', 'radarr', 'lidarr', 'sportarr'];
-const defaultForm = { name: '', type: 'sonarr', url: '', api_key: '', external_url: '' };
+const defaultForm    = { name: '', type: 'sonarr', url: '', api_key: '', external_url: '' };
+const defaultSabForm = { name: '', url: '', api_key: '' };
 
 function validate(form, isEdit) {
   const errors = {};
@@ -23,6 +25,7 @@ function validate(form, isEdit) {
 
 export default function Settings() {
   const { instances, loading, reload } = useInstances();
+  const { instances: sabInstances, loading: sabLoading, reload: reloadSab } = useSabnzbdInstances();
   const { auth, logout } = useAuth();
   const { clearRefresh, setPageTitle, clearPageTitle } = useNav();
   const { testMode, toggle: toggleTestMode } = useTestMode();
@@ -35,6 +38,15 @@ export default function Settings() {
   const [testing, setTesting] = useState(false);
   const [testResult, setTestResult] = useState(null);
   const [showForm, setShowForm] = useState(false);
+
+  const [sabForm, setSabForm]         = useState(defaultSabForm);
+  const [sabErrors, setSabErrors]     = useState({});
+  const [sabEditId, setSabEditId]     = useState(null);
+  const [sabSaving, setSabSaving]     = useState(false);
+  const [sabSaveError, setSabSaveError] = useState(null);
+  const [sabTesting, setSabTesting]   = useState(false);
+  const [sabTestResult, setSabTestResult] = useState(null);
+  const [showSabForm, setShowSabForm] = useState(false);
 
   const [pwForm, setPwForm] = useState({ current: '', next: '', confirm: '' });
   const [pwError, setPwError] = useState(null);
@@ -130,6 +142,99 @@ export default function Settings() {
   async function toggleEnabled(inst) {
     await api.updateInstance(inst.id, { enabled: !inst.enabled });
     reload();
+  }
+
+  function validateSab(form, isEdit) {
+    const errs = {};
+    if (!form.name.trim()) errs.name = 'Name is required';
+    if (!form.url.trim()) {
+      errs.url = 'URL is required';
+    } else {
+      try { new URL(form.url); } catch { errs.url = 'Enter a valid URL (e.g. http://192.168.1.100:8080)'; }
+    }
+    if (!isEdit && !form.api_key.trim()) errs.api_key = 'API key is required';
+    return errs;
+  }
+
+  function handleSabChange(e) {
+    const { name, value } = e.target;
+    setSabForm(f => ({ ...f, [name]: value }));
+    if (sabErrors[name]) setSabErrors(e => ({ ...e, [name]: undefined }));
+    setSabTestResult(null);
+  }
+
+  async function handleSabTest() {
+    const errs = validateSab(sabForm, !!sabEditId);
+    if (Object.keys(errs).length) { setSabErrors(errs); return; }
+    setSabTesting(true);
+    setSabTestResult(null);
+    try {
+      if (sabEditId) {
+        const result = await api.testSabnzbd(sabEditId);
+        setSabTestResult(result.ok ? { ok: true, msg: `Connected · v${result.version}` } : { ok: false, msg: result.error });
+      } else {
+        const inst = await api.createSabnzbdInstance(sabForm);
+        try {
+          const result = await api.testSabnzbd(inst.id);
+          setSabTestResult(result.ok ? { ok: true, msg: `Connected · v${result.version}` } : { ok: false, msg: result.error });
+        } finally {
+          await api.deleteSabnzbdInstance(inst.id);
+        }
+      }
+    } catch (e) {
+      setSabTestResult({ ok: false, msg: e.message });
+    } finally {
+      setSabTesting(false);
+    }
+  }
+
+  async function handleSabSave() {
+    const errs = validateSab(sabForm, !!sabEditId);
+    if (Object.keys(errs).length) { setSabErrors(errs); return; }
+    setSabSaving(true);
+    setSabSaveError(null);
+    try {
+      if (sabEditId) {
+        await api.updateSabnzbdInstance(sabEditId, sabForm);
+      } else {
+        await api.createSabnzbdInstance(sabForm);
+      }
+      cancelSabForm();
+      reloadSab();
+    } catch (e) {
+      setSabSaveError(e.message);
+    } finally {
+      setSabSaving(false);
+    }
+  }
+
+  function startSabEdit(inst) {
+    setSabEditId(inst.id);
+    setSabForm({ name: inst.name, url: inst.url, api_key: '' });
+    setSabErrors({});
+    setSabTestResult(null);
+    setSabSaveError(null);
+    setShowSabForm(true);
+  }
+
+  function cancelSabForm() {
+    setSabForm(defaultSabForm);
+    setSabEditId(null);
+    setSabErrors({});
+    setSabTestResult(null);
+    setSabSaveError(null);
+    setShowSabForm(false);
+  }
+
+  async function handleSabDelete(id) {
+    if (!confirm('Remove this SABnzbd instance?')) return;
+    await api.deleteSabnzbdInstance(id);
+    reloadSab();
+  }
+
+  async function toggleSabEnabled(inst) {
+    await api.updateSabnzbdInstance(inst.id, { enabled: !inst.enabled });
+    reloadSab();
   }
 
   async function handleChangePassword(e) {
@@ -242,6 +347,93 @@ export default function Settings() {
                     </svg>
                   </button>
                   <button className={styles.deleteBtn} onClick={() => handleDelete(inst.id)}>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <polyline points="3 6 5 6 21 6"/>
+                      <path d="M19 6l-1 14H6L5 6"/>
+                      <path d="M10 11v6"/><path d="M14 11v6"/>
+                      <path d="M9 6V4h6v2"/>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* ── SABnzbd ── */}
+        <div className={styles.sectionHeader} style={{ marginTop: 20 }}>
+          <span className={styles.sectionLabel}>SABnzbd</span>
+          {!showSabForm && (
+            <button className={styles.addBtn} onClick={() => setShowSabForm(true)}>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+              </svg>
+              Add
+            </button>
+          )}
+        </div>
+
+        {showSabForm && (
+          <div className={styles.formCard}>
+            <div className={styles.formTitle}>{sabEditId ? 'Edit SABnzbd' : 'New SABnzbd Instance'}</div>
+            <Field label="Name" error={sabErrors.name}>
+              <input name="name" value={sabForm.name} onChange={handleSabChange} placeholder="My SABnzbd" autoComplete="off" />
+            </Field>
+            <Field label="URL" error={sabErrors.url}>
+              <input name="url" value={sabForm.url} onChange={handleSabChange} placeholder="http://192.168.1.100:8080" autoComplete="off" />
+            </Field>
+            <Field label="API Key" error={sabErrors.api_key}>
+              <input name="api_key" value={sabForm.api_key} onChange={handleSabChange}
+                placeholder={sabEditId ? 'Leave blank to keep existing' : 'Config → General → API Key'} autoComplete="off" />
+            </Field>
+            {sabTestResult && (
+              <div className={`${styles.testResult} ${sabTestResult.ok ? styles.testOk : styles.testFail}`}>
+                {sabTestResult.ok ? '✓' : '✗'} {sabTestResult.msg}
+              </div>
+            )}
+            {sabSaveError && <div className={styles.saveError}>{sabSaveError}</div>}
+            <div className={styles.formActions}>
+              <button className={styles.testBtn} onClick={handleSabTest} disabled={sabTesting}>
+                {sabTesting ? 'Testing…' : 'Test Connection'}
+              </button>
+              <div className={styles.formActionsRight}>
+                <button className={styles.cancelBtn} onClick={cancelSabForm}>Cancel</button>
+                <button className={styles.saveBtn} onClick={handleSabSave} disabled={sabSaving}>
+                  {sabSaving ? 'Saving…' : sabEditId ? 'Update' : 'Save'}
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {sabLoading ? (
+          <div className={styles.loadingText}>Loading…</div>
+        ) : sabInstances.length === 0 && !showSabForm ? (
+          <div className={styles.emptyText}>No SABnzbd instances configured yet.</div>
+        ) : (
+          <div className={styles.instanceList}>
+            {sabInstances.map(inst => (
+              <div key={inst.id} className={`${styles.instanceRow} ${!inst.enabled ? styles.disabled : ''}`}>
+                <button className={styles.toggleBtn} onClick={() => toggleSabEnabled(inst)} title={inst.enabled ? 'Disable' : 'Enable'}>
+                  <div className={`${styles.toggle} ${inst.enabled ? styles.toggleOn : ''}`}>
+                    <div className={styles.toggleThumb} />
+                  </div>
+                </button>
+                <div className={styles.instInfo}>
+                  <div className={styles.instNameRow}>
+                    <span className={styles.instName}>{inst.name}</span>
+                    <span className="chip chip-sabnzbd">sabnzbd</span>
+                  </div>
+                  <div className={styles.instUrl}>{inst.url}</div>
+                </div>
+                <div className={styles.instActions}>
+                  <button className={styles.editBtn} onClick={() => startSabEdit(inst)}>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                      <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                    </svg>
+                  </button>
+                  <button className={styles.deleteBtn} onClick={() => handleSabDelete(inst.id)}>
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                       <polyline points="3 6 5 6 21 6"/>
                       <path d="M19 6l-1 14H6L5 6"/>

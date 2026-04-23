@@ -11,27 +11,41 @@ function useTabNotification() {
     const baseTitle = 'ArrMonitor';
     async function checkErrors() {
       try {
-        const instances = await api.getInstances();
+        const [instances, sabInstances] = await Promise.all([
+          api.getInstances(),
+          api.getSabnzbdInstances().catch(() => []),
+        ]);
         const enabled = instances.filter(i => i.enabled);
-        let queued = 0, issues = 0;
-        await Promise.all(enabled.map(async inst => {
-          try {
-            const q = await api.getQueue(inst.id);
-            (q?.records || []).forEach(r => {
-              const s = r.trackedDownloadStatus?.toLowerCase();
-              const t = r.trackedDownloadState?.toLowerCase();
-              const st = r.status?.toLowerCase();
-              if (s === 'warning' || s === 'error' || st === 'failed' || t === 'failed' || t === 'failedpending') {
-                issues++;
-              } else {
-                queued++;
-              }
-            });
-          } catch {}
-        }));
+        let queued = 0, issues = 0, sabActive = false;
+
+        await Promise.all([
+          ...enabled.map(async inst => {
+            try {
+              const q = await api.getQueue(inst.id);
+              (q?.records || []).forEach(r => {
+                const s = r.trackedDownloadStatus?.toLowerCase();
+                const t = r.trackedDownloadState?.toLowerCase();
+                const st = r.status?.toLowerCase();
+                if (s === 'warning' || s === 'error' || st === 'failed' || t === 'failed' || t === 'failedpending') {
+                  issues++;
+                } else {
+                  queued++;
+                }
+              });
+            } catch {}
+          }),
+          ...sabInstances.filter(i => i.enabled).map(async inst => {
+            try {
+              const q = await api.getSabnzbdQueue(inst.id);
+              if (q?.status === 'Downloading' && q?.noofslots > 0) sabActive = true;
+            } catch {}
+          }),
+        ]);
+
         let title = baseTitle;
         if (issues > 0) title = `⚠${issues} ${baseTitle}`;
         else if (queued > 0) title = `(${queued}) ${baseTitle}`;
+        if (sabActive) title = `⬇ ${title}`;
         document.title = title;
       } catch { document.title = baseTitle; }
     }

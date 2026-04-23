@@ -9,6 +9,7 @@ import pool, { initDb } from './db/index.js';
 import instancesRouter from './routes/instances.js';
 import arrRouter from './routes/arr.js';
 import authRouter from './routes/auth.js';
+import sabnzbdRouter from './routes/sabnzbd.js';
 import { requireAuth } from './middleware/requireAuth.js';
 
 const app = express();
@@ -50,6 +51,7 @@ app.use('/api/auth', authRouter);
 // Protected routes
 app.use('/api/instances', requireAuth, instancesRouter);
 app.use('/api/arr', requireAuth, arrRouter);
+app.use('/api/sabnzbd', requireAuth, sabnzbdRouter);
 
 app.get('/health', (_, res) => res.json({ ok: true }));
 
