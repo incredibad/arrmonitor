@@ -73,29 +73,29 @@ export default function SabnzbdCard({ instance }) {
         </div>
 
         <div className={styles.metaRow}>
-          <span className="chip chip-sabnzbd">sabnzbd</span>
-          {queue  && <StatusChip status={status} pauseInt={pauseInt} />}
-          {!queue && !err && <span className="chip chip-neutral">…</span>}
-          {err    && <span className="chip chip-red">offline</span>}
-        </div>
-
-        {/* Actions always occupy the same space — empty when idle */}
-        <div className={styles.actions} onClick={e => e.stopPropagation()}>
-          {isPaused && (
-            <button className={styles.actionBtn} onClick={() => act(() => api.resumeSabnzbd(instance.id), 'Downloading')} disabled={acting}>
-              <ResumeIcon /> Resume
-            </button>
-          )}
-          {isDownloading && (
-            <>
-              <button className={styles.actionBtn} onClick={() => act(() => api.pauseSabnzbd(instance.id), 'Paused')} disabled={acting}>
-                <PauseIcon /> Pause
+          <div className={styles.metaTags}>
+            <span className="chip chip-sabnzbd">sabnzbd</span>
+            {queue  && <StatusChip status={status} pauseInt={pauseInt} />}
+            {!queue && !err && <span className="chip chip-neutral">…</span>}
+            {err    && <span className="chip chip-red">offline</span>}
+          </div>
+          <div className={styles.metaActions} onClick={e => e.stopPropagation()}>
+            {isPaused && (
+              <button className={styles.actionBtn} onClick={() => act(() => api.resumeSabnzbd(instance.id), 'Downloading')} disabled={acting}>
+                <ResumeIcon /> Resume
               </button>
-              <button className={styles.actionBtn} onClick={() => setPauseForOpen(true)} disabled={acting}>
-                <ClockIcon /> Pause for…
-              </button>
-            </>
-          )}
+            )}
+            {isDownloading && (
+              <>
+                <button className={styles.actionBtn} onClick={() => act(() => api.pauseSabnzbd(instance.id), 'Paused')} disabled={acting}>
+                  <PauseIcon /> Pause
+                </button>
+                <button className={styles.actionBtnIcon} onClick={() => setPauseForOpen(true)} disabled={acting} title="Pause for…">
+                  <ClockIcon />
+                </button>
+              </>
+            )}
+          </div>
         </div>
 
         {/* 3 stat boxes — always the same layout */}

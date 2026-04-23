@@ -18,6 +18,14 @@
   .list { grid-template-columns: repeat(3, 1fr); }
 }
 
+.section { display: flex; flex-direction: column; gap: 12px; }
+.section + .section { margin-top: 8px; }
+
+.sectionLabel {
+  font-size: 11px; font-weight: 600;
+  color: var(--text3); text-transform: uppercase; letter-spacing: 0.08em;
+}
+
 .skeleton {
   height: 170px;
   border-radius: var(--radius);
