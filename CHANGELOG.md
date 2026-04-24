@@ -4,6 +4,11 @@ All notable changes are documented here, newest first.
 
 ---
 
+## [1.10.9] — 2026-04-24
+
+### Fixed
+- Browser tab no longer shows "Idle" when qBittorrent is downloading; "Idle" is now only shown when no download client is active
+
 ## [1.10.8] — 2026-04-24
 
 ### Changed

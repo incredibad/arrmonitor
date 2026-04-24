@@ -78,16 +78,15 @@ function useTabNotification() {
         } else if (sabStatus === 'Paused') {
           parts.push('Paused');
           if (sabSizeLeft) parts.push(`${sabSizeLeft} left`);
-        } else if (hasSab) {
-          parts.push('Idle');
         }
 
         if (qbIsDownloading) {
           const mbps = qbDlSpeed / 1024 / 1024;
-          parts.push(mbps >= 1 ? `${mbps.toFixed(1)} MB/s` : `${Math.round(qbDlSpeed / 1024)} KB/s`);
-        } else if (hasQb && !hasSab) {
-          parts.push('Idle');
+          parts.push(mbps >= 1 ? `${Math.round(mbps)} MB/s` : `${Math.round(qbDlSpeed / 1024)} KB/s`);
         }
+
+        // Only show Idle if we have clients configured but nothing is active
+        if (parts.length === 0 && (hasSab || hasQb)) parts.push('Idle');
 
         if (total > 0) parts.push(`(${total})`);
 
