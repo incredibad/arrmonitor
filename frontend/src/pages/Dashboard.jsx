@@ -16,7 +16,7 @@ export default function Dashboard() {
   const { instances: sabInstances } = useSabnzbdInstances();
   const { instances: qbInstances } = useQbittorrentInstances();
   const { registerRefresh, clearRefresh, setPageTitle, clearPageTitle } = useNav();
-  const { horizontalLayout } = useLayout();
+  const { horizontalLayout, tabletMode } = useLayout();
   const navigate = useNavigate();
   const enabled    = instances.filter(i => i.enabled);
   const enabledSab = sabInstances.filter(i => i.enabled);
@@ -65,6 +65,22 @@ export default function Dashboard() {
             <p className={styles.emptySub}>Add your Sonarr, Radarr, or Lidarr instances in Settings to get started.</p>
             <button className={styles.ctaBtn} onClick={() => navigate('/settings')}>Go to Settings</button>
           </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (tabletMode) {
+    return (
+      <div className={styles.tabletLayout}>
+        <div className={styles.tabletColClients}>
+          {enabledSab.map(instance => <SabnzbdCard key={`sab-${instance.id}`} instance={instance} />)}
+          {enabledQb.map(instance => <QbittorrentCard key={`qb-${instance.id}`} instance={instance} />)}
+          {allClients.length === 0 && <p className={styles.colEmpty}>No download clients configured.</p>}
+        </div>
+        <div className={styles.tabletColInstances}>
+          {enabled.map(instance => <InstanceCard key={instance.id} instance={instance} />)}
+          {enabled.length === 0 && <p className={styles.colEmpty}>No instances configured.</p>}
         </div>
       </div>
     );

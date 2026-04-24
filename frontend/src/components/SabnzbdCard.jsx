@@ -1,6 +1,7 @@
 import { useState, useCallback, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { api } from '../lib/api.js';
+import { useLayout } from '../lib/layoutContext.jsx';
 import styles from './SabnzbdCard.module.css';
 
 function formatDuration(secs) {
@@ -60,6 +61,7 @@ function usePoll(instanceId) {
 
 export default function SabnzbdCard({ instance }) {
   const navigate = useNavigate();
+  const { tabletMode } = useLayout();
   const { queue, setQueue, processing, err } = usePoll(instance.id);
   const [version, setVersion] = useState(null);
   const [acting, setActing] = useState(false);
@@ -120,13 +122,13 @@ export default function SabnzbdCard({ instance }) {
   }
 
   return (
-    <div className={styles.card} onClick={() => navigate(`/sabnzbd/${instance.id}`)}>
+    <div className={`${styles.card} ${tabletMode ? styles.cardT : ''}`} onClick={() => navigate(`/sabnzbd/${instance.id}`)}>
       <div className={styles.body}>
 
         <div className={styles.headerRow}>
           <img className={styles.appIcon} src="/logos/sabnzbd.svg" width="16" height="16" alt="SABnzbd" />
           <span className={styles.name}>{instance.name}</span>
-          {version && <span className={styles.version}>v{version}</span>}
+          {!tabletMode && version && <span className={styles.version}>v{version}</span>}
           <div className={styles.headerActions} onClick={e => e.stopPropagation()}>
             {isPaused && (
               <button className={styles.actionBtn} onClick={() => act(() => api.resumeSabnzbd(instance.id), 'Downloading')} disabled={acting}>
@@ -144,10 +146,12 @@ export default function SabnzbdCard({ instance }) {
               </>
             )}
           </div>
-          <a href={instance.url} target="_blank" rel="noopener noreferrer"
-            className={styles.openBtn} onClick={e => e.stopPropagation()} title="Open SABnzbd">
-            <ExternalIcon />
-          </a>
+          {!tabletMode && (
+            <a href={instance.url} target="_blank" rel="noopener noreferrer"
+              className={styles.openBtn} onClick={e => e.stopPropagation()} title="Open SABnzbd">
+              <ExternalIcon />
+            </a>
+          )}
         </div>
 
         {statusLabel && (

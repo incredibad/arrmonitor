@@ -193,3 +193,80 @@
   text-align: center;
   padding: 8px 0;
 }
+
+/* ── Tablet card variant ── */
+.cardT {
+  flex: 1;
+  min-height: 0;
+  transition: none;
+}
+.cardT:hover { transform: none; }
+
+.cardT .body {
+  padding: 20px 22px 18px;
+  gap: 14px;
+}
+
+.cardT .appIcon {
+  width: 32px;
+  height: 32px;
+}
+
+.cardT .name {
+  font-size: 22px;
+}
+
+.cardT .actionBtn {
+  padding: 6px 14px;
+  font-size: 14px;
+  gap: 6px;
+}
+
+.cardT .stats {
+  flex: 1;
+  gap: 10px;
+}
+
+.cardT .stat {
+  padding: 14px 8px 12px;
+  gap: 6px;
+}
+
+.cardT .statVal {
+  font-size: 48px;
+}
+
+.cardT .statValSm {
+  font-size: 34px;
+}
+
+.cardT .statLabel {
+  font-size: 13px;
+  letter-spacing: 0.07em;
+}
+
+.cardT .speedLine {
+  font-size: 34px;
+  gap: 8px;
+}
+
+.cardT .speedLine svg {
+  width: 22px;
+  height: 22px;
+}
+
+.cardT .countNum {
+  font-size: 44px;
+}
+
+.cardT .countLabel {
+  font-size: 11px;
+}
+
+.cardT .countRow {
+  gap: 8px;
+}
+
+.cardT .shimmer {
+  flex: 1;
+}

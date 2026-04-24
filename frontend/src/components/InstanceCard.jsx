@@ -23,13 +23,13 @@ export default function InstanceCard({ instance }) {
   const navigate = useNavigate();
   const { queue, loading, error } = useQueue(instance.id, 30000);
   const { status, updateAvailable } = useInstanceStatus(instance.id, instance.type);
-  const { horizontalLayout } = useLayout();
+  const { horizontalLayout, tabletMode } = useLayout();
 
   const records    = queue?.records || [];
   const issues     = records.filter(r => getSemanticStatus(r) === 'issue').length;
   const totalItems = records.filter(r => getSemanticStatus(r) !== 'issue').length;
 
-  const cardClass = `${styles.card} ${horizontalLayout ? styles.cardH : ''}`;
+  const cardClass = `${styles.card} ${horizontalLayout ? styles.cardH : ''} ${tabletMode ? styles.cardT : ''}`;
 
   return (
     <div className={cardClass} data-type={instance.type} onClick={() => navigate(`/instance/${instance.id}`)}>
@@ -37,15 +37,17 @@ export default function InstanceCard({ instance }) {
         <div className={styles.headerRow}>
           <AppLogo id={instance.id} type={instance.type} />
           <span className={styles.name}>{instance.name}</span>
-          {status?.ok && (
+          {!tabletMode && status?.ok && (
             <span className={styles.version} style={updateAvailable ? { color: 'var(--accent)' } : undefined}>
               v{status.version}
             </span>
           )}
-          <a href={instance.external_url || instance.url} target="_blank" rel="noopener noreferrer"
-            className={styles.openBtn} onClick={e => e.stopPropagation()} title={`Open ${instance.name}`}>
-            <ExternalIcon />
-          </a>
+          {!tabletMode && (
+            <a href={instance.external_url || instance.url} target="_blank" rel="noopener noreferrer"
+              className={styles.openBtn} onClick={e => e.stopPropagation()} title={`Open ${instance.name}`}>
+              <ExternalIcon />
+            </a>
+          )}
         </div>
 
         <div className={styles.stats}>

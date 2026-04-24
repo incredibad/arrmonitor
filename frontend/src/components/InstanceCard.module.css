@@ -151,3 +151,48 @@
 .cardH .shimmer {
   height: 52px;
 }
+
+/* ── Tablet card variant ── */
+.cardT {
+  flex: 1;
+  min-height: 0;
+  transition: none;
+}
+.cardT:hover { transform: none; }
+
+.cardT .body {
+  padding: 20px 20px 16px;
+  gap: 14px;
+}
+
+.cardT .appLogo {
+  width: 32px;
+  height: 32px;
+}
+
+.cardT .name {
+  font-size: 22px;
+}
+
+.cardT .stats {
+  flex: 1;
+  gap: 10px;
+}
+
+.cardT .stat {
+  padding: 14px 8px 12px;
+  gap: 6px;
+}
+
+.cardT .statVal {
+  font-size: 48px;
+}
+
+.cardT .statLabel {
+  font-size: 13px;
+  letter-spacing: 0.07em;
+}
+
+.cardT .shimmer {
+  flex: 1;
+}
