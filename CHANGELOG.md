@@ -4,6 +4,11 @@ All notable changes are documented here, newest first.
 
 ---
 
+## [1.10.7] — 2026-04-24
+
+### Fixed
+- qBittorrent pause/resume now uses the correct API endpoints: `POST /api/v2/torrents/pause` with `hashes=all` (v4) falling back to `stop`/`start` (v5); the previous `pauseAll`/`stopAll` endpoints do not exist in the qBittorrent API
+
 ## [1.10.6] — 2026-04-24
 
 ### Changed
