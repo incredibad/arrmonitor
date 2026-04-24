@@ -95,6 +95,7 @@ export default function InstanceQueue() {
           {/* Instance info — name + link + tags all inline, tags wrap if needed */}
           <div className={styles.instanceInfo}>
             <div className={styles.instanceNameRow}>
+              {instance?.type && <img src={`/logos/${instance.type}.png`} width="16" height="16" className={styles.appIcon} alt="" />}
               <span className={styles.instanceName}>{instance?.name || '…'}</span>
               {instanceUrl && (
                 <a href={instanceUrl} target="_blank" rel="noopener noreferrer"
@@ -108,9 +109,7 @@ export default function InstanceQueue() {
               )}
             </div>
             <div className={styles.instanceMeta}>
-              {instance?.type && <span className={`chip chip-${instance.type}`}>{instance.type}</span>}
               {status?.ok && <span className="chip chip-neutral">v{status.version}</span>}
-              {isLsio && status?.ok && <span className="chip chip-neutral" title="LinuxServer.io build">lsio</span>}
               {updateAvailable && <span className="chip chip-yellow">↑ update</span>}
             </div>
           </div>

@@ -44,9 +44,11 @@
 }
 
 .instanceNameRow {
-  display: flex; align-items: center; gap: 4px;
+  display: flex; align-items: center; gap: 6px;
   flex-shrink: 0;
 }
+
+.appIcon { flex-shrink: 0; width: 16px; height: 16px; object-fit: contain; }
 
 .instanceName {
   font-size: 13px; font-weight: 500; color: var(--text);
@@ -68,6 +70,16 @@
 .instanceMeta {
   display: flex; align-items: center; gap: 3px; flex-wrap: wrap;
   flex-shrink: 0;
+}
+
+/* Controls — centered between instance info and filters */
+.controlsCenter {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex: 1;
+  justify-content: center;
+  padding: 6px 4px;
 }
 
 /* Filters — pushed to the right on wide screens */
