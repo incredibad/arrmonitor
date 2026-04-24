@@ -3,6 +3,7 @@ import { NavLink } from 'react-router-dom';
 import { api } from '../lib/api.js';
 import { useNav } from '../lib/navContext.jsx';
 import { useTestMode } from '../lib/testModeContext.jsx';
+import { useLayout } from '../lib/layoutContext.jsx';
 import ImportToastStack from './ImportToastStack.jsx';
 import styles from './Layout.module.css';
 
@@ -125,11 +126,21 @@ function useTabNotification() {
   }, []);
 }
 
+function useAutoRefresh() {
+  const { autoRefresh } = useLayout();
+  useEffect(() => {
+    if (!autoRefresh) return;
+    const t = setTimeout(() => window.location.reload(), 10 * 60 * 1000);
+    return () => clearTimeout(t);
+  }, [autoRefresh]);
+}
+
 export default function Layout({ children }) {
   const { refreshFn, refreshing, handleRefresh } = useNav();
   const { testMode } = useTestMode();
   const [menuOpen, setMenuOpen] = useState(false);
   useTabNotification();
+  useAutoRefresh();
 
   const closeMenu = () => setMenuOpen(false);
 

@@ -7,6 +7,10 @@ export function LayoutProvider({ children }) {
     try { return localStorage.getItem('arrmonitor_horizontal') === 'true'; } catch { return false; }
   });
 
+  const [autoRefresh, setAutoRefresh] = useState(() => {
+    try { return localStorage.getItem('arrmonitor_auto_refresh') === 'true'; } catch { return false; }
+  });
+
   const toggleHorizontal = useCallback(() => {
     setHorizontalLayout(prev => {
       const next = !prev;
@@ -15,8 +19,16 @@ export function LayoutProvider({ children }) {
     });
   }, []);
 
+  const toggleAutoRefresh = useCallback(() => {
+    setAutoRefresh(prev => {
+      const next = !prev;
+      try { localStorage.setItem('arrmonitor_auto_refresh', String(next)); } catch {}
+      return next;
+    });
+  }, []);
+
   return (
-    <LayoutContext.Provider value={{ horizontalLayout, toggleHorizontal }}>
+    <LayoutContext.Provider value={{ horizontalLayout, toggleHorizontal, autoRefresh, toggleAutoRefresh }}>
       {children}
     </LayoutContext.Provider>
   );

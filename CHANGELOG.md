@@ -4,6 +4,11 @@ All notable changes are documented here, newest first.
 
 ---
 
+## [1.10.10] — 2026-04-25
+
+### Added
+- Display setting: Auto-refresh — reloads the page every 10 minutes when enabled; stored in localStorage (browser-local, not synced to server)
+
 ## [1.10.9] — 2026-04-24
 
 ### Fixed

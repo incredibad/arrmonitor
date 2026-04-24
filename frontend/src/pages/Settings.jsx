@@ -33,7 +33,7 @@ export default function Settings() {
   const { auth, logout } = useAuth();
   const { clearRefresh, setPageTitle, clearPageTitle } = useNav();
   const { testMode, toggle: toggleTestMode } = useTestMode();
-  const { horizontalLayout, toggleHorizontal } = useLayout();
+  const { horizontalLayout, toggleHorizontal, autoRefresh, toggleAutoRefresh } = useLayout();
 
   const [tab, setTab] = useState('apps');
 
@@ -668,6 +668,21 @@ export default function Settings() {
                 {horizontalLayout && <span className="chip chip-accent">on</span>}
               </div>
               <div className={styles.instUrl}>Download clients left (40%), instances right (60%) with inline cards</div>
+            </div>
+          </div>
+
+          <div className={styles.instanceRow}>
+            <button className={styles.toggleBtn} onClick={toggleAutoRefresh} title="Toggle auto-refresh">
+              <div className={`${styles.toggle} ${autoRefresh ? styles.toggleOn : ''}`}>
+                <div className={styles.toggleThumb} />
+              </div>
+            </button>
+            <div className={styles.instInfo}>
+              <div className={styles.instNameRow}>
+                <span className={styles.instName}>Auto-refresh</span>
+                {autoRefresh && <span className="chip chip-accent">on</span>}
+              </div>
+              <div className={styles.instUrl}>Reload the page every 10 minutes</div>
             </div>
           </div>
 
