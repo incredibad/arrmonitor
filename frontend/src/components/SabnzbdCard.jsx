@@ -3,6 +3,21 @@ import { useNavigate } from 'react-router-dom';
 import { api } from '../lib/api.js';
 import styles from './SabnzbdCard.module.css';
 
+function formatDuration(secs) {
+  if (!secs || secs <= 0) return null;
+  if (secs < 60) return `${secs}s`;
+  if (secs < 3600) return `${Math.floor(secs / 60)}m`;
+  const h = Math.floor(secs / 3600);
+  const m = Math.floor((secs % 3600) / 60);
+  return m ? `${h}h ${m}m` : `${h}h`;
+}
+
+function parseSabTimeleft(s) {
+  if (!s || s === '0:00:00') return 0;
+  const parts = s.split(':').map(Number);
+  return parts.length === 3 ? parts[0] * 3600 + parts[1] * 60 + parts[2] : 0;
+}
+
 const PAUSE_PRESETS = [
   { label: '5 minutes',  value: 5 },
   { label: '15 minutes', value: 15 },
@@ -93,8 +108,9 @@ export default function SabnzbdCard({ instance }) {
     : null;
 
   const formattedSpeed = (speed && !speed.startsWith('0 '))
-    ? speed.replace(/([KMGT])$/, '$1B/s')
+    ? speed.replace(/([KMGT])$/, '$1B/s').replace(/(\d+)\.\d+/, '$1')
     : '0 KB/s';
+  const etaText = isDownloading ? formatDuration(parseSabTimeleft(timeleft)) : null;
 
   async function act(fn, optimisticStatus) {
     if (optimisticStatus && queue) setQueue(q => ({ ...q, status: optimisticStatus }));
@@ -148,7 +164,7 @@ export default function SabnzbdCard({ instance }) {
             <>
               <Stat label="DOWNLOAD" value={formattedSpeed} small active={!!statColor} color={statColor} bg={statBg} />
               <Stat label="IN QUEUE" value={queueCount} sublabel={queueCount > 0 && sizeleft ? `${sizeleft} left` : undefined} active={!!statColor} color={statColor} bg={statBg} />
-              <Stat label="ETA" value={isDownloading && timeleft && timeleft !== '0:00:00' ? timeleft : '—'} small active={!!statColor} color={statColor} bg={statBg} />
+              <Stat label="ETA" value={etaText || '—'} small active={!!statColor} color={statColor} bg={statBg} />
             </>
           ) : !err ? (
             <><div className={styles.shimmer} /><div className={styles.shimmer} /><div className={styles.shimmer} /></>
