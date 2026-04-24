@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useLocation } from 'react-router-dom';
 import { api } from '../lib/api.js';
 import { useNav } from '../lib/navContext.jsx';
 import { useTestMode } from '../lib/testModeContext.jsx';
 import { useLayout } from '../lib/layoutContext.jsx';
 import ImportToastStack from './ImportToastStack.jsx';
+import TabletNav from './TabletNav.jsx';
 import styles from './Layout.module.css';
 
 function useTabNotification() {
@@ -138,16 +139,20 @@ function useAutoRefresh() {
 export default function Layout({ children }) {
   const { refreshFn, refreshing, handleRefresh } = useNav();
   const { testMode } = useTestMode();
+  const { tabletMode } = useLayout();
+  const location = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);
   useTabNotification();
   useAutoRefresh();
+
+  const showTabletNav = tabletMode && location.pathname === '/';
 
   const closeMenu = () => setMenuOpen(false);
 
   return (
     <div className={`${styles.root} ${testMode ? styles.testModeRoot : ''}`}>
       {testMode && <div className={styles.testModeBanner}>Test mode — queue data is simulated</div>}
-      <div className={styles.content}>{children}</div>
+      <div className={`${styles.content} ${showTabletNav ? styles.contentTablet : ''}`}>{children}</div>
       <ImportToastStack />
 
       {menuOpen && <div className={styles.drawerBackdrop} onClick={closeMenu} />}
@@ -173,24 +178,26 @@ export default function Layout({ children }) {
         </nav>
       </div>
 
-      <div className={styles.fabGroup}>
-        {refreshFn && (
+      {showTabletNav ? <TabletNav /> : (
+        <div className={styles.fabGroup}>
+          {refreshFn && (
+            <button
+              className={`${styles.fab} ${refreshing ? styles.fabSpinning : ''}`}
+              onClick={handleRefresh}
+              title="Refresh"
+            >
+              <RefreshIcon />
+            </button>
+          )}
           <button
-            className={`${styles.fab} ${refreshing ? styles.fabSpinning : ''}`}
-            onClick={handleRefresh}
-            title="Refresh"
+            className={`${styles.fab} ${menuOpen ? styles.fabOpen : ''}`}
+            onClick={() => setMenuOpen(o => !o)}
+            aria-label={menuOpen ? 'Close menu' : 'Open menu'}
           >
-            <RefreshIcon />
+            {menuOpen ? <CloseIcon /> : <HamburgerIcon />}
           </button>
-        )}
-        <button
-          className={`${styles.fab} ${menuOpen ? styles.fabOpen : ''}`}
-          onClick={() => setMenuOpen(o => !o)}
-          aria-label={menuOpen ? 'Close menu' : 'Open menu'}
-        >
-          {menuOpen ? <CloseIcon /> : <HamburgerIcon />}
-        </button>
-      </div>
+        </div>
+      )}
     </div>
   );
 }

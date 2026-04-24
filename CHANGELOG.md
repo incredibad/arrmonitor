@@ -4,6 +4,11 @@ All notable changes are documented here, newest first.
 
 ---
 
+## [1.11.0] — 2026-04-25
+
+### Added
+- Tablet mode: display setting optimised for large-screen tablets (9.7"+ iPads); dashboard switches to 70/30 full-height layout with dynamically divided card heights, larger text throughout, doubled app icons, hidden version/open-link clutter, and a discreet bottom-sheet navigation replacing the FAB buttons
+
 ## [1.10.10] — 2026-04-25
 
 ### Added

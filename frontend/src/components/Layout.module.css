@@ -44,6 +44,12 @@ body { font-family: var(--font) !important; }
   padding-top: calc(var(--safe-top) + 29px);
 }
 
+.contentTablet {
+  min-height: unset;
+  height: 100dvh;
+  overflow: hidden;
+}
+
 /* Floating button group — bottom-right corner */
 .fabGroup {
   position: fixed;

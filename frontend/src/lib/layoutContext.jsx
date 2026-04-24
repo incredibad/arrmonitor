@@ -11,6 +11,10 @@ export function LayoutProvider({ children }) {
     try { return localStorage.getItem('arrmonitor_auto_refresh') === 'true'; } catch { return false; }
   });
 
+  const [tabletMode, setTabletMode] = useState(() => {
+    try { return localStorage.getItem('arrmonitor_tablet') === 'true'; } catch { return false; }
+  });
+
   const toggleHorizontal = useCallback(() => {
     setHorizontalLayout(prev => {
       const next = !prev;
@@ -27,8 +31,16 @@ export function LayoutProvider({ children }) {
     });
   }, []);
 
+  const toggleTabletMode = useCallback(() => {
+    setTabletMode(prev => {
+      const next = !prev;
+      try { localStorage.setItem('arrmonitor_tablet', String(next)); } catch {}
+      return next;
+    });
+  }, []);
+
   return (
-    <LayoutContext.Provider value={{ horizontalLayout, toggleHorizontal, autoRefresh, toggleAutoRefresh }}>
+    <LayoutContext.Provider value={{ horizontalLayout, toggleHorizontal, autoRefresh, toggleAutoRefresh, tabletMode, toggleTabletMode }}>
       {children}
     </LayoutContext.Provider>
   );

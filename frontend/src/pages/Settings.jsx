@@ -33,7 +33,7 @@ export default function Settings() {
   const { auth, logout } = useAuth();
   const { clearRefresh, setPageTitle, clearPageTitle } = useNav();
   const { testMode, toggle: toggleTestMode } = useTestMode();
-  const { horizontalLayout, toggleHorizontal, autoRefresh, toggleAutoRefresh } = useLayout();
+  const { horizontalLayout, toggleHorizontal, autoRefresh, toggleAutoRefresh, tabletMode, toggleTabletMode } = useLayout();
 
   const [tab, setTab] = useState('apps');
 
@@ -683,6 +683,21 @@ export default function Settings() {
                 {autoRefresh && <span className="chip chip-accent">on</span>}
               </div>
               <div className={styles.instUrl}>Reload the page every 10 minutes</div>
+            </div>
+          </div>
+
+          <div className={styles.instanceRow}>
+            <button className={styles.toggleBtn} onClick={toggleTabletMode} title="Toggle tablet mode">
+              <div className={`${styles.toggle} ${tabletMode ? styles.toggleOn : ''}`}>
+                <div className={styles.toggleThumb} />
+              </div>
+            </button>
+            <div className={styles.instInfo}>
+              <div className={styles.instNameRow}>
+                <span className={styles.instName}>Tablet Mode</span>
+                {tabletMode && <span className="chip chip-accent">on</span>}
+              </div>
+              <div className={styles.instUrl}>Dashboard optimised for large-screen tablets — larger text, 70/30 layout, full-height cards</div>
             </div>
           </div>
 
