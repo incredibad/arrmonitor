@@ -701,6 +701,11 @@ export default function Settings() {
             </div>
           </div>
 
+          <div className={styles.reloadRow}>
+            <span className={styles.reloadLabel}>Reload the app</span>
+            <button className={styles.reloadBtn} onClick={() => window.location.reload()}>Reload</button>
+          </div>
+
           <div className={styles.sectionHeader} style={{ marginTop: 8 }}>
             <span className={styles.sectionLabel}>Developer</span>
           </div>

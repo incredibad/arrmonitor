@@ -294,3 +294,29 @@
   -webkit-tap-highlight-color: transparent;
 }
 .logoutBtn:active { opacity: 0.7; }
+
+.reloadRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 0 4px;
+  margin-top: 4px;
+  border-top: 1px solid var(--divider);
+}
+
+.reloadLabel {
+  font-size: 12px;
+  color: var(--text3);
+}
+
+.reloadBtn {
+  padding: 7px 16px;
+  background: var(--accent-light);
+  border: 1px solid var(--accent-border);
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--accent);
+  -webkit-tap-highlight-color: transparent;
+}
+.reloadBtn:active { opacity: 0.7; }
