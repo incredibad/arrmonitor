@@ -182,6 +182,7 @@ function QueueSlot({ slot }) {
         <div className={styles.itemMeta}>
           <span>{pct}%</span>
           {slot.sizeleft && <span>{slot.sizeleft} left</span>}
+          {slot.size && <span>{slot.size}</span>}
           {slot.timeleft && slot.timeleft !== '0:00:00' && <span>ETA {slot.timeleft}</span>}
           {slot.priority && slot.priority !== 'Normal' && <span className="chip chip-neutral">{slot.priority}</span>}
         </div>
@@ -208,6 +209,7 @@ function HistorySlot({ slot }) {
         </div>
         <div className={styles.itemMeta}>
           <span className={`chip ${statusClass}`}>{slot.status}</span>
+          {slot.size && <span>{slot.size}</span>}
           {slot.action_line && <span className={styles.actionLine}>{slot.action_line}</span>}
         </div>
       </div>
