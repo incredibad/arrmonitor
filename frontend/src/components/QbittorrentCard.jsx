@@ -9,7 +9,7 @@ const PAUSED      = new Set(['pausedDL','pausedUP','stoppedDL','stoppedUP']);
 
 function formatSpeed(bps) {
   if (!bps) return '0 KB/s';
-  if (bps >= 1024 * 1024) return `${(bps / 1024 / 1024).toFixed(1)} MB/s`;
+  if (bps >= 1024 * 1024) return `${Math.round(bps / 1024 / 1024)} MB/s`;
   if (bps >= 1024) return `${Math.round(bps / 1024)} KB/s`;
   return `${bps} B/s`;
 }
@@ -183,11 +183,11 @@ function CountStat({ dlCount, seedCount, active, color, bg }) {
     <div className={styles.stat} style={active && color ? { background: bg, borderColor: color } : undefined}>
       <div className={styles.countRow}>
         <span className={styles.countNum} style={c}>{dlCount}</span>
-        <span className={styles.countLabel} style={c}>Downloading</span>
+        <span className={styles.countLabel} style={c}>DOWNLOADS</span>
       </div>
       <div className={styles.countRow}>
         <span className={styles.countNum} style={c}>{seedCount}</span>
-        <span className={styles.countLabel} style={c}>Seeding</span>
+        <span className={styles.countLabel} style={c}>SEEDS</span>
       </div>
     </div>
   );
@@ -205,12 +205,12 @@ function Stat({ label, value, sublabel, active, small, color, bg }) {
 }
 
 const DlArrow = () => (
-  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
     <line x1="12" y1="5" x2="12" y2="19"/><polyline points="7 14 12 19 17 14"/>
   </svg>
 );
 const UlArrow = () => (
-  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
     <line x1="12" y1="19" x2="12" y2="5"/><polyline points="7 10 12 5 17 10"/>
   </svg>
 );

@@ -4,6 +4,16 @@ All notable changes are documented here, newest first.
 
 ---
 
+## [1.10.4] — 2026-04-24
+
+### Changed
+- Dashboard horizontal layout columns changed from 40/60 to 50/50
+- All stat box numbers (speed, ETA, counts, queue) unified at 20–22 px across both cards
+- Download speeds rounded to nearest integer (no decimal) on both qBittorrent and SABnzbd
+- ETA reformatted to "1h 32m" / "45m" / "34s" on both cards; SABnzbd ETA was previously a raw HH:MM:SS string
+- qBittorrent count box labels changed to "DOWNLOADS" and "SEEDS"
+- Download/upload arrow icons scaled up to match larger speed text
+
 ## [1.10.3] — 2026-04-24
 
 ### Changed
