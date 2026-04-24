@@ -352,15 +352,17 @@ function WarningTag({ messages }) {
     m.messages?.length ? m.messages.map(msg => `${m.title}: ${msg}`) : [m.title]
   ).filter(Boolean);
 
+  const preview = allMessages.join(' · ');
+
   return (
     <>
       <button
-        className={styles.warningTag}
+        className={styles.warningRow}
         onClick={e => { e.stopPropagation(); setOpen(o => !o); }}
-        title="Click to see warnings"
+        title={preview}
       >
         <span className={styles.warningDot}>⚠</span>
-        {allMessages.length} warning{allMessages.length !== 1 ? 's' : ''}
+        <span className={styles.warningText}>{preview}</span>
       </button>
       {open && (
         <div className="modal-backdrop" onClick={() => setOpen(false)}>
@@ -430,12 +432,14 @@ export default function QueueItem({ item, instanceId, instanceType, instanceName
                   CF {cfScore > 0 ? '+' : ''}{cfScore}
                 </span>
               )}
-              {hasError && item.statusMessages?.length > 0 && (
-                <WarningTag messages={item.statusMessages} />
-              )}
             </div>
             {sizeStr && <span className={styles.metaSize}>{sizeStr}</span>}
           </div>
+
+          {/* Row 3: warning text (issues only) */}
+          {hasError && item.statusMessages?.length > 0 && (
+            <WarningTag messages={item.statusMessages} />
+          )}
 
         </div>
 

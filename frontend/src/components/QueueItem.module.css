@@ -108,19 +108,23 @@
   box-shadow: 0 0 6px rgba(245,158,11,0.5);
 }
 
-/* Warning tag */
-.warningTag {
-  display: inline-flex; align-items: center; gap: 3px;
-  padding: 1px 6px; border-radius: 100px;
-  font-size: 10px; font-weight: 500;
-  background: var(--red-bg); color: var(--red);
-  border: 1px solid rgba(248,113,113,0.22);
-  cursor: pointer; flex-shrink: 0;
+/* Warning row — full width, own line, truncated */
+.warningRow {
+  display: flex; align-items: center; gap: 5px;
+  margin-top: 4px;
+  padding: 2px 0;
+  width: 100%; text-align: left;
+  cursor: pointer;
   -webkit-tap-highlight-color: transparent;
-  transition: background 0.12s;
+  min-width: 0;
 }
-.warningTag:active { background: rgba(248,113,113,0.20); }
-.warningDot { font-size: 9px; }
+.warningDot { font-size: 10px; color: var(--red); flex-shrink: 0; }
+.warningText {
+  font-size: 11px; color: var(--red);
+  font-family: var(--font-mono);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  flex: 1; min-width: 0;
+}
 
 .warningList { padding: 4px 0 8px; max-height: 40vh; overflow-y: auto; }
 .warningItem {
