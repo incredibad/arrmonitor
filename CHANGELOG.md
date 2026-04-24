@@ -4,6 +4,11 @@ All notable changes are documented here, newest first.
 
 ---
 
+## [1.11.1] — 2026-04-25
+
+### Added
+- Display settings: Reload button performs a full browser refresh; useful for manually refreshing the app from tablet mode
+
 ## [1.11.0] — 2026-04-25
 
 ### Added
