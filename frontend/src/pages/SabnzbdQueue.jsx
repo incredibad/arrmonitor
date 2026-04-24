@@ -80,6 +80,7 @@ export default function SabnzbdQueue() {
 
           <div className={iqStyles.instanceInfo}>
             <div className={iqStyles.instanceNameRow}>
+              {instance && <img src="/logos/sabnzbd.svg" width="16" height="16" className={iqStyles.appIcon} alt="" />}
               {instance && <span className={iqStyles.instanceName}>{instance.name}</span>}
               {instance && (
                 <a href={instance.url} target="_blank" rel="noopener noreferrer" className={iqStyles.openLink} onClick={e => e.stopPropagation()}>
@@ -89,12 +90,24 @@ export default function SabnzbdQueue() {
               )}
             </div>
             <div className={iqStyles.instanceMeta}>
-              <span className="chip chip-sabnzbd">sabnzbd</span>
               {queue && <StatusChip status={status} />}
               {isDownloading && speed && (
                 <span className="chip chip-neutral" style={{ fontFamily: 'var(--font-mono)', fontSize: 10 }}>↓ {speed}</span>
               )}
             </div>
+          </div>
+
+          <div className={iqStyles.controlsCenter}>
+            {isDownloading && (
+              <button className={styles.controlBtn} onClick={handlePause} disabled={acting}>
+                <PauseIcon /> Pause
+              </button>
+            )}
+            {isPaused && (
+              <button className={styles.controlBtn} onClick={handleResume} disabled={acting}>
+                <ResumeIcon /> Resume
+              </button>
+            )}
           </div>
 
           <div className={iqStyles.filters}>
@@ -112,20 +125,6 @@ export default function SabnzbdQueue() {
                 </button>
               );
             })}
-            {(isDownloading || isPaused) && (
-              <>
-                {isDownloading && (
-                  <button className={styles.controlBtn} onClick={handlePause} disabled={acting}>
-                    <PauseIcon /> Pause
-                  </button>
-                )}
-                {isPaused && (
-                  <button className={styles.controlBtn} onClick={handleResume} disabled={acting}>
-                    <ResumeIcon /> Resume
-                  </button>
-                )}
-              </>
-            )}
           </div>
         </div>
 

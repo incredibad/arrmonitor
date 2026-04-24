@@ -102,6 +102,7 @@ export default function QbittorrentQueue() {
 
           <div className={iqStyles.instanceInfo}>
             <div className={iqStyles.instanceNameRow}>
+              {instance && <img src="/logos/qbittorrent.svg" width="16" height="16" className={iqStyles.appIcon} alt="" />}
               {instance && <span className={iqStyles.instanceName}>{instance.name}</span>}
               {instance && (
                 <a href={instance.url} target="_blank" rel="noopener noreferrer" className={iqStyles.openLink} onClick={e => e.stopPropagation()}>
@@ -110,7 +111,6 @@ export default function QbittorrentQueue() {
               )}
             </div>
             <div className={iqStyles.instanceMeta}>
-              <span className="chip chip-qbittorrent">qbittorrent</span>
               {torrents && (
                 <>
                   {isDownloading
@@ -123,6 +123,19 @@ export default function QbittorrentQueue() {
                 </>
               )}
             </div>
+          </div>
+
+          <div className={iqStyles.controlsCenter}>
+            {hasActive && (
+              <button className={styles.controlBtn} onClick={handlePauseAll} disabled={acting}>
+                <PauseIcon /> Pause All
+              </button>
+            )}
+            {hasPaused && (
+              <button className={styles.controlBtn} onClick={handleResumeAll} disabled={acting}>
+                <ResumeIcon /> Resume All
+              </button>
+            )}
           </div>
 
           <div className={iqStyles.filters}>
@@ -142,16 +155,6 @@ export default function QbittorrentQueue() {
                 </button>
               );
             })}
-            {hasActive && (
-              <button className={styles.controlBtn} onClick={handlePauseAll} disabled={acting}>
-                <PauseIcon /> Pause All
-              </button>
-            )}
-            {hasPaused && (
-              <button className={styles.controlBtn} onClick={handleResumeAll} disabled={acting}>
-                <ResumeIcon /> Resume All
-              </button>
-            )}
           </div>
         </div>
       </div>

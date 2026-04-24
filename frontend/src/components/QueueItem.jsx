@@ -281,14 +281,11 @@ function RemoveModal({ item, onClose, onRemove, onRefresh }) {
   const title = getTitle(item);
 
   async function doRemove(blacklist) {
-    setBusy(true);
+    onClose();
     try {
       await onRemove(item.id, { blacklist, skipRedownload: false });
-      onClose();
       onRefresh?.();
-    } finally {
-      setBusy(false);
-    }
+    } catch {}
   }
 
   return (

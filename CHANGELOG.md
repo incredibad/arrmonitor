@@ -4,6 +4,13 @@ All notable changes are documented here, newest first.
 
 ---
 
+## [1.10.5] — 2026-04-24
+
+### Changed
+- Remove modal closes immediately on action and then force-refreshes the queue in the background
+- All queue screens show the app logo before the instance name instead of a type chip; lsio chip removed
+- SABnzbd and qBittorrent queue screens: Pause/Resume controls moved to the centre of the nav bar; filter chips remain on the right
+
 ## [1.10.4] — 2026-04-24
 
 ### Changed
