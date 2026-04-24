@@ -166,9 +166,11 @@ router.get('/:id/transfer', async (req, res) => {
 router.post('/:id/pauseAll', async (req, res) => {
   try {
     const inst = await getInst(req.params.id);
-    // Try v4 pauseAll, fall back to v5 stopAll
-    let r = await qbFetch(inst, '/api/v2/torrents/pauseAll', { method: 'POST' });
-    if (r.status === 404) r = await qbFetch(inst, '/api/v2/torrents/stopAll', { method: 'POST' });
+    const formBody = 'hashes=all';
+    const formHeaders = { 'Content-Type': 'application/x-www-form-urlencoded' };
+    // v4: pause, v5: stop
+    let r = await qbFetch(inst, '/api/v2/torrents/pause', { method: 'POST', headers: formHeaders, body: formBody });
+    if (r.status === 404) r = await qbFetch(inst, '/api/v2/torrents/stop', { method: 'POST', headers: formHeaders, body: formBody });
     if (!r.ok) throw new Error(`qBittorrent returned ${r.status}`);
     res.json({ ok: true });
   } catch (e) {
@@ -179,9 +181,11 @@ router.post('/:id/pauseAll', async (req, res) => {
 router.post('/:id/resumeAll', async (req, res) => {
   try {
     const inst = await getInst(req.params.id);
-    // Try v4 resumeAll, fall back to v5 startAll
-    let r = await qbFetch(inst, '/api/v2/torrents/resumeAll', { method: 'POST' });
-    if (r.status === 404) r = await qbFetch(inst, '/api/v2/torrents/startAll', { method: 'POST' });
+    const formBody = 'hashes=all';
+    const formHeaders = { 'Content-Type': 'application/x-www-form-urlencoded' };
+    // v4: resume, v5: start
+    let r = await qbFetch(inst, '/api/v2/torrents/resume', { method: 'POST', headers: formHeaders, body: formBody });
+    if (r.status === 404) r = await qbFetch(inst, '/api/v2/torrents/start', { method: 'POST', headers: formHeaders, body: formBody });
     if (!r.ok) throw new Error(`qBittorrent returned ${r.status}`);
     res.json({ ok: true });
   } catch (e) {
