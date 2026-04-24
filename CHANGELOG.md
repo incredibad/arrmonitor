@@ -4,6 +4,11 @@ All notable changes are documented here, newest first.
 
 ---
 
+## [1.10.8] — 2026-04-24
+
+### Changed
+- Queue item warnings now appear on their own line below the meta row, showing the full warning text truncated with ellipsis; still clickable to see all messages in a modal
+
 ## [1.10.7] — 2026-04-24
 
 ### Fixed
