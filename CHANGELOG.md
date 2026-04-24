@@ -4,6 +4,13 @@ All notable changes are documented here, newest first.
 
 ---
 
+## [1.10.6] — 2026-04-24
+
+### Changed
+- SABnzbd queue items now show total download size in the meta row (both queue and history slots)
+- qBittorrent torrent rows now show total size in the meta row
+- Dashboard section headings ("Download Clients" / "Instances") removed
+
 ## [1.10.5] — 2026-04-24
 
 ### Changed

@@ -223,6 +223,7 @@ function TorrentRow({ torrent }) {
         <div className={styles.itemMeta}>
           {isDown && <span>{pct}%</span>}
           {sizeLeft && <span>{sizeLeft} left</span>}
+          {formatSize(torrent.size) && <span>{formatSize(torrent.size)}</span>}
           {dlSpeed && <span>↓ {dlSpeed}</span>}
           {ulSpeed && <span>↑ {ulSpeed}</span>}
           {eta && <span>ETA {eta}</span>}
