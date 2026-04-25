@@ -1,6 +1,8 @@
 .card {
   background: var(--bg2);
   border: 1px solid var(--border);
+  border-left-width: 5px;
+  border-left-color: var(--qbittorrent);
   border-radius: var(--radius);
   display: flex;
   flex-direction: column;
