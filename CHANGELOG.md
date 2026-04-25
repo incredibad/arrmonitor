@@ -4,6 +4,12 @@ All notable changes are documented here, newest first.
 
 ---
 
+## [1.14.1] — 2026-04-26
+
+### Changed
+- All settings tabs now use the mosaic tile layout (Apps: Instances / SABnzbd / qBittorrent; Account: Security / Account)
+- Auto-refresh interval controls are now inline with the toggle label instead of wrapping below it
+
 ## [1.14.0] — 2026-04-26
 
 ### Changed
