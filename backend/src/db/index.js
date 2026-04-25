@@ -94,6 +94,17 @@ export async function initDb() {
     );
   `);
 
+  // Remote reload trigger — single row, touched on demand
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS reload_trigger (
+      id INTEGER PRIMARY KEY DEFAULT 1,
+      triggered_at TIMESTAMPTZ
+    );
+  `);
+  await pool.query(`
+    INSERT INTO reload_trigger (id, triggered_at) VALUES (1, NULL) ON CONFLICT DO NOTHING;
+  `);
+
   console.log('Database initialized');
 }
 

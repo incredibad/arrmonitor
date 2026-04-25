@@ -11,6 +11,7 @@ import arrRouter from './routes/arr.js';
 import authRouter from './routes/auth.js';
 import sabnzbdRouter from './routes/sabnzbd.js';
 import qbittorrentRouter from './routes/qbittorrent.js';
+import reloadTriggerRouter from './routes/reloadTrigger.js';
 import { requireAuth } from './middleware/requireAuth.js';
 
 const app = express();
@@ -54,6 +55,7 @@ app.use('/api/instances', requireAuth, instancesRouter);
 app.use('/api/arr', requireAuth, arrRouter);
 app.use('/api/sabnzbd', requireAuth, sabnzbdRouter);
 app.use('/api/qbittorrent', requireAuth, qbittorrentRouter);
+app.use('/api/reload-trigger', requireAuth, reloadTriggerRouter);
 
 app.get('/health', (_, res) => res.json({ ok: true }));
 
