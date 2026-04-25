@@ -239,7 +239,7 @@
 }
 
 .cardT .statVal {
-  font-size: 48px;
+  font-size: 40px;
 }
 
 .cardT .statValSm {
@@ -247,26 +247,26 @@
 }
 
 .cardT .statLabel {
-  font-size: 18px;
+  font-size: 14px;
   letter-spacing: 0.07em;
 }
 
 .cardT .speedLine {
-  font-size: 34px;
-  gap: 8px;
+  font-size: 28px;
+  gap: 6px;
 }
 
 .cardT .speedLine svg {
-  width: 22px;
-  height: 22px;
+  width: 18px;
+  height: 18px;
 }
 
 .cardT .countNum {
-  font-size: 44px;
+  font-size: 36px;
 }
 
 .cardT .countLabel {
-  font-size: 16px;
+  font-size: 12px;
 }
 
 .cardT .countRow {

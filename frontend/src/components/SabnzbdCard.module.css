@@ -251,20 +251,20 @@
 }
 
 .cardT .statVal {
-  font-size: 48px;
+  font-size: 44px;
 }
 
 .cardT .statValSm {
-  font-size: 34px;
+  font-size: 29px;
 }
 
 .cardT .statLabel {
-  font-size: 18px;
+  font-size: 14px;
   letter-spacing: 0.06em;
 }
 
 .cardT .statSublabel {
-  font-size: 18px;
+  font-size: 14px;
 }
 
 .cardT .shimmer {

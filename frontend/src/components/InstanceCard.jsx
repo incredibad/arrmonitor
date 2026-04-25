@@ -57,7 +57,7 @@ export default function InstanceCard({ instance }) {
             <span className={styles.errText}>⚠ {error}</span>
           ) : (
             <>
-              <Stat label="In Queue" value={totalItems} color="var(--status-downloading)" bg="var(--status-downloading-bg)" active={totalItems > 0} />
+              <Stat label="Queue" value={totalItems} color="var(--status-downloading)" bg="var(--status-downloading-bg)" active={totalItems > 0} />
               <Stat label="Issues"   value={issues}     color="var(--status-issue)"       bg="var(--status-issue-bg)"       active={issues > 0} />
             </>
           )}

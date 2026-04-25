@@ -163,6 +163,7 @@
 .cardT .body {
   padding: 20px 20px 16px;
   gap: 14px;
+  justify-content: space-between;
 }
 
 .cardT .appLogo {
@@ -171,11 +172,10 @@
 }
 
 .cardT .name {
-  font-size: 27px;
+  font-size: 22px;
 }
 
 .cardT .stats {
-  flex: 1;
   gap: 10px;
 }
 
@@ -185,11 +185,11 @@
 }
 
 .cardT .statVal {
-  font-size: 48px;
+  font-size: 43px;
 }
 
 .cardT .statLabel {
-  font-size: 18px;
+  font-size: 13px;
   letter-spacing: 0.07em;
 }
 
