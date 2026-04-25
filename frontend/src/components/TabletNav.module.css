@@ -83,6 +83,18 @@
   flex: 1;
 }
 
+.version {
+  margin-left: auto;
+  font-size: 11px;
+  font-family: var(--font-mono);
+  color: var(--text3);
+  text-decoration: none;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: color 0.15s;
+}
+.version:hover { color: var(--text2); }
+
 .navItem {
   display: flex;
   align-items: center;

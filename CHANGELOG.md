@@ -4,6 +4,11 @@ All notable changes are documented here, newest first.
 
 ---
 
+## [1.14.5] — 2026-04-26
+
+### Added
+- Version number shown in all nav menus (drawer, tablet bottom sheet, settings nav bar) as a link to the GitHub repo; injected at build time via Vite define
+
 ## [1.14.4] — 2026-04-26
 
 ### Changed
