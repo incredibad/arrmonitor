@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { NavLink } from 'react-router-dom';
 import { useInstances } from '../hooks/useQueue.js';
 import { useSabnzbdInstances } from '../hooks/useSabnzbd.js';
 import { useQbittorrentInstances } from '../hooks/useQbittorrent.js';
@@ -8,12 +7,12 @@ import { useAuth } from '../lib/authContext.jsx';
 import { useTestMode } from '../lib/testModeContext.jsx';
 import { useLayout } from '../lib/layoutContext.jsx';
 import { api } from '../lib/api.js';
+import AppNav from '../components/AppNav.jsx';
 import styles from './Settings.module.css';
 
 const TYPES = ['sonarr', 'radarr', 'lidarr', 'sportarr'];
-const defaultForm    = { name: '', type: 'sonarr', url: '', api_key: '', external_url: '' };
-const defaultSabForm = { name: '', url: '', api_key: '' };
-const defaultQbForm  = { name: '', url: '', username: '', password: '' };
+const defaultForm   = { name: '', type: 'sonarr', url: '', api_key: '', external_url: '' };
+const defaultDcForm = { dcType: 'sabnzbd', name: '', url: '', api_key: '', username: '', password: '' };
 
 function validate(form, isEdit) {
   const errors = {};
@@ -34,7 +33,7 @@ export default function Settings() {
   const { auth, logout } = useAuth();
   const { clearRefresh, setPageTitle, clearPageTitle } = useNav();
   const { testMode, toggle: toggleTestMode } = useTestMode();
-  const { horizontalLayout, toggleHorizontal, autoRefresh, toggleAutoRefresh, autoRefreshValue, autoRefreshUnit, setAutoRefreshInterval, tabletMode, toggleTabletMode, hidePending, toggleHidePending } = useLayout();
+  const { horizontalLayout, toggleHorizontal, autoRefresh, toggleAutoRefresh, autoRefreshValue, autoRefreshUnit, setAutoRefreshInterval, tabletMode, toggleTabletMode, hidePending, toggleHidePending, showNavBar, toggleShowNavBar } = useLayout();
 
   const [tab, setTab] = useState('apps');
 
@@ -47,23 +46,15 @@ export default function Settings() {
   const [testResult, setTestResult] = useState(null);
   const [showForm, setShowForm] = useState(false);
 
-  const [sabForm, setSabForm]         = useState(defaultSabForm);
-  const [sabErrors, setSabErrors]     = useState({});
-  const [sabEditId, setSabEditId]     = useState(null);
-  const [sabSaving, setSabSaving]     = useState(false);
-  const [sabSaveError, setSabSaveError] = useState(null);
-  const [sabTesting, setSabTesting]   = useState(false);
-  const [sabTestResult, setSabTestResult] = useState(null);
-  const [showSabForm, setShowSabForm] = useState(false);
-
-  const [qbForm, setQbForm]       = useState(defaultQbForm);
-  const [qbErrors, setQbErrors]   = useState({});
-  const [qbEditId, setQbEditId]   = useState(null);
-  const [qbSaving, setQbSaving]   = useState(false);
-  const [qbSaveError, setQbSaveError] = useState(null);
-  const [qbTesting, setQbTesting] = useState(false);
-  const [qbTestResult, setQbTestResult] = useState(null);
-  const [showQbForm, setShowQbForm] = useState(false);
+  const [dcForm, setDcForm]       = useState(defaultDcForm);
+  const [dcErrors, setDcErrors]   = useState({});
+  const [dcEditId, setDcEditId]   = useState(null);
+  const [dcEditType, setDcEditType] = useState(null);
+  const [dcSaving, setDcSaving]   = useState(false);
+  const [dcSaveError, setDcSaveError] = useState(null);
+  const [dcTesting, setDcTesting] = useState(false);
+  const [dcTestResult, setDcTestResult] = useState(null);
+  const [showDcForm, setShowDcForm] = useState(false);
 
   const [pwForm, setPwForm] = useState({ current: '', next: '', confirm: '' });
   const [pwError, setPwError] = useState(null);
@@ -78,8 +69,7 @@ export default function Settings() {
 
   function switchTab(t) {
     cancelForm();
-    cancelSabForm();
-    cancelQbForm();
+    cancelDcForm();
     setTab(t);
   }
 
@@ -168,7 +158,7 @@ export default function Settings() {
     reload();
   }
 
-  function validateSab(form, isEdit) {
+  function validateDc(form, isEdit) {
     const errs = {};
     if (!form.name.trim()) errs.name = 'Name is required';
     if (!form.url.trim()) {
@@ -176,173 +166,94 @@ export default function Settings() {
     } else {
       try { new URL(form.url); } catch { errs.url = 'Enter a valid URL (e.g. http://192.168.1.100:8080)'; }
     }
-    if (!isEdit && !form.api_key.trim()) errs.api_key = 'API key is required';
+    if (form.dcType === 'sabnzbd' && !isEdit && !form.api_key.trim()) errs.api_key = 'API key is required';
     return errs;
   }
 
-  function handleSabChange(e) {
+  function handleDcChange(e) {
     const { name, value } = e.target;
-    setSabForm(f => ({ ...f, [name]: value }));
-    if (sabErrors[name]) setSabErrors(e => ({ ...e, [name]: undefined }));
-    setSabTestResult(null);
+    setDcForm(f => ({ ...f, [name]: value }));
+    if (dcErrors[name]) setDcErrors(err => ({ ...err, [name]: undefined }));
+    setDcTestResult(null);
   }
 
-  async function handleSabTest() {
-    const errs = validateSab(sabForm, !!sabEditId);
-    if (Object.keys(errs).length) { setSabErrors(errs); return; }
-    setSabTesting(true);
-    setSabTestResult(null);
+  async function handleDcTest() {
+    const errs = validateDc(dcForm, !!dcEditId);
+    if (Object.keys(errs).length) { setDcErrors(errs); return; }
+    setDcTesting(true); setDcTestResult(null);
+    const isSab = (dcEditType || dcForm.dcType) === 'sabnzbd';
     try {
-      if (sabEditId) {
-        const result = await api.testSabnzbd(sabEditId);
-        setSabTestResult(result.ok ? { ok: true, msg: `Connected · v${result.version}` } : { ok: false, msg: result.error });
-      } else {
-        const inst = await api.createSabnzbdInstance(sabForm);
+      if (dcEditId) {
+        const result = isSab ? await api.testSabnzbd(dcEditId) : await api.testQbittorrent(dcEditId);
+        setDcTestResult(result.ok ? { ok: true, msg: `Connected · v${result.version}` } : { ok: false, msg: result.error });
+      } else if (isSab) {
+        const inst = await api.createSabnzbdInstance(dcForm);
         try {
           const result = await api.testSabnzbd(inst.id);
-          setSabTestResult(result.ok ? { ok: true, msg: `Connected · v${result.version}` } : { ok: false, msg: result.error });
-        } finally {
-          await api.deleteSabnzbdInstance(inst.id);
-        }
-      }
-    } catch (e) {
-      setSabTestResult({ ok: false, msg: e.message });
-    } finally {
-      setSabTesting(false);
-    }
-  }
-
-  async function handleSabSave() {
-    const errs = validateSab(sabForm, !!sabEditId);
-    if (Object.keys(errs).length) { setSabErrors(errs); return; }
-    setSabSaving(true);
-    setSabSaveError(null);
-    try {
-      if (sabEditId) {
-        await api.updateSabnzbdInstance(sabEditId, sabForm);
+          setDcTestResult(result.ok ? { ok: true, msg: `Connected · v${result.version}` } : { ok: false, msg: result.error });
+        } finally { await api.deleteSabnzbdInstance(inst.id); }
       } else {
-        await api.createSabnzbdInstance(sabForm);
-      }
-      cancelSabForm();
-      reloadSab();
-    } catch (e) {
-      setSabSaveError(e.message);
-    } finally {
-      setSabSaving(false);
-    }
-  }
-
-  function startSabEdit(inst) {
-    setSabEditId(inst.id);
-    setSabForm({ name: inst.name, url: inst.url, api_key: '' });
-    setSabErrors({});
-    setSabTestResult(null);
-    setSabSaveError(null);
-    setShowSabForm(true);
-  }
-
-  function cancelSabForm() {
-    setSabForm(defaultSabForm);
-    setSabEditId(null);
-    setSabErrors({});
-    setSabTestResult(null);
-    setSabSaveError(null);
-    setShowSabForm(false);
-  }
-
-  async function handleSabDelete(id) {
-    if (!confirm('Remove this SABnzbd instance?')) return;
-    await api.deleteSabnzbdInstance(id);
-    reloadSab();
-  }
-
-  async function toggleSabEnabled(inst) {
-    await api.updateSabnzbdInstance(inst.id, { enabled: !inst.enabled });
-    reloadSab();
-  }
-
-  function validateQb(form) {
-    const errs = {};
-    if (!form.name.trim()) errs.name = 'Name is required';
-    if (!form.url.trim()) {
-      errs.url = 'URL is required';
-    } else {
-      try { new URL(form.url); } catch { errs.url = 'Enter a valid URL (e.g. http://192.168.1.100:8080)'; }
-    }
-    return errs;
-  }
-
-  function handleQbChange(e) {
-    const { name, value } = e.target;
-    setQbForm(f => ({ ...f, [name]: value }));
-    if (qbErrors[name]) setQbErrors(e => ({ ...e, [name]: undefined }));
-    setQbTestResult(null);
-  }
-
-  async function handleQbTest() {
-    const errs = validateQb(qbForm);
-    if (Object.keys(errs).length) { setQbErrors(errs); return; }
-    setQbTesting(true); setQbTestResult(null);
-    try {
-      if (qbEditId) {
-        const result = await api.testQbittorrent(qbEditId);
-        setQbTestResult(result.ok ? { ok: true, msg: `Connected · v${result.version}` } : { ok: false, msg: result.error });
-      } else {
-        const inst = await api.createQbittorrentInstance(qbForm);
+        const inst = await api.createQbittorrentInstance(dcForm);
         try {
           const result = await api.testQbittorrent(inst.id);
-          setQbTestResult(result.ok ? { ok: true, msg: `Connected · v${result.version}` } : { ok: false, msg: result.error });
-        } finally {
-          await api.deleteQbittorrentInstance(inst.id);
-        }
+          setDcTestResult(result.ok ? { ok: true, msg: `Connected · v${result.version}` } : { ok: false, msg: result.error });
+        } finally { await api.deleteQbittorrentInstance(inst.id); }
       }
     } catch (e) {
-      setQbTestResult({ ok: false, msg: e.message });
+      setDcTestResult({ ok: false, msg: e.message });
     } finally {
-      setQbTesting(false);
+      setDcTesting(false);
     }
   }
 
-  async function handleQbSave() {
-    const errs = validateQb(qbForm);
-    if (Object.keys(errs).length) { setQbErrors(errs); return; }
-    setQbSaving(true); setQbSaveError(null);
+  async function handleDcSave() {
+    const errs = validateDc(dcForm, !!dcEditId);
+    if (Object.keys(errs).length) { setDcErrors(errs); return; }
+    setDcSaving(true); setDcSaveError(null);
+    const isSab = (dcEditType || dcForm.dcType) === 'sabnzbd';
     try {
-      if (qbEditId) {
-        await api.updateQbittorrentInstance(qbEditId, qbForm);
+      if (dcEditId) {
+        if (isSab) await api.updateSabnzbdInstance(dcEditId, dcForm);
+        else await api.updateQbittorrentInstance(dcEditId, dcForm);
       } else {
-        await api.createQbittorrentInstance(qbForm);
+        if (isSab) await api.createSabnzbdInstance(dcForm);
+        else await api.createQbittorrentInstance(dcForm);
       }
-      cancelQbForm(); reloadQb();
+      cancelDcForm();
+      isSab ? reloadSab() : reloadQb();
     } catch (e) {
-      setQbSaveError(e.message);
+      setDcSaveError(e.message);
     } finally {
-      setQbSaving(false);
+      setDcSaving(false);
     }
   }
 
-  function startQbEdit(inst) {
-    setQbEditId(inst.id);
-    setQbForm({ name: inst.name, url: inst.url, username: inst.username || '', password: '' });
-    setQbErrors({}); setQbTestResult(null); setQbSaveError(null);
-    setShowQbForm(true);
+  function startDcEdit(inst, type) {
+    setDcEditId(inst.id);
+    setDcEditType(type);
+    setDcForm(type === 'sabnzbd'
+      ? { dcType: 'sabnzbd', name: inst.name, url: inst.url, api_key: '', username: '', password: '' }
+      : { dcType: 'qbittorrent', name: inst.name, url: inst.url, api_key: '', username: inst.username || '', password: '' }
+    );
+    setDcErrors({}); setDcTestResult(null); setDcSaveError(null);
+    setShowDcForm(true);
   }
 
-  function cancelQbForm() {
-    setQbForm(defaultQbForm); setQbEditId(null);
-    setQbErrors({}); setQbTestResult(null); setQbSaveError(null);
-    setShowQbForm(false);
+  function cancelDcForm() {
+    setDcForm(defaultDcForm); setDcEditId(null); setDcEditType(null);
+    setDcErrors({}); setDcTestResult(null); setDcSaveError(null);
+    setShowDcForm(false);
   }
 
-  async function handleQbDelete(id) {
-    if (!confirm('Remove this qBittorrent instance?')) return;
-    await api.deleteQbittorrentInstance(id);
-    reloadQb();
+  async function handleDcDelete(inst, type) {
+    if (!confirm(`Remove this ${type === 'sabnzbd' ? 'SABnzbd' : 'qBittorrent'} instance?`)) return;
+    if (type === 'sabnzbd') { await api.deleteSabnzbdInstance(inst.id); reloadSab(); }
+    else { await api.deleteQbittorrentInstance(inst.id); reloadQb(); }
   }
 
-  async function toggleQbEnabled(inst) {
-    await api.updateQbittorrentInstance(inst.id, { enabled: !inst.enabled });
-    reloadQb();
+  async function toggleDcEnabled(inst, type) {
+    if (type === 'sabnzbd') { await api.updateSabnzbdInstance(inst.id, { enabled: !inst.enabled }); reloadSab(); }
+    else { await api.updateQbittorrentInstance(inst.id, { enabled: !inst.enabled }); reloadQb(); }
   }
 
   async function handleChangePassword(e) {
@@ -366,27 +277,7 @@ export default function Settings() {
 
   return (
     <div className={styles.page}>
-      <div className={styles.tabletNav}>
-          <NavLink to="/" className={styles.tabletNavLogo}>
-            <img src="/favicon.svg" alt="" className={styles.tabletNavLogoIcon} />
-            <span className={styles.tabletNavLogoText}>ARRMONITOR</span>
-          </NavLink>
-          <div className={styles.tabletNavDivider} />
-          <nav className={styles.tabletNavLinks}>
-            <NavLink to="/" end className={({ isActive }) => `${styles.tabletNavItem} ${isActive ? styles.tabletNavItemActive : ''}`}>
-              <DashIcon /> Dashboard
-            </NavLink>
-            <NavLink to="/activity" className={({ isActive }) => `${styles.tabletNavItem} ${isActive ? styles.tabletNavItemActive : ''}`}>
-              <ActivityIcon /> All Queues
-            </NavLink>
-            <NavLink to="/settings" className={({ isActive }) => `${styles.tabletNavItem} ${isActive ? styles.tabletNavItemActive : ''}`}>
-              <SettingsIcon /> Settings
-            </NavLink>
-          </nav>
-          <a href="https://github.com/incredibad/arrmonitor" target="_blank" rel="noopener noreferrer" className={styles.tabletNavVersion}>
-            v{__APP_VERSION__}
-          </a>
-      </div>
+      <AppNav />
       <div className={styles.tabBar}>
         <button className={`${styles.tab} ${tab === 'apps'    ? styles.tabActive : ''}`} onClick={() => switchTab('apps')}>Apps</button>
         <button className={`${styles.tab} ${tab === 'account' ? styles.tabActive : ''}`} onClick={() => switchTab('account')}>Account</button>
@@ -478,57 +369,78 @@ export default function Settings() {
             )}
           </div>
 
-          {/* SABnzbd zone */}
+          {/* Download Clients zone */}
           <div className={styles.displayZone}>
             <div className={styles.sectionHeader}>
-              <span className={styles.sectionLabel}>SABnzbd</span>
-              {!showSabForm && (
-                <button className={styles.addBtn} onClick={() => setShowSabForm(true)}>
+              <span className={styles.sectionLabel}>Download Clients</span>
+              {!showDcForm && (
+                <button className={styles.addBtn} onClick={() => setShowDcForm(true)}>
                   <PlusIcon /> Add
                 </button>
               )}
             </div>
-            {showSabForm && (
+            {showDcForm && (
               <div className={styles.formCard}>
-                <div className={styles.formTitle}>{sabEditId ? 'Edit SABnzbd' : 'New SABnzbd Instance'}</div>
-                <Field label="Name" error={sabErrors.name}>
-                  <input name="name" value={sabForm.name} onChange={handleSabChange} placeholder="My SABnzbd" autoComplete="off" />
+                <div className={styles.formTitle}>{dcEditId ? `Edit ${dcEditType === 'sabnzbd' ? 'SABnzbd' : 'qBittorrent'}` : 'New Download Client'}</div>
+                {!dcEditId && (
+                  <Field label="Type">
+                    <select name="dcType" value={dcForm.dcType} onChange={handleDcChange}>
+                      <option value="sabnzbd">SABnzbd</option>
+                      <option value="qbittorrent">qBittorrent</option>
+                    </select>
+                  </Field>
+                )}
+                <Field label="Name" error={dcErrors.name}>
+                  <input name="name" value={dcForm.name} onChange={handleDcChange}
+                    placeholder={dcForm.dcType === 'sabnzbd' ? 'My SABnzbd' : 'My qBittorrent'} autoComplete="off" />
                 </Field>
-                <Field label="URL" error={sabErrors.url}>
-                  <input name="url" value={sabForm.url} onChange={handleSabChange} placeholder="http://192.168.1.100:8080" autoComplete="off" />
+                <Field label="URL" error={dcErrors.url}>
+                  <input name="url" value={dcForm.url} onChange={handleDcChange} placeholder="http://192.168.1.100:8080" autoComplete="off" />
                 </Field>
-                <Field label="API Key" error={sabErrors.api_key}>
-                  <input name="api_key" value={sabForm.api_key} onChange={handleSabChange}
-                    placeholder={sabEditId ? 'Leave blank to keep existing' : 'Config → General → API Key'} autoComplete="off" />
-                </Field>
-                {sabTestResult && (
-                  <div className={`${styles.testResult} ${sabTestResult.ok ? styles.testOk : styles.testFail}`}>
-                    {sabTestResult.ok ? '✓' : '✗'} {sabTestResult.msg}
+                {(dcEditType || dcForm.dcType) === 'sabnzbd' ? (
+                  <Field label="API Key" error={dcErrors.api_key}>
+                    <input name="api_key" value={dcForm.api_key} onChange={handleDcChange}
+                      placeholder={dcEditId ? 'Leave blank to keep existing' : 'Config → General → API Key'} autoComplete="off" />
+                  </Field>
+                ) : (
+                  <>
+                    <Field label="Username (optional)" hint="Leave blank if Web UI auth is disabled">
+                      <input name="username" value={dcForm.username} onChange={handleDcChange} placeholder="admin" autoComplete="off" />
+                    </Field>
+                    <Field label="Password (optional)">
+                      <input name="password" type="password" value={dcForm.password} onChange={handleDcChange}
+                        placeholder={dcEditId ? 'Leave blank to keep existing' : 'Web UI password'} autoComplete="new-password" />
+                    </Field>
+                  </>
+                )}
+                {dcTestResult && (
+                  <div className={`${styles.testResult} ${dcTestResult.ok ? styles.testOk : styles.testFail}`}>
+                    {dcTestResult.ok ? '✓' : '✗'} {dcTestResult.msg}
                   </div>
                 )}
-                {sabSaveError && <div className={styles.saveError}>{sabSaveError}</div>}
+                {dcSaveError && <div className={styles.saveError}>{dcSaveError}</div>}
                 <div className={styles.formActions}>
-                  <button className={styles.testBtn} onClick={handleSabTest} disabled={sabTesting}>
-                    {sabTesting ? 'Testing…' : 'Test Connection'}
+                  <button className={styles.testBtn} onClick={handleDcTest} disabled={dcTesting}>
+                    {dcTesting ? 'Testing…' : 'Test Connection'}
                   </button>
                   <div className={styles.formActionsRight}>
-                    <button className={styles.cancelBtn} onClick={cancelSabForm}>Cancel</button>
-                    <button className={styles.saveBtn} onClick={handleSabSave} disabled={sabSaving}>
-                      {sabSaving ? 'Saving…' : sabEditId ? 'Update' : 'Save'}
+                    <button className={styles.cancelBtn} onClick={cancelDcForm}>Cancel</button>
+                    <button className={styles.saveBtn} onClick={handleDcSave} disabled={dcSaving}>
+                      {dcSaving ? 'Saving…' : dcEditId ? 'Update' : 'Save'}
                     </button>
                   </div>
                 </div>
               </div>
             )}
-            {sabLoading ? (
+            {(sabLoading || qbLoading) ? (
               <div className={styles.loadingText}>Loading…</div>
-            ) : sabInstances.length === 0 && !showSabForm ? (
-              <div className={styles.emptyText}>No SABnzbd instances configured yet.</div>
+            ) : sabInstances.length === 0 && qbInstances.length === 0 && !showDcForm ? (
+              <div className={styles.emptyText}>No download clients configured yet. Tap Add to get started.</div>
             ) : (
               <div className={styles.instanceList}>
                 {sabInstances.map(inst => (
-                  <div key={inst.id} className={`${styles.instanceRow} ${!inst.enabled ? styles.disabled : ''}`}>
-                    <button className={styles.toggleBtn} onClick={() => toggleSabEnabled(inst)} title={inst.enabled ? 'Disable' : 'Enable'}>
+                  <div key={`sab-${inst.id}`} className={`${styles.instanceRow} ${!inst.enabled ? styles.disabled : ''}`}>
+                    <button className={styles.toggleBtn} onClick={() => toggleDcEnabled(inst, 'sabnzbd')} title={inst.enabled ? 'Disable' : 'Enable'}>
                       <div className={`${styles.toggle} ${inst.enabled ? styles.toggleOn : ''}`}>
                         <div className={styles.toggleThumb} />
                       </div>
@@ -541,69 +453,14 @@ export default function Settings() {
                       <div className={styles.instUrl}>{inst.url}</div>
                     </div>
                     <div className={styles.instActions}>
-                      <button className={styles.editBtn} onClick={() => startSabEdit(inst)}><EditIcon /></button>
-                      <button className={styles.deleteBtn} onClick={() => handleSabDelete(inst.id)}><TrashIcon /></button>
+                      <button className={styles.editBtn} onClick={() => startDcEdit(inst, 'sabnzbd')}><EditIcon /></button>
+                      <button className={styles.deleteBtn} onClick={() => handleDcDelete(inst, 'sabnzbd')}><TrashIcon /></button>
                     </div>
                   </div>
                 ))}
-              </div>
-            )}
-          </div>
-
-          {/* qBittorrent zone */}
-          <div className={styles.displayZone}>
-            <div className={styles.sectionHeader}>
-              <span className={styles.sectionLabel}>qBittorrent</span>
-              {!showQbForm && (
-                <button className={styles.addBtn} onClick={() => setShowQbForm(true)}>
-                  <PlusIcon /> Add
-                </button>
-              )}
-            </div>
-            {showQbForm && (
-              <div className={styles.formCard}>
-                <div className={styles.formTitle}>{qbEditId ? 'Edit qBittorrent' : 'New qBittorrent Instance'}</div>
-                <Field label="Name" error={qbErrors.name}>
-                  <input name="name" value={qbForm.name} onChange={handleQbChange} placeholder="My qBittorrent" autoComplete="off" />
-                </Field>
-                <Field label="URL" error={qbErrors.url}>
-                  <input name="url" value={qbForm.url} onChange={handleQbChange} placeholder="http://192.168.1.100:8080" autoComplete="off" />
-                </Field>
-                <Field label="Username (optional)" hint="Leave blank if Web UI auth is disabled">
-                  <input name="username" value={qbForm.username} onChange={handleQbChange} placeholder="admin" autoComplete="off" />
-                </Field>
-                <Field label="Password (optional)">
-                  <input name="password" type="password" value={qbForm.password} onChange={handleQbChange}
-                    placeholder={qbEditId ? 'Leave blank to keep existing' : 'Web UI password'} autoComplete="new-password" />
-                </Field>
-                {qbTestResult && (
-                  <div className={`${styles.testResult} ${qbTestResult.ok ? styles.testOk : styles.testFail}`}>
-                    {qbTestResult.ok ? '✓' : '✗'} {qbTestResult.msg}
-                  </div>
-                )}
-                {qbSaveError && <div className={styles.saveError}>{qbSaveError}</div>}
-                <div className={styles.formActions}>
-                  <button className={styles.testBtn} onClick={handleQbTest} disabled={qbTesting}>
-                    {qbTesting ? 'Testing…' : 'Test Connection'}
-                  </button>
-                  <div className={styles.formActionsRight}>
-                    <button className={styles.cancelBtn} onClick={cancelQbForm}>Cancel</button>
-                    <button className={styles.saveBtn} onClick={handleQbSave} disabled={qbSaving}>
-                      {qbSaving ? 'Saving…' : qbEditId ? 'Update' : 'Save'}
-                    </button>
-                  </div>
-                </div>
-              </div>
-            )}
-            {qbLoading ? (
-              <div className={styles.loadingText}>Loading…</div>
-            ) : qbInstances.length === 0 && !showQbForm ? (
-              <div className={styles.emptyText}>No qBittorrent instances configured yet.</div>
-            ) : (
-              <div className={styles.instanceList}>
                 {qbInstances.map(inst => (
-                  <div key={inst.id} className={`${styles.instanceRow} ${!inst.enabled ? styles.disabled : ''}`}>
-                    <button className={styles.toggleBtn} onClick={() => toggleQbEnabled(inst)} title={inst.enabled ? 'Disable' : 'Enable'}>
+                  <div key={`qb-${inst.id}`} className={`${styles.instanceRow} ${!inst.enabled ? styles.disabled : ''}`}>
+                    <button className={styles.toggleBtn} onClick={() => toggleDcEnabled(inst, 'qbittorrent')} title={inst.enabled ? 'Disable' : 'Enable'}>
                       <div className={`${styles.toggle} ${inst.enabled ? styles.toggleOn : ''}`}>
                         <div className={styles.toggleThumb} />
                       </div>
@@ -616,8 +473,8 @@ export default function Settings() {
                       <div className={styles.instUrl}>{inst.url}</div>
                     </div>
                     <div className={styles.instActions}>
-                      <button className={styles.editBtn} onClick={() => startQbEdit(inst)}><EditIcon /></button>
-                      <button className={styles.deleteBtn} onClick={() => handleQbDelete(inst.id)}><TrashIcon /></button>
+                      <button className={styles.editBtn} onClick={() => startDcEdit(inst, 'qbittorrent')}><EditIcon /></button>
+                      <button className={styles.deleteBtn} onClick={() => handleDcDelete(inst, 'qbittorrent')}><TrashIcon /></button>
                     </div>
                   </div>
                 ))}
@@ -722,6 +579,20 @@ export default function Settings() {
                 <div className={styles.instUrl}>Dashboard optimised for large-screen tablets — larger text, 70/30 layout, full-height cards</div>
               </div>
             </div>
+            <div className={styles.instanceRow}>
+              <button className={styles.toggleBtn} onClick={toggleShowNavBar} title="Toggle dashboard nav bar">
+                <div className={`${styles.toggle} ${showNavBar ? styles.toggleOn : ''}`}>
+                  <div className={styles.toggleThumb} />
+                </div>
+              </button>
+              <div className={styles.instInfo}>
+                <div className={styles.instNameRow}>
+                  <span className={styles.instName}>Dashboard nav bar</span>
+                  {showNavBar && <span className="chip chip-accent">on</span>}
+                </div>
+                <div className={styles.instUrl}>Show the navigation bar above the dashboard content</div>
+              </div>
+            </div>
           </div>
 
           {/* View zone */}
@@ -815,25 +686,6 @@ export default function Settings() {
     </div>
   );
 }
-
-const DashIcon = () => (
-  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/>
-    <rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/>
-  </svg>
-);
-const ActivityIcon = () => (
-  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/>
-    <line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/>
-  </svg>
-);
-const SettingsIcon = () => (
-  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <circle cx="12" cy="12" r="3"/>
-    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
-  </svg>
-);
 
 function Field({ label, hint, error, children }) {
   return (

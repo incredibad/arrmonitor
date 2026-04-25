@@ -6,6 +6,7 @@ import { useQbittorrentInstances } from '../hooks/useQbittorrent.js';
 import { useNav } from '../lib/navContext.jsx';
 import { useLayout } from '../lib/layoutContext.jsx';
 import { api } from '../lib/api.js';
+import AppNav from '../components/AppNav.jsx';
 import InstanceCard from '../components/InstanceCard.jsx';
 import SabnzbdCard from '../components/SabnzbdCard.jsx';
 import QbittorrentCard from '../components/QbittorrentCard.jsx';
@@ -16,7 +17,7 @@ export default function Dashboard() {
   const { instances: sabInstances } = useSabnzbdInstances();
   const { instances: qbInstances } = useQbittorrentInstances();
   const { registerRefresh, clearRefresh, setPageTitle, clearPageTitle } = useNav();
-  const { horizontalLayout, tabletMode } = useLayout();
+  const { horizontalLayout, tabletMode, showNavBar } = useLayout();
   const navigate = useNavigate();
   const enabled    = instances.filter(i => i.enabled);
   const enabledSab = sabInstances.filter(i => i.enabled);
@@ -44,6 +45,7 @@ export default function Dashboard() {
   if (loading) {
     return (
       <div className={styles.page}>
+        {showNavBar && <AppNav />}
         <div className={styles.content}>
           {[1,2,3].map(i => <div key={i} className={styles.skeleton} />)}
         </div>
@@ -54,6 +56,7 @@ export default function Dashboard() {
   if (enabled.length === 0 && allClients.length === 0) {
     return (
       <div className={styles.page}>
+        {showNavBar && <AppNav />}
         <div className={styles.content}>
           <div className={styles.empty}>
             <div className={styles.emptyIcon}>
@@ -71,8 +74,8 @@ export default function Dashboard() {
   }
 
   if (tabletMode) {
-    return (
-      <div className={styles.tabletLayout}>
+    const tabletCols = (
+      <>
         <div className={styles.tabletColClients}>
           {enabledSab.map(instance => <SabnzbdCard key={`sab-${instance.id}`} instance={instance} />)}
           {enabledQb.map(instance => <QbittorrentCard key={`qb-${instance.id}`} instance={instance} />)}
@@ -82,13 +85,23 @@ export default function Dashboard() {
           {enabled.map(instance => <InstanceCard key={instance.id} instance={instance} />)}
           {enabled.length === 0 && <p className={styles.colEmpty}>No instances configured.</p>}
         </div>
-      </div>
+      </>
     );
+    if (showNavBar) {
+      return (
+        <div className={styles.tabletWrapper}>
+          <AppNav />
+          <div className={styles.tabletLayoutInner}>{tabletCols}</div>
+        </div>
+      );
+    }
+    return <div className={styles.tabletLayout}>{tabletCols}</div>;
   }
 
   if (horizontalLayout) {
     return (
       <div className={styles.page}>
+        {showNavBar && <AppNav />}
         <div className={styles.twoCol}>
           <div className={styles.colClients}>
             <div className={styles.clientList}>
@@ -111,6 +124,7 @@ export default function Dashboard() {
 
   return (
     <div className={styles.page}>
+      {showNavBar && <AppNav />}
       <div className={styles.content}>
         {allClients.length > 0 && (
           <div className={styles.section}>

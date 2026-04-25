@@ -4,6 +4,15 @@ All notable changes are documented here, newest first.
 
 ---
 
+## [1.15.0] — 2026-04-26
+
+### Added
+- All Queues page: back button to return to the dashboard
+- Display setting "Dashboard nav bar" (Layout zone) to show/hide the nav bar on the dashboard; on by default
+- Dashboard: nav bar (logo + links) shown above all layouts when setting is enabled; tablet mode uses a flex wrapper so the cards still fill the remaining height
+- Nav bar extracted to shared `AppNav` component used by both Settings and Dashboard
+- Apps tab: SABnzbd and qBittorrent instances unified into a single "Download Clients" zone with a type picker in the add form
+
 ## [1.14.5] — 2026-04-26
 
 ### Added

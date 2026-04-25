@@ -27,6 +27,10 @@ export function LayoutProvider({ children }) {
     try { const v = localStorage.getItem('arrmonitor_hide_pending'); return v === null ? true : v === 'true'; } catch { return true; }
   });
 
+  const [showNavBar, setShowNavBar] = useState(() => {
+    try { const v = localStorage.getItem('arrmonitor_show_nav_bar'); return v === null ? true : v === 'true'; } catch { return true; }
+  });
+
   const toggleHorizontal = useCallback(() => {
     setHorizontalLayout(prev => {
       const next = !prev;
@@ -69,8 +73,16 @@ export function LayoutProvider({ children }) {
     });
   }, []);
 
+  const toggleShowNavBar = useCallback(() => {
+    setShowNavBar(prev => {
+      const next = !prev;
+      try { localStorage.setItem('arrmonitor_show_nav_bar', String(next)); } catch {}
+      return next;
+    });
+  }, []);
+
   return (
-    <LayoutContext.Provider value={{ horizontalLayout, toggleHorizontal, autoRefresh, toggleAutoRefresh, autoRefreshValue, autoRefreshUnit, setAutoRefreshInterval, tabletMode, toggleTabletMode, hidePending, toggleHidePending }}>
+    <LayoutContext.Provider value={{ horizontalLayout, toggleHorizontal, autoRefresh, toggleAutoRefresh, autoRefreshValue, autoRefreshUnit, setAutoRefreshInterval, tabletMode, toggleTabletMode, hidePending, toggleHidePending, showNavBar, toggleShowNavBar }}>
       {children}
     </LayoutContext.Provider>
   );

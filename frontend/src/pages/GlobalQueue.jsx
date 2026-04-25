@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useGlobalQueue } from '../hooks/useQueue.js';
 import { useNav } from '../lib/navContext.jsx';
 import { useLayout } from '../lib/layoutContext.jsx';
@@ -30,7 +31,14 @@ const FILTERS = [
   { key: 'queued',      label: 'Queued' },
 ];
 
+const BackIcon = () => (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+    <polyline points="15 18 9 12 15 6"/>
+  </svg>
+);
+
 export default function GlobalQueue() {
+  const navigate = useNavigate();
   const { allRecords, loading, lastUpdated, refresh, removeItem } = useGlobalQueue(15000);
   const { registerRefresh, clearRefresh, setPageTitle, clearPageTitle } = useNav();
   const { hidePending } = useLayout();
@@ -74,7 +82,10 @@ export default function GlobalQueue() {
     <div className={styles.page}>
       <div className={styles.subBar}>
         <div className={styles.subBarRow}>
-          <div className={styles.instanceInfo} style={{ paddingLeft: 12 }}>
+          <button className={styles.backBtn} onClick={() => navigate('/')}>
+            <BackIcon />
+          </button>
+          <div className={styles.instanceInfo}>
             <div className={styles.instanceNameRow}>
               <span className={styles.instanceName}>All Queues</span>
             </div>

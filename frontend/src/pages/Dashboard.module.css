@@ -96,6 +96,24 @@
   overflow: hidden;
 }
 
+/* Tablet mode with nav bar: flex column wrapper, inner fills remaining height */
+.tabletWrapper {
+  display: flex;
+  flex-direction: column;
+  height: calc(100dvh - var(--safe-top) - 10px - env(safe-area-inset-bottom, 0px));
+  overflow: hidden;
+}
+
+.tabletLayoutInner {
+  display: flex;
+  flex-direction: row;
+  flex: 1;
+  min-height: 0;
+  padding: 12px;
+  gap: 12px;
+  overflow: hidden;
+}
+
 .tabletColClients {
   flex: 7;
   display: flex;
