@@ -651,121 +651,129 @@ export default function Settings() {
 
       {/* ── Display tab ── */}
       {tab === 'display' && (
-        <div className={styles.section}>
-          <div className={styles.sectionHeader}>
-            <span className={styles.sectionLabel}>Layout</span>
-          </div>
+        <div className={styles.displayZones}>
 
-          <div className={styles.instanceRow}>
-            <button className={styles.toggleBtn} onClick={toggleHorizontal} title="Toggle horizontal orientation">
-              <div className={`${styles.toggle} ${horizontalLayout ? styles.toggleOn : ''}`}>
-                <div className={styles.toggleThumb} />
-              </div>
-            </button>
-            <div className={styles.instInfo}>
-              <div className={styles.instNameRow}>
-                <span className={styles.instName}>Horizontal Orientation</span>
-                {horizontalLayout && <span className="chip chip-accent">on</span>}
-              </div>
-              <div className={styles.instUrl}>Download clients left (40%), instances right (60%) with inline cards</div>
+          {/* Layout zone */}
+          <div className={styles.displayZone}>
+            <div className={styles.sectionHeader}>
+              <span className={styles.sectionLabel}>Layout</span>
             </div>
-          </div>
-
-          <div className={styles.instanceRow}>
-            <button className={styles.toggleBtn} onClick={toggleAutoRefresh} title="Toggle auto-refresh">
-              <div className={`${styles.toggle} ${autoRefresh ? styles.toggleOn : ''}`}>
-                <div className={styles.toggleThumb} />
+            <div className={styles.instanceRow}>
+              <button className={styles.toggleBtn} onClick={toggleHorizontal} title="Toggle horizontal orientation">
+                <div className={`${styles.toggle} ${horizontalLayout ? styles.toggleOn : ''}`}>
+                  <div className={styles.toggleThumb} />
+                </div>
+              </button>
+              <div className={styles.instInfo}>
+                <div className={styles.instNameRow}>
+                  <span className={styles.instName}>Horizontal Orientation</span>
+                  {horizontalLayout && <span className="chip chip-accent">on</span>}
+                </div>
+                <div className={styles.instUrl}>Download clients left (40%), instances right (60%) with inline cards</div>
               </div>
-            </button>
-            <div className={styles.instInfo}>
-              <div className={styles.instNameRow}>
-                <span className={styles.instName}>Auto-refresh</span>
-                {autoRefresh && <span className="chip chip-accent">on</span>}
-              </div>
-              <div className={styles.refreshIntervalRow}>
-                <span className={styles.refreshEvery}>every</span>
-                <input
-                  className={styles.refreshValueInput}
-                  type="number"
-                  min="1"
-                  value={autoRefreshValue}
-                  onChange={e => setAutoRefreshInterval(e.target.value, autoRefreshUnit)}
-                />
-                <select
-                  className={styles.refreshUnitSelect}
-                  value={autoRefreshUnit}
-                  onChange={e => setAutoRefreshInterval(autoRefreshValue, e.target.value)}
-                >
-                  <option value="seconds">seconds</option>
-                  <option value="minutes">minutes</option>
-                  <option value="hours">hours</option>
-                  <option value="days">days</option>
-                </select>
+            </div>
+            <div className={styles.instanceRow}>
+              <button className={styles.toggleBtn} onClick={toggleTabletMode} title="Toggle tablet mode">
+                <div className={`${styles.toggle} ${tabletMode ? styles.toggleOn : ''}`}>
+                  <div className={styles.toggleThumb} />
+                </div>
+              </button>
+              <div className={styles.instInfo}>
+                <div className={styles.instNameRow}>
+                  <span className={styles.instName}>Tablet Mode</span>
+                  {tabletMode && <span className="chip chip-accent">on</span>}
+                </div>
+                <div className={styles.instUrl}>Dashboard optimised for large-screen tablets — larger text, 70/30 layout, full-height cards</div>
               </div>
             </div>
           </div>
 
-          <div className={styles.instanceRow}>
-            <button className={styles.toggleBtn} onClick={toggleTabletMode} title="Toggle tablet mode">
-              <div className={`${styles.toggle} ${tabletMode ? styles.toggleOn : ''}`}>
-                <div className={styles.toggleThumb} />
+          {/* View zone */}
+          <div className={styles.displayZone}>
+            <div className={styles.sectionHeader}>
+              <span className={styles.sectionLabel}>View</span>
+            </div>
+            <div className={styles.instanceRow}>
+              <button className={styles.toggleBtn} onClick={toggleAutoRefresh} title="Toggle auto-refresh">
+                <div className={`${styles.toggle} ${autoRefresh ? styles.toggleOn : ''}`}>
+                  <div className={styles.toggleThumb} />
+                </div>
+              </button>
+              <div className={styles.instInfo}>
+                <div className={styles.instNameRow}>
+                  <span className={styles.instName}>Auto-refresh</span>
+                  {autoRefresh && <span className="chip chip-accent">on</span>}
+                </div>
+                <div className={styles.refreshIntervalRow}>
+                  <span className={styles.refreshEvery}>every</span>
+                  <input
+                    className={styles.refreshValueInput}
+                    type="number"
+                    min="1"
+                    value={autoRefreshValue}
+                    onChange={e => setAutoRefreshInterval(e.target.value, autoRefreshUnit)}
+                  />
+                  <select
+                    className={styles.refreshUnitSelect}
+                    value={autoRefreshUnit}
+                    onChange={e => setAutoRefreshInterval(autoRefreshValue, e.target.value)}
+                  >
+                    <option value="seconds">seconds</option>
+                    <option value="minutes">minutes</option>
+                    <option value="hours">hours</option>
+                    <option value="days">days</option>
+                  </select>
+                </div>
               </div>
-            </button>
-            <div className={styles.instInfo}>
-              <div className={styles.instNameRow}>
-                <span className={styles.instName}>Tablet Mode</span>
-                {tabletMode && <span className="chip chip-accent">on</span>}
+            </div>
+            <div className={styles.instanceRow}>
+              <button className={styles.toggleBtn} onClick={toggleHidePending} title="Toggle hide pending downloads">
+                <div className={`${styles.toggle} ${hidePending ? styles.toggleOn : ''}`}>
+                  <div className={styles.toggleThumb} />
+                </div>
+              </button>
+              <div className={styles.instInfo}>
+                <div className={styles.instNameRow}>
+                  <span className={styles.instName}>Hide pending downloads</span>
+                  {hidePending && <span className="chip chip-accent">on</span>}
+                </div>
+                <div className={styles.instUrl}>Filter out delayed or scheduled items from queue views</div>
               </div>
-              <div className={styles.instUrl}>Dashboard optimised for large-screen tablets — larger text, 70/30 layout, full-height cards</div>
             </div>
           </div>
 
-          <div className={styles.instanceRow}>
-            <button className={styles.toggleBtn} onClick={toggleHidePending} title="Toggle hide pending downloads">
-              <div className={`${styles.toggle} ${hidePending ? styles.toggleOn : ''}`}>
-                <div className={styles.toggleThumb} />
+          {/* Developer zone */}
+          <div className={styles.displayZone}>
+            <div className={styles.sectionHeader}>
+              <span className={styles.sectionLabel}>Developer</span>
+            </div>
+            <div className={styles.instanceRow}>
+              <button className={styles.toggleBtn} onClick={toggleTestMode} title="Toggle test mode">
+                <div className={`${styles.toggle} ${testMode ? styles.toggleOn : ''}`}>
+                  <div className={styles.toggleThumb} />
+                </div>
+              </button>
+              <div className={styles.instInfo}>
+                <div className={styles.instNameRow}>
+                  <span className={styles.instName}>Test Mode</span>
+                  {testMode && <span className="chip chip-yellow">active</span>}
+                </div>
+                <div className={styles.instUrl}>Populate all queue views with simulated data</div>
               </div>
-            </button>
-            <div className={styles.instInfo}>
-              <div className={styles.instNameRow}>
-                <span className={styles.instName}>Hide pending downloads</span>
-                {hidePending && <span className="chip chip-accent">on</span>}
-              </div>
-              <div className={styles.instUrl}>Filter out delayed or scheduled items from queue views</div>
+            </div>
+            <div className={styles.reloadRow}>
+              <span className={styles.reloadLabel}>Reload the app</span>
+              <button className={styles.reloadBtn} onClick={() => window.location.reload()}>Reload</button>
+            </div>
+            <div className={styles.reloadRow}>
+              <span className={styles.reloadLabel}>Reload all devices</span>
+              <button className={styles.reloadBtn} onClick={async () => {
+                await api.triggerReload().catch(() => {});
+                window.location.reload();
+              }}>Reload all</button>
             </div>
           </div>
 
-          <div className={styles.reloadRow}>
-            <span className={styles.reloadLabel}>Reload the app</span>
-            <button className={styles.reloadBtn} onClick={() => window.location.reload()}>Reload</button>
-          </div>
-
-          <div className={styles.reloadRow}>
-            <span className={styles.reloadLabel}>Reload all devices</span>
-            <button className={styles.reloadBtn} onClick={async () => {
-              await api.triggerReload().catch(() => {});
-              window.location.reload();
-            }}>Reload all</button>
-          </div>
-
-          <div className={styles.sectionHeader} style={{ marginTop: 8 }}>
-            <span className={styles.sectionLabel}>Developer</span>
-          </div>
-
-          <div className={styles.instanceRow}>
-            <button className={styles.toggleBtn} onClick={toggleTestMode} title="Toggle test mode">
-              <div className={`${styles.toggle} ${testMode ? styles.toggleOn : ''}`}>
-                <div className={styles.toggleThumb} />
-              </div>
-            </button>
-            <div className={styles.instInfo}>
-              <div className={styles.instNameRow}>
-                <span className={styles.instName}>Test Mode</span>
-                {testMode && <span className="chip chip-yellow">active</span>}
-              </div>
-              <div className={styles.instUrl}>Populate all queue views with simulated data</div>
-            </div>
-          </div>
         </div>
       )}
     </div>

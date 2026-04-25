@@ -4,6 +4,11 @@ All notable changes are documented here, newest first.
 
 ---
 
+## [1.14.0] — 2026-04-26
+
+### Changed
+- Display settings reorganised into zoned tiles: Layout, View, and Developer — tiles sit side-by-side at 50% width on non-mobile screens and stack to full-width on mobile
+
 ## [1.13.2] — 2026-04-26
 
 ### Changed

@@ -11,6 +11,30 @@
   gap: 10px;
 }
 
+.displayZones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 16px;
+}
+
+.displayZone {
+  flex: 0 0 calc(50% - 6px);
+  min-width: 0;
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  box-shadow: var(--elevation-1);
+}
+
+@media (max-width: 600px) {
+  .displayZone { flex: 0 0 100%; }
+}
+
 .sectionHeader {
   display: flex;
   align-items: center;
