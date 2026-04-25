@@ -4,6 +4,11 @@ All notable changes are documented here, newest first.
 
 ---
 
+## [1.11.4] — 2026-04-25
+
+### Fixed
+- Tablet mode: SABnzbd status chip filename truncates with ellipsis instead of wrapping
+
 ## [1.11.3] — 2026-04-25
 
 ### Changed
