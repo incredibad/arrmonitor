@@ -166,6 +166,13 @@
   justify-content: space-between;
 }
 
+.cardT .headerRow {
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
 .cardT .appLogo {
   width: 32px;
   height: 32px;
@@ -173,6 +180,9 @@
 
 .cardT .name {
   font-size: 22px;
+  flex: none;
+  text-align: center;
+  white-space: normal;
 }
 
 .cardT .stats {
