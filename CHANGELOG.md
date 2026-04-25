@@ -4,6 +4,14 @@ All notable changes are documented here, newest first.
 
 ---
 
+## [1.11.3] — 2026-04-25
+
+### Changed
+- Instance cards: "In Queue" label renamed to "Queue" globally
+- Tablet mode: instance card stat values 48→43px, labels 18→13px, name 22px; body uses space-between to fix logo/name vertical alignment
+- Tablet mode: qBittorrent speed text 34→28px, count numbers 44→36px, ETA 48→40px, labels reduced to reduce crowding
+- Tablet mode: SABnzbd speed/ETA text 34→29px, queue number 48→44px, labels reduced
+
 ## [1.11.2] — 2026-04-25
 
 ### Changed
