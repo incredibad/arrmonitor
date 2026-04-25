@@ -188,7 +188,7 @@ function CountStat({ dlCount, seedCount, active, color, bg }) {
     <div className={styles.stat} style={active && color ? { background: bg, borderColor: color } : undefined}>
       <div className={styles.countRow}>
         <span className={styles.countNum} style={c}>{dlCount}</span>
-        <span className={styles.countLabel} style={c}>DOWNLOADS</span>
+        <span className={styles.countLabel} style={c}>QUEUE</span>
       </div>
       <div className={styles.countRow}>
         <span className={styles.countNum} style={c}>{seedCount}</span>
