@@ -4,6 +4,14 @@ All notable changes are documented here, newest first.
 
 ---
 
+## [1.15.1] — 2026-04-26
+
+### Changed
+- Removed right-side drawer and bottom-right FABs entirely
+- Compact nav trigger moved to top of screen (fixed, full-width, 10px bar with down-chevron); panel now drops down from the trigger instead of sliding up from the bottom
+- Compact nav shown on dashboard whenever "Dashboard nav bar" is disabled (any layout mode, not just tablet)
+- Tablet layout heights converted from fixed `calc()` to flex-fill (`flex: 1; min-height: 0`) so the layout correctly fills the remaining space when AppNav or other elements are present
+
 ## [1.15.0] — 2026-04-26
 
 ### Added

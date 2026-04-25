@@ -1,9 +1,8 @@
-import { useEffect, useState } from 'react';
-import { NavLink, useLocation } from 'react-router-dom';
+import { useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import { api } from '../lib/api.js';
-import { useNav } from '../lib/navContext.jsx';
-import { useTestMode } from '../lib/testModeContext.jsx';
 import { useLayout } from '../lib/layoutContext.jsx';
+import { useTestMode } from '../lib/testModeContext.jsx';
 import ImportToastStack from './ImportToastStack.jsx';
 import TabletNav from './TabletNav.jsx';
 import styles from './Layout.module.css';
@@ -12,7 +11,6 @@ function useTabNotification() {
   useEffect(() => {
     const BASE = 'ArrMonitor';
 
-    // Slow-changing data: arr queue counts and issue flags (refresh every 30s)
     let arrTotal = 0, arrIssues = 0;
     async function refreshArr() {
       try {
@@ -35,7 +33,6 @@ function useTabNotification() {
       } catch {}
     }
 
-    // Fast-changing data: SABnzbd + qBittorrent speed/status (refresh every 2s)
     let sabInstances = [], qbInstances = [];
     async function refreshClients() {
       try {
@@ -87,9 +84,7 @@ function useTabNotification() {
           parts.push(mbps >= 1 ? `${Math.round(mbps)} MB/s` : `${Math.round(qbDlSpeed / 1024)} KB/s`);
         }
 
-        // Only show Idle if we have clients configured but nothing is active
         if (parts.length === 0 && (hasSab || hasQb)) parts.push('Idle');
-
         if (total > 0) parts.push(`(${total})`);
 
         let title = parts.length ? `${parts.join(' - ')} - ${BASE}` : BASE;
@@ -169,106 +164,23 @@ function useRemoteReload() {
 }
 
 export default function Layout({ children }) {
-  const { refreshFn, refreshing, handleRefresh } = useNav();
   const { testMode } = useTestMode();
-  const { tabletMode } = useLayout();
+  const { tabletMode, showNavBar } = useLayout();
   const location = useLocation();
-  const [menuOpen, setMenuOpen] = useState(false);
+
   useTabNotification();
   useAutoRefresh();
   useRemoteReload();
 
-  const showTabletNav = tabletMode && location.pathname === '/';
-  const showSettingsNav = location.pathname === '/settings';
-
-  const closeMenu = () => setMenuOpen(false);
+  const onDashboard = location.pathname === '/';
+  const showCompactNav = onDashboard && !showNavBar;
 
   return (
     <div className={`${styles.root} ${testMode ? styles.testModeRoot : ''}`}>
       {testMode && <div className={styles.testModeBanner}>Test mode — queue data is simulated</div>}
-      <div className={`${styles.content} ${showTabletNav ? styles.contentTablet : ''}`}>{children}</div>
+      <div className={`${styles.content} ${onDashboard && tabletMode ? styles.contentTablet : ''}`}>{children}</div>
       <ImportToastStack />
-
-      {menuOpen && <div className={styles.drawerBackdrop} onClick={closeMenu} />}
-      <div className={`${styles.drawer} ${menuOpen ? styles.drawerOpen : ''}`} aria-hidden={!menuOpen}>
-        <NavLink to="/" onClick={closeMenu} className={styles.drawerLogo}>
-          <img src="/favicon.svg" alt="" className={styles.drawerLogoIcon} />
-          <span className={styles.drawerLogoText}>ARRMONITOR</span>
-        </NavLink>
-        <div className={styles.drawerDivider} />
-        <nav className={styles.drawerNav}>
-          <NavLink to="/" end onClick={closeMenu}
-            className={({ isActive }) => `${styles.drawerItem} ${isActive ? styles.drawerItemActive : ''}`}>
-            <DashIcon /> Dashboard
-          </NavLink>
-          <NavLink to="/activity" onClick={closeMenu}
-            className={({ isActive }) => `${styles.drawerItem} ${isActive ? styles.drawerItemActive : ''}`}>
-            <ActivityIcon /> All Queues
-          </NavLink>
-          <NavLink to="/settings" onClick={closeMenu}
-            className={({ isActive }) => `${styles.drawerItem} ${isActive ? styles.drawerItemActive : ''}`}>
-            <SettingsIcon /> Settings
-          </NavLink>
-        </nav>
-        <a href="https://github.com/incredibad/arrmonitor" target="_blank" rel="noopener noreferrer" className={styles.drawerVersion}>
-          v{__APP_VERSION__}
-        </a>
-      </div>
-
-      {showTabletNav ? <TabletNav /> : !showSettingsNav && (
-        <div className={styles.fabGroup}>
-          {refreshFn && (
-            <button
-              className={`${styles.fab} ${refreshing ? styles.fabSpinning : ''}`}
-              onClick={handleRefresh}
-              title="Refresh"
-            >
-              <RefreshIcon />
-            </button>
-          )}
-          <button
-            className={`${styles.fab} ${menuOpen ? styles.fabOpen : ''}`}
-            onClick={() => setMenuOpen(o => !o)}
-            aria-label={menuOpen ? 'Close menu' : 'Open menu'}
-          >
-            {menuOpen ? <CloseIcon /> : <HamburgerIcon />}
-          </button>
-        </div>
-      )}
+      {showCompactNav && <TabletNav />}
     </div>
   );
 }
-
-const RefreshIcon = () => (
-  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-    <polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
-  </svg>
-);
-const HamburgerIcon = () => (
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
-  </svg>
-);
-const CloseIcon = () => (
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-    <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
-  </svg>
-);
-const ActivityIcon = () => (
-  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/>
-    <line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/>
-  </svg>
-);
-const DashIcon = () => (
-  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/>
-    <rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/>
-  </svg>
-);
-const SettingsIcon = () => (
-  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <circle cx="12" cy="12" r="3"/>
-    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
-  </svg>
-);

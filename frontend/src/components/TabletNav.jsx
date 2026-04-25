@@ -3,6 +3,8 @@ import { NavLink } from 'react-router-dom';
 import { useNav } from '../lib/navContext.jsx';
 import styles from './TabletNav.module.css';
 
+/* eslint-disable no-undef */
+
 export default function TabletNav() {
   const [open, setOpen] = useState(false);
   const { refreshFn, refreshing, handleRefresh } = useNav();
@@ -17,7 +19,10 @@ export default function TabletNav() {
   return (
     <>
       {open && <div className={styles.backdrop} onClick={close} />}
-      <div className={`${styles.sheet} ${open ? styles.sheetOpen : ''}`}>
+      <button className={`${styles.trigger} ${open ? styles.triggerOpen : ''}`} onClick={() => setOpen(o => !o)} aria-label="Navigation">
+        <ChevronIcon />
+      </button>
+      <div className={`${styles.sheet} ${open ? styles.sheetOpen : ''}`} aria-hidden={!open}>
         <NavLink to="/" className={styles.logo} onClick={close}>
           <img src="/favicon.svg" alt="" className={styles.logoIcon} />
           <span className={styles.logoText}>ARRMONITOR</span>
@@ -46,16 +51,13 @@ export default function TabletNav() {
           v{__APP_VERSION__}
         </a>
       </div>
-      <button className={`${styles.trigger} ${open ? styles.triggerOpen : ''}`} onClick={() => setOpen(o => !o)} aria-label="Navigation">
-        <ChevronIcon />
-      </button>
     </>
   );
 }
 
 const ChevronIcon = () => (
   <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round">
-    <polyline points="18 15 12 9 6 15"/>
+    <polyline points="6 9 12 15 18 9"/>
   </svg>
 );
 const DashIcon = () => (

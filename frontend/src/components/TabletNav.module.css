@@ -1,10 +1,10 @@
+/* Thin trigger strip at the very top of the screen */
 .trigger {
   position: fixed;
-  bottom: 0;
+  top: var(--safe-top);
   left: 0;
   right: 0;
-  height: calc(10px + env(safe-area-inset-bottom, 0px));
-  padding-bottom: env(safe-area-inset-bottom, 0px);
+  height: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -12,12 +12,13 @@
   border: none;
   color: #fff;
   opacity: 0.55;
-  z-index: 100;
+  z-index: 300;
   -webkit-tap-highlight-color: transparent;
   transition: opacity 0.15s;
 }
 .trigger:active { opacity: 0.9; }
 .triggerOpen { opacity: 0.65; }
+/* Default: chevron points down (open); open: points up (close) */
 .triggerOpen svg { transform: rotate(180deg); }
 
 .backdrop {
@@ -29,23 +30,27 @@
   z-index: 200;
 }
 
+/* Panel drops down from below the trigger */
 .sheet {
   position: fixed;
-  bottom: 0;
+  top: calc(var(--safe-top) + 10px);
   left: 0;
   right: 0;
   background: var(--bg2);
-  border-top: 1px solid var(--border);
-  box-shadow: 0 -8px 32px rgba(0,0,0,0.5);
+  border-bottom: 1px solid var(--border);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.5);
   z-index: 250;
   display: flex;
   align-items: center;
   padding: 18px 28px;
-  padding-bottom: calc(18px + env(safe-area-inset-bottom, 0px));
-  transform: translateY(100%);
+  transform: translateY(-110%);
   transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  pointer-events: none;
 }
-.sheetOpen { transform: translateY(0); }
+.sheetOpen {
+  transform: translateY(0);
+  pointer-events: auto;
+}
 
 .logo {
   display: flex;

@@ -87,20 +87,23 @@
 }
 
 /* ── Tablet mode layout ── */
+/* contentTablet (parent) is height: 100dvh flex-col; these fill remaining space */
 .tabletLayout {
   display: flex;
   flex-direction: row;
-  height: calc(100dvh - var(--safe-top) - 10px - env(safe-area-inset-bottom, 0px));
+  flex: 1;
+  min-height: 0;
   padding: 12px;
   gap: 12px;
   overflow: hidden;
 }
 
-/* Tablet mode with nav bar: flex column wrapper, inner fills remaining height */
+/* With AppNav: outer wrapper fills remaining, inner holds the columns */
 .tabletWrapper {
   display: flex;
   flex-direction: column;
-  height: calc(100dvh - var(--safe-top) - 10px - env(safe-area-inset-bottom, 0px));
+  flex: 1;
+  min-height: 0;
   overflow: hidden;
 }
 
