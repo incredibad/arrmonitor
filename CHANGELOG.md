@@ -4,6 +4,11 @@ All notable changes are documented here, newest first.
 
 ---
 
+## [1.12.2] — 2026-04-25
+
+### Changed
+- Tablet mode: nav trigger bar shrunk to 10px high, full-width, no button styling — just a centred up-arrow icon; dashboard height adjusted to match
+
 ## [1.12.1] — 2026-04-25
 
 ### Changed
