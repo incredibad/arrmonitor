@@ -4,6 +4,11 @@ All notable changes are documented here, newest first.
 
 ---
 
+## [1.12.3] — 2026-04-25
+
+### Changed
+- Tablet mode: nav trigger chevron is now white and bolder
+
 ## [1.12.2] — 2026-04-25
 
 ### Changed
