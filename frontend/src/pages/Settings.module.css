@@ -21,7 +21,7 @@
 .displayZone {
   flex: 0 0 calc(50% - 6px);
   min-width: 0;
-  background: var(--bg2);
+  background: var(--bg3);
   border: 1px solid var(--border);
   border-radius: var(--radius);
   padding: 14px;
@@ -29,6 +29,22 @@
   flex-direction: column;
   gap: 10px;
   box-shadow: var(--elevation-1);
+}
+
+.refreshRow {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  flex-wrap: nowrap;
+  min-width: 0;
+}
+
+.refreshControls {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: auto;
+  flex-shrink: 0;
 }
 
 @media (max-width: 600px) {

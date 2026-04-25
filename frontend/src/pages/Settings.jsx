@@ -373,279 +373,293 @@ export default function Settings() {
 
       {/* ── Apps tab ── */}
       {tab === 'apps' && (
-        <div className={styles.section}>
-          <div className={styles.sectionHeader}>
-            <span className={styles.sectionLabel}>Instances</span>
-            {!showForm && (
-              <button className={styles.addBtn} onClick={() => setShowForm(true)}>
-                <PlusIcon /> Add
-              </button>
+        <div className={styles.displayZones}>
+
+          {/* Instances zone */}
+          <div className={styles.displayZone}>
+            <div className={styles.sectionHeader}>
+              <span className={styles.sectionLabel}>Instances</span>
+              {!showForm && (
+                <button className={styles.addBtn} onClick={() => setShowForm(true)}>
+                  <PlusIcon /> Add
+                </button>
+              )}
+            </div>
+            {showForm && (
+              <div className={styles.formCard}>
+                <div className={styles.formTitle}>{editId ? 'Edit Instance' : 'New Instance'}</div>
+                <Field label="Name" error={errors.name}>
+                  <input name="name" value={form.name} onChange={handleChange} placeholder="My Sonarr" autoComplete="off" />
+                </Field>
+                <Field label="Type">
+                  <select name="type" value={form.type} onChange={handleChange}>
+                    {TYPES.map(t => <option key={t} value={t}>{t.charAt(0).toUpperCase() + t.slice(1)}</option>)}
+                  </select>
+                </Field>
+                <Field label="URL" error={errors.url}>
+                  <input name="url" value={form.url} onChange={handleChange} placeholder="http://192.168.1.100:8989" autoComplete="off" />
+                </Field>
+                <Field label="API Key" error={errors.api_key}>
+                  <input name="api_key" value={form.api_key} onChange={handleChange}
+                    placeholder={editId ? 'Leave blank to keep existing' : 'Paste your API key'} autoComplete="off" />
+                </Field>
+                <Field label="External URL (optional)" hint="Override the link button — useful for reverse proxies">
+                  <input name="external_url" value={form.external_url} onChange={handleChange}
+                    placeholder="https://sonarr.yourdomain.com" autoComplete="off" />
+                </Field>
+                {testResult && (
+                  <div className={`${styles.testResult} ${testResult.ok ? styles.testOk : styles.testFail}`}>
+                    {testResult.ok ? '✓' : '✗'} {testResult.msg}
+                  </div>
+                )}
+                {saveError && <div className={styles.saveError}>{saveError}</div>}
+                <div className={styles.formActions}>
+                  <button className={styles.testBtn} onClick={handleTest} disabled={testing}>
+                    {testing ? 'Testing…' : 'Test Connection'}
+                  </button>
+                  <div className={styles.formActionsRight}>
+                    <button className={styles.cancelBtn} onClick={cancelForm}>Cancel</button>
+                    <button className={styles.saveBtn} onClick={handleSave} disabled={saving}>
+                      {saving ? 'Saving…' : editId ? 'Update' : 'Save'}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+            {loading ? (
+              <div className={styles.loadingText}>Loading…</div>
+            ) : instances.length === 0 && !showForm ? (
+              <div className={styles.emptyText}>No instances configured yet. Tap Add to get started.</div>
+            ) : (
+              <div className={styles.instanceList}>
+                {instances.map(inst => (
+                  <div key={inst.id} className={`${styles.instanceRow} ${!inst.enabled ? styles.disabled : ''}`}>
+                    <button className={styles.toggleBtn} onClick={() => toggleEnabled(inst)} title={inst.enabled ? 'Disable' : 'Enable'}>
+                      <div className={`${styles.toggle} ${inst.enabled ? styles.toggleOn : ''}`}>
+                        <div className={styles.toggleThumb} />
+                      </div>
+                    </button>
+                    <div className={styles.instInfo}>
+                      <div className={styles.instNameRow}>
+                        <span className={styles.instName}>{inst.name}</span>
+                        <span className={`chip chip-${inst.type}`}>{inst.type}</span>
+                      </div>
+                      <div className={styles.instUrl}>{inst.url}</div>
+                    </div>
+                    <div className={styles.instActions}>
+                      <button className={styles.editBtn} onClick={() => startEdit(inst)}><EditIcon /></button>
+                      <button className={styles.deleteBtn} onClick={() => handleDelete(inst.id)}><TrashIcon /></button>
+                    </div>
+                  </div>
+                ))}
+              </div>
             )}
           </div>
 
-          {showForm && (
-            <div className={styles.formCard}>
-              <div className={styles.formTitle}>{editId ? 'Edit Instance' : 'New Instance'}</div>
-              <Field label="Name" error={errors.name}>
-                <input name="name" value={form.name} onChange={handleChange} placeholder="My Sonarr" autoComplete="off" />
-              </Field>
-              <Field label="Type">
-                <select name="type" value={form.type} onChange={handleChange}>
-                  {TYPES.map(t => <option key={t} value={t}>{t.charAt(0).toUpperCase() + t.slice(1)}</option>)}
-                </select>
-              </Field>
-              <Field label="URL" error={errors.url}>
-                <input name="url" value={form.url} onChange={handleChange} placeholder="http://192.168.1.100:8989" autoComplete="off" />
-              </Field>
-              <Field label="API Key" error={errors.api_key}>
-                <input name="api_key" value={form.api_key} onChange={handleChange}
-                  placeholder={editId ? 'Leave blank to keep existing' : 'Paste your API key'} autoComplete="off" />
-              </Field>
-              <Field label="External URL (optional)" hint="Override the link button — useful for reverse proxies">
-                <input name="external_url" value={form.external_url} onChange={handleChange}
-                  placeholder="https://sonarr.yourdomain.com" autoComplete="off" />
-              </Field>
-              {testResult && (
-                <div className={`${styles.testResult} ${testResult.ok ? styles.testOk : styles.testFail}`}>
-                  {testResult.ok ? '✓' : '✗'} {testResult.msg}
-                </div>
-              )}
-              {saveError && <div className={styles.saveError}>{saveError}</div>}
-              <div className={styles.formActions}>
-                <button className={styles.testBtn} onClick={handleTest} disabled={testing}>
-                  {testing ? 'Testing…' : 'Test Connection'}
+          {/* SABnzbd zone */}
+          <div className={styles.displayZone}>
+            <div className={styles.sectionHeader}>
+              <span className={styles.sectionLabel}>SABnzbd</span>
+              {!showSabForm && (
+                <button className={styles.addBtn} onClick={() => setShowSabForm(true)}>
+                  <PlusIcon /> Add
                 </button>
-                <div className={styles.formActionsRight}>
-                  <button className={styles.cancelBtn} onClick={cancelForm}>Cancel</button>
-                  <button className={styles.saveBtn} onClick={handleSave} disabled={saving}>
-                    {saving ? 'Saving…' : editId ? 'Update' : 'Save'}
+              )}
+            </div>
+            {showSabForm && (
+              <div className={styles.formCard}>
+                <div className={styles.formTitle}>{sabEditId ? 'Edit SABnzbd' : 'New SABnzbd Instance'}</div>
+                <Field label="Name" error={sabErrors.name}>
+                  <input name="name" value={sabForm.name} onChange={handleSabChange} placeholder="My SABnzbd" autoComplete="off" />
+                </Field>
+                <Field label="URL" error={sabErrors.url}>
+                  <input name="url" value={sabForm.url} onChange={handleSabChange} placeholder="http://192.168.1.100:8080" autoComplete="off" />
+                </Field>
+                <Field label="API Key" error={sabErrors.api_key}>
+                  <input name="api_key" value={sabForm.api_key} onChange={handleSabChange}
+                    placeholder={sabEditId ? 'Leave blank to keep existing' : 'Config → General → API Key'} autoComplete="off" />
+                </Field>
+                {sabTestResult && (
+                  <div className={`${styles.testResult} ${sabTestResult.ok ? styles.testOk : styles.testFail}`}>
+                    {sabTestResult.ok ? '✓' : '✗'} {sabTestResult.msg}
+                  </div>
+                )}
+                {sabSaveError && <div className={styles.saveError}>{sabSaveError}</div>}
+                <div className={styles.formActions}>
+                  <button className={styles.testBtn} onClick={handleSabTest} disabled={sabTesting}>
+                    {sabTesting ? 'Testing…' : 'Test Connection'}
                   </button>
+                  <div className={styles.formActionsRight}>
+                    <button className={styles.cancelBtn} onClick={cancelSabForm}>Cancel</button>
+                    <button className={styles.saveBtn} onClick={handleSabSave} disabled={sabSaving}>
+                      {sabSaving ? 'Saving…' : sabEditId ? 'Update' : 'Save'}
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
-          )}
-
-          {loading ? (
-            <div className={styles.loadingText}>Loading…</div>
-          ) : instances.length === 0 && !showForm ? (
-            <div className={styles.emptyText}>No instances configured yet. Tap Add to get started.</div>
-          ) : (
-            <div className={styles.instanceList}>
-              {instances.map(inst => (
-                <div key={inst.id} className={`${styles.instanceRow} ${!inst.enabled ? styles.disabled : ''}`}>
-                  <button className={styles.toggleBtn} onClick={() => toggleEnabled(inst)} title={inst.enabled ? 'Disable' : 'Enable'}>
-                    <div className={`${styles.toggle} ${inst.enabled ? styles.toggleOn : ''}`}>
-                      <div className={styles.toggleThumb} />
+            )}
+            {sabLoading ? (
+              <div className={styles.loadingText}>Loading…</div>
+            ) : sabInstances.length === 0 && !showSabForm ? (
+              <div className={styles.emptyText}>No SABnzbd instances configured yet.</div>
+            ) : (
+              <div className={styles.instanceList}>
+                {sabInstances.map(inst => (
+                  <div key={inst.id} className={`${styles.instanceRow} ${!inst.enabled ? styles.disabled : ''}`}>
+                    <button className={styles.toggleBtn} onClick={() => toggleSabEnabled(inst)} title={inst.enabled ? 'Disable' : 'Enable'}>
+                      <div className={`${styles.toggle} ${inst.enabled ? styles.toggleOn : ''}`}>
+                        <div className={styles.toggleThumb} />
+                      </div>
+                    </button>
+                    <div className={styles.instInfo}>
+                      <div className={styles.instNameRow}>
+                        <span className={styles.instName}>{inst.name}</span>
+                        <span className="chip chip-sabnzbd">sabnzbd</span>
+                      </div>
+                      <div className={styles.instUrl}>{inst.url}</div>
                     </div>
-                  </button>
-                  <div className={styles.instInfo}>
-                    <div className={styles.instNameRow}>
-                      <span className={styles.instName}>{inst.name}</span>
-                      <span className={`chip chip-${inst.type}`}>{inst.type}</span>
+                    <div className={styles.instActions}>
+                      <button className={styles.editBtn} onClick={() => startSabEdit(inst)}><EditIcon /></button>
+                      <button className={styles.deleteBtn} onClick={() => handleSabDelete(inst.id)}><TrashIcon /></button>
                     </div>
-                    <div className={styles.instUrl}>{inst.url}</div>
                   </div>
-                  <div className={styles.instActions}>
-                    <button className={styles.editBtn} onClick={() => startEdit(inst)}><EditIcon /></button>
-                    <button className={styles.deleteBtn} onClick={() => handleDelete(inst.id)}><TrashIcon /></button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-
-          <div className={styles.sectionHeader} style={{ marginTop: 8 }}>
-            <span className={styles.sectionLabel}>SABnzbd</span>
-            {!showSabForm && (
-              <button className={styles.addBtn} onClick={() => setShowSabForm(true)}>
-                <PlusIcon /> Add
-              </button>
+                ))}
+              </div>
             )}
           </div>
 
-          {showSabForm && (
-            <div className={styles.formCard}>
-              <div className={styles.formTitle}>{sabEditId ? 'Edit SABnzbd' : 'New SABnzbd Instance'}</div>
-              <Field label="Name" error={sabErrors.name}>
-                <input name="name" value={sabForm.name} onChange={handleSabChange} placeholder="My SABnzbd" autoComplete="off" />
-              </Field>
-              <Field label="URL" error={sabErrors.url}>
-                <input name="url" value={sabForm.url} onChange={handleSabChange} placeholder="http://192.168.1.100:8080" autoComplete="off" />
-              </Field>
-              <Field label="API Key" error={sabErrors.api_key}>
-                <input name="api_key" value={sabForm.api_key} onChange={handleSabChange}
-                  placeholder={sabEditId ? 'Leave blank to keep existing' : 'Config → General → API Key'} autoComplete="off" />
-              </Field>
-              {sabTestResult && (
-                <div className={`${styles.testResult} ${sabTestResult.ok ? styles.testOk : styles.testFail}`}>
-                  {sabTestResult.ok ? '✓' : '✗'} {sabTestResult.msg}
-                </div>
-              )}
-              {sabSaveError && <div className={styles.saveError}>{sabSaveError}</div>}
-              <div className={styles.formActions}>
-                <button className={styles.testBtn} onClick={handleSabTest} disabled={sabTesting}>
-                  {sabTesting ? 'Testing…' : 'Test Connection'}
+          {/* qBittorrent zone */}
+          <div className={styles.displayZone}>
+            <div className={styles.sectionHeader}>
+              <span className={styles.sectionLabel}>qBittorrent</span>
+              {!showQbForm && (
+                <button className={styles.addBtn} onClick={() => setShowQbForm(true)}>
+                  <PlusIcon /> Add
                 </button>
-                <div className={styles.formActionsRight}>
-                  <button className={styles.cancelBtn} onClick={cancelSabForm}>Cancel</button>
-                  <button className={styles.saveBtn} onClick={handleSabSave} disabled={sabSaving}>
-                    {sabSaving ? 'Saving…' : sabEditId ? 'Update' : 'Save'}
+              )}
+            </div>
+            {showQbForm && (
+              <div className={styles.formCard}>
+                <div className={styles.formTitle}>{qbEditId ? 'Edit qBittorrent' : 'New qBittorrent Instance'}</div>
+                <Field label="Name" error={qbErrors.name}>
+                  <input name="name" value={qbForm.name} onChange={handleQbChange} placeholder="My qBittorrent" autoComplete="off" />
+                </Field>
+                <Field label="URL" error={qbErrors.url}>
+                  <input name="url" value={qbForm.url} onChange={handleQbChange} placeholder="http://192.168.1.100:8080" autoComplete="off" />
+                </Field>
+                <Field label="Username (optional)" hint="Leave blank if Web UI auth is disabled">
+                  <input name="username" value={qbForm.username} onChange={handleQbChange} placeholder="admin" autoComplete="off" />
+                </Field>
+                <Field label="Password (optional)">
+                  <input name="password" type="password" value={qbForm.password} onChange={handleQbChange}
+                    placeholder={qbEditId ? 'Leave blank to keep existing' : 'Web UI password'} autoComplete="new-password" />
+                </Field>
+                {qbTestResult && (
+                  <div className={`${styles.testResult} ${qbTestResult.ok ? styles.testOk : styles.testFail}`}>
+                    {qbTestResult.ok ? '✓' : '✗'} {qbTestResult.msg}
+                  </div>
+                )}
+                {qbSaveError && <div className={styles.saveError}>{qbSaveError}</div>}
+                <div className={styles.formActions}>
+                  <button className={styles.testBtn} onClick={handleQbTest} disabled={qbTesting}>
+                    {qbTesting ? 'Testing…' : 'Test Connection'}
                   </button>
+                  <div className={styles.formActionsRight}>
+                    <button className={styles.cancelBtn} onClick={cancelQbForm}>Cancel</button>
+                    <button className={styles.saveBtn} onClick={handleQbSave} disabled={qbSaving}>
+                      {qbSaving ? 'Saving…' : qbEditId ? 'Update' : 'Save'}
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
-          )}
-
-          {sabLoading ? (
-            <div className={styles.loadingText}>Loading…</div>
-          ) : sabInstances.length === 0 && !showSabForm ? (
-            <div className={styles.emptyText}>No SABnzbd instances configured yet.</div>
-          ) : (
-            <div className={styles.instanceList}>
-              {sabInstances.map(inst => (
-                <div key={inst.id} className={`${styles.instanceRow} ${!inst.enabled ? styles.disabled : ''}`}>
-                  <button className={styles.toggleBtn} onClick={() => toggleSabEnabled(inst)} title={inst.enabled ? 'Disable' : 'Enable'}>
-                    <div className={`${styles.toggle} ${inst.enabled ? styles.toggleOn : ''}`}>
-                      <div className={styles.toggleThumb} />
+            )}
+            {qbLoading ? (
+              <div className={styles.loadingText}>Loading…</div>
+            ) : qbInstances.length === 0 && !showQbForm ? (
+              <div className={styles.emptyText}>No qBittorrent instances configured yet.</div>
+            ) : (
+              <div className={styles.instanceList}>
+                {qbInstances.map(inst => (
+                  <div key={inst.id} className={`${styles.instanceRow} ${!inst.enabled ? styles.disabled : ''}`}>
+                    <button className={styles.toggleBtn} onClick={() => toggleQbEnabled(inst)} title={inst.enabled ? 'Disable' : 'Enable'}>
+                      <div className={`${styles.toggle} ${inst.enabled ? styles.toggleOn : ''}`}>
+                        <div className={styles.toggleThumb} />
+                      </div>
+                    </button>
+                    <div className={styles.instInfo}>
+                      <div className={styles.instNameRow}>
+                        <span className={styles.instName}>{inst.name}</span>
+                        <span className="chip chip-qbittorrent">qbittorrent</span>
+                      </div>
+                      <div className={styles.instUrl}>{inst.url}</div>
                     </div>
-                  </button>
-                  <div className={styles.instInfo}>
-                    <div className={styles.instNameRow}>
-                      <span className={styles.instName}>{inst.name}</span>
-                      <span className="chip chip-sabnzbd">sabnzbd</span>
+                    <div className={styles.instActions}>
+                      <button className={styles.editBtn} onClick={() => startQbEdit(inst)}><EditIcon /></button>
+                      <button className={styles.deleteBtn} onClick={() => handleQbDelete(inst.id)}><TrashIcon /></button>
                     </div>
-                    <div className={styles.instUrl}>{inst.url}</div>
                   </div>
-                  <div className={styles.instActions}>
-                    <button className={styles.editBtn} onClick={() => startSabEdit(inst)}><EditIcon /></button>
-                    <button className={styles.deleteBtn} onClick={() => handleSabDelete(inst.id)}><TrashIcon /></button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-
-          {/* ── qBittorrent ── */}
-          <div className={styles.sectionHeader} style={{ marginTop: 8 }}>
-            <span className={styles.sectionLabel}>qBittorrent</span>
-            {!showQbForm && (
-              <button className={styles.addBtn} onClick={() => setShowQbForm(true)}>
-                <PlusIcon /> Add
-              </button>
+                ))}
+              </div>
             )}
           </div>
 
-          {showQbForm && (
-            <div className={styles.formCard}>
-              <div className={styles.formTitle}>{qbEditId ? 'Edit qBittorrent' : 'New qBittorrent Instance'}</div>
-              <Field label="Name" error={qbErrors.name}>
-                <input name="name" value={qbForm.name} onChange={handleQbChange} placeholder="My qBittorrent" autoComplete="off" />
-              </Field>
-              <Field label="URL" error={qbErrors.url}>
-                <input name="url" value={qbForm.url} onChange={handleQbChange} placeholder="http://192.168.1.100:8080" autoComplete="off" />
-              </Field>
-              <Field label="Username (optional)" hint="Leave blank if Web UI auth is disabled">
-                <input name="username" value={qbForm.username} onChange={handleQbChange} placeholder="admin" autoComplete="off" />
-              </Field>
-              <Field label="Password (optional)">
-                <input name="password" type="password" value={qbForm.password} onChange={handleQbChange}
-                  placeholder={qbEditId ? 'Leave blank to keep existing' : 'Web UI password'} autoComplete="new-password" />
-              </Field>
-              {qbTestResult && (
-                <div className={`${styles.testResult} ${qbTestResult.ok ? styles.testOk : styles.testFail}`}>
-                  {qbTestResult.ok ? '✓' : '✗'} {qbTestResult.msg}
-                </div>
-              )}
-              {qbSaveError && <div className={styles.saveError}>{qbSaveError}</div>}
-              <div className={styles.formActions}>
-                <button className={styles.testBtn} onClick={handleQbTest} disabled={qbTesting}>
-                  {qbTesting ? 'Testing…' : 'Test Connection'}
-                </button>
-                <div className={styles.formActionsRight}>
-                  <button className={styles.cancelBtn} onClick={cancelQbForm}>Cancel</button>
-                  <button className={styles.saveBtn} onClick={handleQbSave} disabled={qbSaving}>
-                    {qbSaving ? 'Saving…' : qbEditId ? 'Update' : 'Save'}
-                  </button>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {qbLoading ? (
-            <div className={styles.loadingText}>Loading…</div>
-          ) : qbInstances.length === 0 && !showQbForm ? (
-            <div className={styles.emptyText}>No qBittorrent instances configured yet.</div>
-          ) : (
-            <div className={styles.instanceList}>
-              {qbInstances.map(inst => (
-                <div key={inst.id} className={`${styles.instanceRow} ${!inst.enabled ? styles.disabled : ''}`}>
-                  <button className={styles.toggleBtn} onClick={() => toggleQbEnabled(inst)} title={inst.enabled ? 'Disable' : 'Enable'}>
-                    <div className={`${styles.toggle} ${inst.enabled ? styles.toggleOn : ''}`}>
-                      <div className={styles.toggleThumb} />
-                    </div>
-                  </button>
-                  <div className={styles.instInfo}>
-                    <div className={styles.instNameRow}>
-                      <span className={styles.instName}>{inst.name}</span>
-                      <span className="chip chip-qbittorrent">qbittorrent</span>
-                    </div>
-                    <div className={styles.instUrl}>{inst.url}</div>
-                  </div>
-                  <div className={styles.instActions}>
-                    <button className={styles.editBtn} onClick={() => startQbEdit(inst)}><EditIcon /></button>
-                    <button className={styles.deleteBtn} onClick={() => handleQbDelete(inst.id)}><TrashIcon /></button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
         </div>
       )}
 
       {/* ── Account tab ── */}
       {tab === 'account' && (
-        <div className={styles.section}>
-          <div className={styles.sectionHeader}>
-            <span className={styles.sectionLabel}>Security</span>
-          </div>
+        <div className={styles.displayZones}>
 
-          <div className={styles.formCard}>
-            <div className={styles.formTitle}>Change Password</div>
-            <form onSubmit={handleChangePassword} style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-              <Field label="Current Password">
-                <input type="password" value={pwForm.current} autoComplete="current-password"
-                  onChange={e => setPwForm(f => ({ ...f, current: e.target.value }))}
-                  placeholder="Current password" />
-              </Field>
-              <Field label="New Password">
-                <input type="password" value={pwForm.next} autoComplete="new-password"
-                  onChange={e => setPwForm(f => ({ ...f, next: e.target.value }))}
-                  placeholder="At least 8 characters" />
-              </Field>
-              <Field label="Confirm New Password">
-                <input type="password" value={pwForm.confirm} autoComplete="new-password"
-                  onChange={e => setPwForm(f => ({ ...f, confirm: e.target.value }))}
-                  placeholder="Repeat new password" />
-              </Field>
-              {pwError && <div className={`${styles.testResult} ${styles.testFail}`}>{pwError}</div>}
-              {pwSuccess && <div className={`${styles.testResult} ${styles.testOk}`}>✓ Password updated</div>}
-              <div className={styles.formActions}>
-                <div />
-                <div className={styles.formActionsRight}>
-                  <button type="submit" className={styles.saveBtn} disabled={pwLoading}>
-                    {pwLoading ? 'Saving…' : 'Update Password'}
-                  </button>
+          {/* Security zone */}
+          <div className={styles.displayZone}>
+            <div className={styles.sectionHeader}>
+              <span className={styles.sectionLabel}>Security</span>
+            </div>
+            <div className={styles.formCard}>
+              <div className={styles.formTitle}>Change Password</div>
+              <form onSubmit={handleChangePassword} style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+                <Field label="Current Password">
+                  <input type="password" value={pwForm.current} autoComplete="current-password"
+                    onChange={e => setPwForm(f => ({ ...f, current: e.target.value }))}
+                    placeholder="Current password" />
+                </Field>
+                <Field label="New Password">
+                  <input type="password" value={pwForm.next} autoComplete="new-password"
+                    onChange={e => setPwForm(f => ({ ...f, next: e.target.value }))}
+                    placeholder="At least 8 characters" />
+                </Field>
+                <Field label="Confirm New Password">
+                  <input type="password" value={pwForm.confirm} autoComplete="new-password"
+                    onChange={e => setPwForm(f => ({ ...f, confirm: e.target.value }))}
+                    placeholder="Repeat new password" />
+                </Field>
+                {pwError && <div className={`${styles.testResult} ${styles.testFail}`}>{pwError}</div>}
+                {pwSuccess && <div className={`${styles.testResult} ${styles.testOk}`}>✓ Password updated</div>}
+                <div className={styles.formActions}>
+                  <div />
+                  <div className={styles.formActionsRight}>
+                    <button type="submit" className={styles.saveBtn} disabled={pwLoading}>
+                      {pwLoading ? 'Saving…' : 'Update Password'}
+                    </button>
+                  </div>
                 </div>
-              </div>
-            </form>
+              </form>
+            </div>
           </div>
 
-          <div className={styles.logoutRow}>
-            <span className={styles.loggedInAs}>
-              Signed in as <strong>{auth?.username}</strong>
-            </span>
-            <button className={styles.logoutBtn} onClick={logout}>Sign Out</button>
+          {/* Account zone */}
+          <div className={styles.displayZone}>
+            <div className={styles.sectionHeader}>
+              <span className={styles.sectionLabel}>Account</span>
+            </div>
+            <div className={styles.logoutRow}>
+              <span className={styles.loggedInAs}>
+                Signed in as <strong>{auth?.username}</strong>
+              </span>
+              <button className={styles.logoutBtn} onClick={logout}>Sign Out</button>
+            </div>
           </div>
+
         </div>
       )}
 
@@ -700,29 +714,29 @@ export default function Settings() {
                 </div>
               </button>
               <div className={styles.instInfo}>
-                <div className={styles.instNameRow}>
+                <div className={styles.refreshRow}>
                   <span className={styles.instName}>Auto-refresh</span>
                   {autoRefresh && <span className="chip chip-accent">on</span>}
-                </div>
-                <div className={styles.refreshIntervalRow}>
-                  <span className={styles.refreshEvery}>every</span>
-                  <input
-                    className={styles.refreshValueInput}
-                    type="number"
-                    min="1"
-                    value={autoRefreshValue}
-                    onChange={e => setAutoRefreshInterval(e.target.value, autoRefreshUnit)}
-                  />
-                  <select
-                    className={styles.refreshUnitSelect}
-                    value={autoRefreshUnit}
-                    onChange={e => setAutoRefreshInterval(autoRefreshValue, e.target.value)}
-                  >
-                    <option value="seconds">seconds</option>
-                    <option value="minutes">minutes</option>
-                    <option value="hours">hours</option>
-                    <option value="days">days</option>
-                  </select>
+                  <div className={styles.refreshControls}>
+                    <span className={styles.refreshEvery}>every</span>
+                    <input
+                      className={styles.refreshValueInput}
+                      type="number"
+                      min="1"
+                      value={autoRefreshValue}
+                      onChange={e => setAutoRefreshInterval(e.target.value, autoRefreshUnit)}
+                    />
+                    <select
+                      className={styles.refreshUnitSelect}
+                      value={autoRefreshUnit}
+                      onChange={e => setAutoRefreshInterval(autoRefreshValue, e.target.value)}
+                    >
+                      <option value="seconds">seconds</option>
+                      <option value="minutes">minutes</option>
+                      <option value="hours">hours</option>
+                      <option value="days">days</option>
+                    </select>
+                  </div>
                 </div>
               </div>
             </div>
