@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useGlobalQueue } from '../hooks/useQueue.js';
 import { useNav } from '../lib/navContext.jsx';
+import { useLayout } from '../lib/layoutContext.jsx';
 import QueueItem from '../components/QueueItem.jsx';
 import styles from './InstanceQueue.module.css';
 
@@ -32,6 +33,7 @@ const FILTERS = [
 export default function GlobalQueue() {
   const { allRecords, loading, lastUpdated, refresh, removeItem } = useGlobalQueue(15000);
   const { registerRefresh, clearRefresh, setPageTitle, clearPageTitle } = useNav();
+  const { hidePending } = useLayout();
   const [filter, setFilter] = useState('all');
   const [toast, setToast] = useState(null);
 
@@ -50,7 +52,11 @@ export default function GlobalQueue() {
     setTimeout(() => setToast(null), 3000);
   }
 
-  const records = allRecords || [];
+  const records = (allRecords || []).filter(r => {
+    if (!hidePending) return true;
+    const st = String(r.status ?? '').toLowerCase();
+    return st !== 'delay' && st !== 'pending';
+  });
 
   function countForFilter(key) {
     if (key === 'all') return records.length;

@@ -4,6 +4,11 @@ All notable changes are documented here, newest first.
 
 ---
 
+## [1.13.2] — 2026-04-26
+
+### Changed
+- "Hide pending downloads" is now a configurable toggle in Display settings (off by default) rather than always-on; filters `delay`/`pending` status items from all queue views
+
 ## [1.13.1] — 2026-04-26
 
 ### Fixed

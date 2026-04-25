@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useQueue, useInstances, useInstanceStatus } from '../hooks/useQueue.js';
 import { api } from '../lib/api.js';
 import { useNav } from '../lib/navContext.jsx';
+import { useLayout } from '../lib/layoutContext.jsx';
 import QueueItem from '../components/QueueItem.jsx';
 import styles from './InstanceQueue.module.css';
 
@@ -39,6 +40,7 @@ export default function InstanceQueue() {
   const { queue, loading, error, lastUpdated, refresh, removeItem } = useQueue(id, 15000);
   const { status, updateAvailable, latestVersion, isLsio } = useInstanceStatus(id, instance?.type);
   const { registerRefresh, clearRefresh, setPageTitle, clearPageTitle } = useNav();
+  const { hidePending } = useLayout();
   const [filter, setFilter] = useState('all');
   const [toast, setToast] = useState(null);
 
@@ -65,7 +67,11 @@ export default function InstanceQueue() {
     setTimeout(() => setToast(null), 3000);
   }
 
-  const records = queue?.records || [];
+  const records = (queue?.records || []).filter(r => {
+    if (!hidePending) return true;
+    const st = String(r.status ?? '').toLowerCase();
+    return st !== 'delay' && st !== 'pending';
+  });
 
   function countForFilter(key) {
     if (key === 'all') return queue?.totalRecords ?? 0;

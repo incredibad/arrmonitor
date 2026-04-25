@@ -122,14 +122,6 @@ router.get('/:id/queue', async (req, res) => {
       data = await arrFetch(instance, `/queue?page=${page}&pageSize=${pageSize}&includeUnknownSeriesItems=true&includeSeries=true&includeEpisode=true&includeMovie=true&includeArtist=true`);
     }
 
-    if (Array.isArray(data?.records)) {
-      data.records = data.records.filter(r => {
-        const status = String(r.status ?? '').toLowerCase();
-        return status !== 'delay' && status !== 'pending';
-      });
-      data.totalRecords = data.records.length;
-    }
-
     res.json(data);
   } catch (e) {
     res.status(502).json({ error: e.message });
