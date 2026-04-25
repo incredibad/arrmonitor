@@ -4,6 +4,11 @@ All notable changes are documented here, newest first.
 
 ---
 
+## [1.12.1] — 2026-04-25
+
+### Changed
+- qBittorrent card: "DOWNLOADS" label renamed to "QUEUE" to match other cards
+
 ## [1.12.0] — 2026-04-25
 
 ### Added
