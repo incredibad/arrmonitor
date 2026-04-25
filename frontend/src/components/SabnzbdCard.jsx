@@ -128,6 +128,7 @@ export default function SabnzbdCard({ instance }) {
         <div className={styles.headerRow}>
           <img className={styles.appIcon} src="/logos/sabnzbd.svg" width="16" height="16" alt="SABnzbd" />
           <span className={styles.name}>{instance.name}</span>
+          {tabletMode && statusLabel && <span className={`chip ${chipClass}`}>{statusLabel}{truncated ? ` (${truncated})` : ''}</span>}
           {!tabletMode && version && <span className={styles.version}>v{version}</span>}
           <div className={styles.headerActions} onClick={e => e.stopPropagation()}>
             {isPaused && (
@@ -154,7 +155,7 @@ export default function SabnzbdCard({ instance }) {
           )}
         </div>
 
-        {statusLabel && (
+        {!tabletMode && statusLabel && (
           <div className={styles.statusRow}>
             <span className={`chip ${chipClass}`}>
               {statusLabel}{truncated ? ` (${truncated})` : ''}

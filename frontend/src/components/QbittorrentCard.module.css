@@ -213,12 +213,18 @@
 }
 
 .cardT .name {
-  font-size: 22px;
+  font-size: 27px;
+}
+
+.cardT :global(.chip) {
+  font-size: 16px;
+  padding: 4px 12px;
+  line-height: 24px;
 }
 
 .cardT .actionBtn {
   padding: 6px 14px;
-  font-size: 14px;
+  font-size: 19px;
   gap: 6px;
 }
 
@@ -241,7 +247,7 @@
 }
 
 .cardT .statLabel {
-  font-size: 13px;
+  font-size: 18px;
   letter-spacing: 0.07em;
 }
 
@@ -260,7 +266,7 @@
 }
 
 .cardT .countLabel {
-  font-size: 11px;
+  font-size: 16px;
 }
 
 .cardT .countRow {

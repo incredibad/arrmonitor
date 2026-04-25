@@ -116,6 +116,7 @@ export default function QbittorrentCard({ instance }) {
         <div className={styles.headerRow}>
           <img className={styles.appIcon} src="/logos/qbittorrent.svg" width="16" height="16" alt="qBittorrent" />
           <span className={styles.name}>{instance.name}</span>
+          {tabletMode && statusLabel && <span className={`chip ${chipClass}`}>{statusLabel}</span>}
           {!tabletMode && version && <span className={styles.version}>v{version}</span>}
           <div className={styles.headerActions} onClick={e => e.stopPropagation()}>
             {(isDownloading || isSeeding) && (
@@ -137,7 +138,7 @@ export default function QbittorrentCard({ instance }) {
           )}
         </div>
 
-        {statusLabel && (
+        {!tabletMode && statusLabel && (
           <div className={styles.statusRow}>
             <span className={`chip ${chipClass}`}>{statusLabel}</span>
           </div>

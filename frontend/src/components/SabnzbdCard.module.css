@@ -220,18 +220,24 @@
 }
 
 .cardT .name {
-  font-size: 22px;
+  font-size: 27px;
+}
+
+.cardT :global(.chip) {
+  font-size: 16px;
+  padding: 4px 12px;
+  line-height: 24px;
 }
 
 .cardT .actionBtn {
   padding: 6px 14px;
-  font-size: 14px;
+  font-size: 19px;
   gap: 6px;
 }
 
 .cardT .actionBtnIcon {
-  width: 32px;
-  height: 32px;
+  width: 36px;
+  height: 36px;
 }
 
 .cardT .stats {
@@ -253,12 +259,12 @@
 }
 
 .cardT .statLabel {
-  font-size: 13px;
+  font-size: 18px;
   letter-spacing: 0.06em;
 }
 
 .cardT .statSublabel {
-  font-size: 13px;
+  font-size: 18px;
 }
 
 .cardT .shimmer {

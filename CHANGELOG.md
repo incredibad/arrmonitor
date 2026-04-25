@@ -4,6 +4,11 @@ All notable changes are documented here, newest first.
 
 ---
 
+## [1.11.2] — 2026-04-25
+
+### Changed
+- Tablet mode: status chips moved inline next to the download client name in the header row; chips scaled up to 16px; all label/secondary text increased by 5px across download client and instance cards
+
 ## [1.11.1] — 2026-04-25
 
 ### Added
