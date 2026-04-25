@@ -24,7 +24,7 @@ export function LayoutProvider({ children }) {
   });
 
   const [hidePending, setHidePending] = useState(() => {
-    try { return localStorage.getItem('arrmonitor_hide_pending') === 'true'; } catch { return false; }
+    try { const v = localStorage.getItem('arrmonitor_hide_pending'); return v === null ? true : v === 'true'; } catch { return true; }
   });
 
   const toggleHorizontal = useCallback(() => {
