@@ -179,7 +179,7 @@ export default function Layout({ children }) {
   useRemoteReload();
 
   const showTabletNav = tabletMode && location.pathname === '/';
-  const showSettingsNav = tabletMode && location.pathname === '/settings';
+  const showSettingsNav = location.pathname === '/settings';
 
   const closeMenu = () => setMenuOpen(false);
 
