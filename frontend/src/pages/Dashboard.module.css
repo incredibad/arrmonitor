@@ -90,7 +90,7 @@
 .tabletLayout {
   display: flex;
   flex-direction: row;
-  height: calc(100dvh - var(--safe-top) - 52px);
+  height: calc(100dvh - var(--safe-top) - 10px - env(safe-area-inset-bottom, 0px));
   padding: 12px;
   gap: 12px;
   overflow: hidden;
