@@ -4,6 +4,11 @@ All notable changes are documented here, newest first.
 
 ---
 
+## [1.13.1] — 2026-04-26
+
+### Fixed
+- Queue views: items with `delay` or `pending` status (future scheduled downloads) are now filtered out before display
+
 ## [1.13.0] — 2026-04-26
 
 ### Changed
