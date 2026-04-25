@@ -4,6 +4,12 @@ All notable changes are documented here, newest first.
 
 ---
 
+## [1.12.4] — 2026-04-25
+
+### Changed
+- All dashboard cards: coloured left border increased from 3px to 5px
+- qBittorrent card: added coloured left border (matching qBittorrent brand colour) to match SABnzbd and instance cards
+
 ## [1.12.3] — 2026-04-25
 
 ### Changed
