@@ -4,6 +4,11 @@ All notable changes are documented here, newest first.
 
 ---
 
+## [1.11.5] — 2026-04-25
+
+### Fixed
+- Tablet mode: instance card logo and name now stacked vertically and centred, preventing long names from overflowing the column
+
 ## [1.11.4] — 2026-04-25
 
 ### Fixed
