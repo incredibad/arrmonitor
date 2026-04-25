@@ -366,8 +366,7 @@ export default function Settings() {
 
   return (
     <div className={styles.page}>
-      {tabletMode && (
-        <div className={styles.tabletNav}>
+      <div className={styles.tabletNav}>
           <NavLink to="/" className={styles.tabletNavLogo}>
             <img src="/favicon.svg" alt="" className={styles.tabletNavLogoIcon} />
             <span className={styles.tabletNavLogoText}>ARRMONITOR</span>
@@ -384,8 +383,7 @@ export default function Settings() {
               <SettingsIcon /> Settings
             </NavLink>
           </nav>
-        </div>
-      )}
+      </div>
       <div className={styles.tabBar}>
         <button className={`${styles.tab} ${tab === 'apps'    ? styles.tabActive : ''}`} onClick={() => switchTab('apps')}>Apps</button>
         <button className={`${styles.tab} ${tab === 'account' ? styles.tabActive : ''}`} onClick={() => switchTab('account')}>Account</button>

@@ -4,6 +4,11 @@ All notable changes are documented here, newest first.
 
 ---
 
+## [1.14.3] — 2026-04-26
+
+### Changed
+- Settings page nav bar and hidden FAB/drawer now apply regardless of tablet mode (always visible on settings page)
+
 ## [1.14.2] — 2026-04-26
 
 ### Changed
