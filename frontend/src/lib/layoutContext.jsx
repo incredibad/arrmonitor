@@ -12,11 +12,11 @@ export function LayoutProvider({ children }) {
   });
 
   const [autoRefreshValue, setAutoRefreshValueState] = useState(() => {
-    try { return Number(localStorage.getItem('arrmonitor_auto_refresh_value')) || 30; } catch { return 30; }
+    try { return Number(localStorage.getItem('arrmonitor_auto_refresh_value')) || 1; } catch { return 1; }
   });
 
   const [autoRefreshUnit, setAutoRefreshUnitState] = useState(() => {
-    try { return localStorage.getItem('arrmonitor_auto_refresh_unit') || 'minutes'; } catch { return 'minutes'; }
+    try { return localStorage.getItem('arrmonitor_auto_refresh_unit') || 'hours'; } catch { return 'hours'; }
   });
 
   const [tabletMode, setTabletMode] = useState(() => {
