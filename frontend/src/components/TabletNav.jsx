@@ -42,6 +42,9 @@ export default function TabletNav() {
             </button>
           )}
         </nav>
+        <a href="https://github.com/incredibad/arrmonitor" target="_blank" rel="noopener noreferrer" className={styles.version}>
+          v{__APP_VERSION__}
+        </a>
       </div>
       <button className={`${styles.trigger} ${open ? styles.triggerOpen : ''}`} onClick={() => setOpen(o => !o)} aria-label="Navigation">
         <ChevronIcon />

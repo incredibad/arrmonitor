@@ -210,6 +210,9 @@ export default function Layout({ children }) {
             <SettingsIcon /> Settings
           </NavLink>
         </nav>
+        <a href="https://github.com/incredibad/arrmonitor" target="_blank" rel="noopener noreferrer" className={styles.drawerVersion}>
+          v{__APP_VERSION__}
+        </a>
       </div>
 
       {showTabletNav ? <TabletNav /> : !showSettingsNav && (

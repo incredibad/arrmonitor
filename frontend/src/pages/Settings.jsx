@@ -383,6 +383,9 @@ export default function Settings() {
               <SettingsIcon /> Settings
             </NavLink>
           </nav>
+          <a href="https://github.com/incredibad/arrmonitor" target="_blank" rel="noopener noreferrer" className={styles.tabletNavVersion}>
+            v{__APP_VERSION__}
+          </a>
       </div>
       <div className={styles.tabBar}>
         <button className={`${styles.tab} ${tab === 'apps'    ? styles.tabActive : ''}`} onClick={() => switchTab('apps')}>Apps</button>
