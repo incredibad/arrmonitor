@@ -4,6 +4,12 @@ All notable changes are documented here, newest first.
 
 ---
 
+## [1.14.4] — 2026-04-26
+
+### Changed
+- Settings nav bar: reduced padding, smaller logo text (21px) and nav item text (15px), shorter divider
+- Settings tabs: inactive tabs raised to `--text2`, font size 14px; active tab bold (600)
+
 ## [1.14.3] — 2026-04-26
 
 ### Changed
