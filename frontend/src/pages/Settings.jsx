@@ -33,7 +33,7 @@ export default function Settings() {
   const { auth, logout } = useAuth();
   const { clearRefresh, setPageTitle, clearPageTitle } = useNav();
   const { testMode, toggle: toggleTestMode } = useTestMode();
-  const { horizontalLayout, toggleHorizontal, autoRefresh, toggleAutoRefresh, tabletMode, toggleTabletMode } = useLayout();
+  const { horizontalLayout, toggleHorizontal, autoRefresh, toggleAutoRefresh, autoRefreshValue, autoRefreshUnit, setAutoRefreshInterval, tabletMode, toggleTabletMode } = useLayout();
 
   const [tab, setTab] = useState('apps');
 
@@ -682,7 +682,26 @@ export default function Settings() {
                 <span className={styles.instName}>Auto-refresh</span>
                 {autoRefresh && <span className="chip chip-accent">on</span>}
               </div>
-              <div className={styles.instUrl}>Reload the page every 10 minutes</div>
+              <div className={styles.refreshIntervalRow}>
+                <span className={styles.refreshEvery}>every</span>
+                <input
+                  className={styles.refreshValueInput}
+                  type="number"
+                  min="1"
+                  value={autoRefreshValue}
+                  onChange={e => setAutoRefreshInterval(e.target.value, autoRefreshUnit)}
+                />
+                <select
+                  className={styles.refreshUnitSelect}
+                  value={autoRefreshUnit}
+                  onChange={e => setAutoRefreshInterval(autoRefreshValue, e.target.value)}
+                >
+                  <option value="seconds">seconds</option>
+                  <option value="minutes">minutes</option>
+                  <option value="hours">hours</option>
+                  <option value="days">days</option>
+                </select>
+              </div>
             </div>
           </div>
 
