@@ -8,7 +8,7 @@
 .tabletNav {
   display: flex;
   align-items: center;
-  padding: 18px 28px;
+  padding: 12px 20px;
   background: var(--bg2);
   border-bottom: 1px solid var(--border);
   box-shadow: 0 -8px 32px rgba(0,0,0,0.5);
@@ -30,7 +30,7 @@
 }
 .tabletNavLogoText {
   font-family: 'Oswald', sans-serif;
-  font-size: 22px;
+  font-size: 21px;
   font-weight: 600;
   letter-spacing: 0.08em;
   color: #f5eddf;
@@ -39,9 +39,9 @@
 
 .tabletNavDivider {
   width: 1px;
-  height: 36px;
+  height: 30px;
   background: var(--border);
-  margin: 0 28px;
+  margin: 0 20px;
   flex-shrink: 0;
 }
 
@@ -56,9 +56,9 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 11px 18px;
+  padding: 8px 14px;
   border-radius: var(--radius-sm);
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 500;
   color: var(--text2);
   text-decoration: none;
@@ -395,20 +395,21 @@
 .tab {
   flex: 1;
   padding: 14px 0;
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 500;
-  color: var(--text3);
+  color: var(--text2);
   text-align: center;
   border-bottom: 2px solid transparent;
   margin-bottom: -1px;
   transition: color 0.15s, border-color 0.15s;
   -webkit-tap-highlight-color: transparent;
 }
-.tab:active { color: var(--text2); }
+.tab:active { color: var(--text); }
 
 .tabActive {
   color: var(--accent);
   border-bottom-color: var(--accent);
+  font-weight: 600;
 }
 
 .logoutRow {
