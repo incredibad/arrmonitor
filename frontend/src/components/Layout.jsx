@@ -179,6 +179,7 @@ export default function Layout({ children }) {
   useRemoteReload();
 
   const showTabletNav = tabletMode && location.pathname === '/';
+  const showSettingsNav = tabletMode && location.pathname === '/settings';
 
   const closeMenu = () => setMenuOpen(false);
 
@@ -211,7 +212,7 @@ export default function Layout({ children }) {
         </nav>
       </div>
 
-      {showTabletNav ? <TabletNav /> : (
+      {showTabletNav ? <TabletNav /> : !showSettingsNav && (
         <div className={styles.fabGroup}>
           {refreshFn && (
             <button

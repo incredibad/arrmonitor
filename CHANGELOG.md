@@ -4,6 +4,11 @@ All notable changes are documented here, newest first.
 
 ---
 
+## [1.14.2] — 2026-04-26
+
+### Changed
+- Tablet mode: settings page now shows a persistent horizontal nav bar (logo + Dashboard / All Queues / Settings links) above the settings tabs; the bottom-sheet trigger and FAB/drawer are hidden on this page
+
 ## [1.14.1] — 2026-04-26
 
 ### Changed
