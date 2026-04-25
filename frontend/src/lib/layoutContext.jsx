@@ -11,6 +11,14 @@ export function LayoutProvider({ children }) {
     try { return localStorage.getItem('arrmonitor_auto_refresh') === 'true'; } catch { return false; }
   });
 
+  const [autoRefreshValue, setAutoRefreshValueState] = useState(() => {
+    try { return Number(localStorage.getItem('arrmonitor_auto_refresh_value')) || 30; } catch { return 30; }
+  });
+
+  const [autoRefreshUnit, setAutoRefreshUnitState] = useState(() => {
+    try { return localStorage.getItem('arrmonitor_auto_refresh_unit') || 'minutes'; } catch { return 'minutes'; }
+  });
+
   const [tabletMode, setTabletMode] = useState(() => {
     try { return localStorage.getItem('arrmonitor_tablet') === 'true'; } catch { return false; }
   });
@@ -31,6 +39,16 @@ export function LayoutProvider({ children }) {
     });
   }, []);
 
+  const setAutoRefreshInterval = useCallback((value, unit) => {
+    const v = Math.max(1, Number(value) || 1);
+    setAutoRefreshValueState(v);
+    setAutoRefreshUnitState(unit);
+    try {
+      localStorage.setItem('arrmonitor_auto_refresh_value', String(v));
+      localStorage.setItem('arrmonitor_auto_refresh_unit', unit);
+    } catch {}
+  }, []);
+
   const toggleTabletMode = useCallback(() => {
     setTabletMode(prev => {
       const next = !prev;
@@ -40,7 +58,7 @@ export function LayoutProvider({ children }) {
   }, []);
 
   return (
-    <LayoutContext.Provider value={{ horizontalLayout, toggleHorizontal, autoRefresh, toggleAutoRefresh, tabletMode, toggleTabletMode }}>
+    <LayoutContext.Provider value={{ horizontalLayout, toggleHorizontal, autoRefresh, toggleAutoRefresh, autoRefreshValue, autoRefreshUnit, setAutoRefreshInterval, tabletMode, toggleTabletMode }}>
       {children}
     </LayoutContext.Provider>
   );

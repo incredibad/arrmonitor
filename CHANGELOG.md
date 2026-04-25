@@ -4,6 +4,11 @@ All notable changes are documented here, newest first.
 
 ---
 
+## [1.13.0] — 2026-04-26
+
+### Changed
+- Auto-refresh interval is now configurable: number input + seconds/minutes/hours/days dropdown (default 30 minutes), persisted in localStorage
+
 ## [1.12.5] — 2026-04-25
 
 ### Fixed

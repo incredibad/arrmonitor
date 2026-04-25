@@ -209,6 +209,47 @@
   text-overflow: ellipsis;
 }
 
+.refreshIntervalRow {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 4px;
+}
+
+.refreshEvery {
+  font-size: 11px;
+  color: var(--text3);
+  font-family: var(--font-mono);
+}
+
+.refreshValueInput {
+  width: 54px;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text);
+  font-size: 12px;
+  font-family: var(--font-mono);
+  padding: 3px 6px;
+  text-align: right;
+  -moz-appearance: textfield;
+}
+.refreshValueInput::-webkit-outer-spin-button,
+.refreshValueInput::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+.refreshValueInput:focus { outline: none; border-color: var(--accent); }
+
+.refreshUnitSelect {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text);
+  font-size: 12px;
+  font-family: var(--font-mono);
+  padding: 3px 6px;
+  cursor: pointer;
+}
+.refreshUnitSelect:focus { outline: none; border-color: var(--accent); }
+
 .instActions {
   display: flex;
   align-items: center;

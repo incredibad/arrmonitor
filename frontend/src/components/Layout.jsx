@@ -127,13 +127,16 @@ function useTabNotification() {
   }, []);
 }
 
+const UNIT_MS = { seconds: 1000, minutes: 60000, hours: 3600000, days: 86400000 };
+
 function useAutoRefresh() {
-  const { autoRefresh } = useLayout();
+  const { autoRefresh, autoRefreshValue, autoRefreshUnit } = useLayout();
   useEffect(() => {
     if (!autoRefresh) return;
-    const t = setTimeout(() => window.location.reload(), 10 * 60 * 1000);
+    const ms = (autoRefreshValue || 30) * (UNIT_MS[autoRefreshUnit] || 60000);
+    const t = setTimeout(() => window.location.reload(), ms);
     return () => clearTimeout(t);
-  }, [autoRefresh]);
+  }, [autoRefresh, autoRefreshValue, autoRefreshUnit]);
 }
 
 function useRemoteReload() {
