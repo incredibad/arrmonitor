@@ -33,7 +33,7 @@ export default function Settings() {
   const { auth, logout } = useAuth();
   const { clearRefresh, setPageTitle, clearPageTitle } = useNav();
   const { testMode, toggle: toggleTestMode } = useTestMode();
-  const { horizontalLayout, toggleHorizontal, autoRefresh, toggleAutoRefresh, autoRefreshValue, autoRefreshUnit, setAutoRefreshInterval, tabletMode, toggleTabletMode } = useLayout();
+  const { horizontalLayout, toggleHorizontal, autoRefresh, toggleAutoRefresh, autoRefreshValue, autoRefreshUnit, setAutoRefreshInterval, tabletMode, toggleTabletMode, hidePending, toggleHidePending } = useLayout();
 
   const [tab, setTab] = useState('apps');
 
@@ -717,6 +717,21 @@ export default function Settings() {
                 {tabletMode && <span className="chip chip-accent">on</span>}
               </div>
               <div className={styles.instUrl}>Dashboard optimised for large-screen tablets — larger text, 70/30 layout, full-height cards</div>
+            </div>
+          </div>
+
+          <div className={styles.instanceRow}>
+            <button className={styles.toggleBtn} onClick={toggleHidePending} title="Toggle hide pending downloads">
+              <div className={`${styles.toggle} ${hidePending ? styles.toggleOn : ''}`}>
+                <div className={styles.toggleThumb} />
+              </div>
+            </button>
+            <div className={styles.instInfo}>
+              <div className={styles.instNameRow}>
+                <span className={styles.instName}>Hide pending downloads</span>
+                {hidePending && <span className="chip chip-accent">on</span>}
+              </div>
+              <div className={styles.instUrl}>Filter out delayed or scheduled items from queue views</div>
             </div>
           </div>
 

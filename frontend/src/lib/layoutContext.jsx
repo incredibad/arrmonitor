@@ -23,6 +23,10 @@ export function LayoutProvider({ children }) {
     try { return localStorage.getItem('arrmonitor_tablet') === 'true'; } catch { return false; }
   });
 
+  const [hidePending, setHidePending] = useState(() => {
+    try { return localStorage.getItem('arrmonitor_hide_pending') === 'true'; } catch { return false; }
+  });
+
   const toggleHorizontal = useCallback(() => {
     setHorizontalLayout(prev => {
       const next = !prev;
@@ -57,8 +61,16 @@ export function LayoutProvider({ children }) {
     });
   }, []);
 
+  const toggleHidePending = useCallback(() => {
+    setHidePending(prev => {
+      const next = !prev;
+      try { localStorage.setItem('arrmonitor_hide_pending', String(next)); } catch {}
+      return next;
+    });
+  }, []);
+
   return (
-    <LayoutContext.Provider value={{ horizontalLayout, toggleHorizontal, autoRefresh, toggleAutoRefresh, autoRefreshValue, autoRefreshUnit, setAutoRefreshInterval, tabletMode, toggleTabletMode }}>
+    <LayoutContext.Provider value={{ horizontalLayout, toggleHorizontal, autoRefresh, toggleAutoRefresh, autoRefreshValue, autoRefreshUnit, setAutoRefreshInterval, tabletMode, toggleTabletMode, hidePending, toggleHidePending }}>
       {children}
     </LayoutContext.Provider>
   );
