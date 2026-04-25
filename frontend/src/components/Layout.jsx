@@ -136,6 +136,35 @@ function useAutoRefresh() {
   }, [autoRefresh]);
 }
 
+function useRemoteReload() {
+  useEffect(() => {
+    let interval = null;
+
+    async function check() {
+      try {
+        const data = await api.getReloadTrigger();
+        if (!data?.triggered) return;
+        const lastHandled = sessionStorage.getItem('arrmonitor_reload_handled');
+        if (data.triggered_at && data.triggered_at !== lastHandled) {
+          sessionStorage.setItem('arrmonitor_reload_handled', data.triggered_at);
+          window.location.reload();
+        }
+      } catch {}
+    }
+
+    function start() { check(); interval = setInterval(check, 10000); }
+    function stop() { clearInterval(interval); interval = null; }
+    function onVisibility() { document.hidden ? stop() : start(); }
+
+    if (!document.hidden) start();
+    document.addEventListener('visibilitychange', onVisibility);
+    return () => {
+      stop();
+      document.removeEventListener('visibilitychange', onVisibility);
+    };
+  }, []);
+}
+
 export default function Layout({ children }) {
   const { refreshFn, refreshing, handleRefresh } = useNav();
   const { testMode } = useTestMode();
@@ -144,6 +173,7 @@ export default function Layout({ children }) {
   const [menuOpen, setMenuOpen] = useState(false);
   useTabNotification();
   useAutoRefresh();
+  useRemoteReload();
 
   const showTabletNav = tabletMode && location.pathname === '/';
 

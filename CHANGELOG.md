@@ -4,6 +4,11 @@ All notable changes are documented here, newest first.
 
 ---
 
+## [1.12.0] — 2026-04-25
+
+### Added
+- Remote reload: "Reload all devices" button in Display settings sets a server-side trigger (persists 20s); all open clients poll every 10s and reload once when they detect it — works across different devices and browsers
+
 ## [1.11.5] — 2026-04-25
 
 ### Fixed

@@ -706,6 +706,14 @@ export default function Settings() {
             <button className={styles.reloadBtn} onClick={() => window.location.reload()}>Reload</button>
           </div>
 
+          <div className={styles.reloadRow}>
+            <span className={styles.reloadLabel}>Reload all devices</span>
+            <button className={styles.reloadBtn} onClick={async () => {
+              await api.triggerReload().catch(() => {});
+              window.location.reload();
+            }}>Reload all</button>
+          </div>
+
           <div className={styles.sectionHeader} style={{ marginTop: 8 }}>
             <span className={styles.sectionLabel}>Developer</span>
           </div>

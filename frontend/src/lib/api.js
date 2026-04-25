@@ -73,4 +73,8 @@ export const api = {
   getQbittorrentTransfer: (id) => request(`/api/qbittorrent/${id}/transfer`),
   pauseAllQbittorrent: (id) => request(`/api/qbittorrent/${id}/pauseAll`, { method: 'POST' }),
   resumeAllQbittorrent: (id) => request(`/api/qbittorrent/${id}/resumeAll`, { method: 'POST' }),
+
+  // Remote reload trigger
+  getReloadTrigger: () => request('/api/reload-trigger'),
+  triggerReload: () => request('/api/reload-trigger', { method: 'POST' }),
 };
