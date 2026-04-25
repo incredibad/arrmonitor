@@ -4,6 +4,71 @@
   min-height: calc(100dvh - 72px);
 }
 
+/* ── Tablet nav bar (settings page only) ── */
+.tabletNav {
+  display: flex;
+  align-items: center;
+  padding: 18px 28px;
+  background: var(--bg2);
+  border-bottom: 1px solid var(--border);
+  box-shadow: 0 -8px 32px rgba(0,0,0,0.5);
+  gap: 0;
+  flex-shrink: 0;
+}
+
+.tabletNavLogo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+  flex-shrink: 0;
+}
+.tabletNavLogoIcon {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+}
+.tabletNavLogoText {
+  font-family: 'Oswald', sans-serif;
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: #f5eddf;
+  white-space: nowrap;
+}
+
+.tabletNavDivider {
+  width: 1px;
+  height: 36px;
+  background: var(--border);
+  margin: 0 28px;
+  flex-shrink: 0;
+}
+
+.tabletNavLinks {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex: 1;
+}
+
+.tabletNavItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 11px 18px;
+  border-radius: var(--radius-sm);
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--text2);
+  text-decoration: none;
+  white-space: nowrap;
+  -webkit-tap-highlight-color: transparent;
+  transition: background 0.12s, color 0.12s;
+}
+.tabletNavItem:active { background: var(--bg3); }
+.tabletNavItemActive { color: var(--accent); background: var(--accent-light); }
+
 .section {
   padding: 16px;
   display: flex;
