@@ -4,6 +4,11 @@ All notable changes are documented here, newest first.
 
 ---
 
+## [1.12.5] — 2026-04-25
+
+### Fixed
+- Brand colours corrected to match app logos: SABnzbd changed from purple to amber (`#ffb300`), Lidarr changed from lime green to forest green (`#2d9948`)
+
 ## [1.12.4] — 2026-04-25
 
 ### Changed

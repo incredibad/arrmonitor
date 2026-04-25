@@ -40,12 +40,12 @@
   --sonarr-bg:  rgba(56,189,248,0.10);
   --radarr:     #fbbf24;
   --radarr-bg:  rgba(251,191,36,0.10);
-  --lidarr:     #4ade80;
-  --lidarr-bg:  rgba(74,222,128,0.10);
+  --lidarr:     #2d9948;
+  --lidarr-bg:  rgba(45,153,72,0.10);
   --sportarr:   #2dd4bf;
   --sportarr-bg: rgba(45,212,191,0.10);
-  --sabnzbd:       #818cf8;
-  --sabnzbd-bg:    rgba(129,140,248,0.10);
+  --sabnzbd:       #ffb300;
+  --sabnzbd-bg:    rgba(255,179,0,0.10);
   --qbittorrent:   #3d9be9;
   --qbittorrent-bg: rgba(61,155,233,0.10);
 
@@ -98,9 +98,9 @@ select option { background: var(--bg3); }
 }
 .chip-sonarr   { background: var(--sonarr-bg);   color: var(--sonarr);   border-color: rgba(56,189,248,0.20); }
 .chip-radarr   { background: var(--radarr-bg);   color: var(--radarr);   border-color: rgba(251,191,36,0.20); }
-.chip-lidarr   { background: var(--lidarr-bg);   color: var(--lidarr);   border-color: rgba(74,222,128,0.20); }
+.chip-lidarr   { background: var(--lidarr-bg);   color: var(--lidarr);   border-color: rgba(45,153,72,0.20); }
 .chip-sportarr { background: var(--sportarr-bg); color: var(--sportarr); border-color: rgba(45,212,191,0.20); }
-.chip-sabnzbd      { background: var(--sabnzbd-bg);      color: var(--sabnzbd);      border-color: rgba(129,140,248,0.20); }
+.chip-sabnzbd      { background: var(--sabnzbd-bg);      color: var(--sabnzbd);      border-color: rgba(255,179,0,0.20); }
 .chip-qbittorrent  { background: var(--qbittorrent-bg);  color: var(--qbittorrent);  border-color: rgba(61,155,233,0.20); }
 .chip-green    { background: var(--green-bg);    color: var(--green);    border-color: rgba(74,222,128,0.20); }
 .chip-red      { background: var(--red-bg);      color: var(--red);      border-color: rgba(248,113,113,0.20); }
