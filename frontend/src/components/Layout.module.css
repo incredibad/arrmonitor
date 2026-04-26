@@ -67,4 +67,11 @@ body { font-family: var(--font) !important; }
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  background: #000;
+}
+
+/* Spacer that reserves the compact nav trigger height so content sits below it */
+.compactNavSpacer {
+  height: 15px;
+  flex-shrink: 0;
 }

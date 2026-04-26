@@ -4,11 +4,11 @@
   top: var(--safe-top);
   left: 0;
   right: 0;
-  height: 10px;
+  height: 15px;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: none;
+  background: #222;
   border: none;
   color: #fff;
   opacity: 0.55;
@@ -33,7 +33,7 @@
 /* Panel drops down from below the trigger */
 .sheet {
   position: fixed;
-  top: calc(var(--safe-top) + 10px);
+  top: calc(var(--safe-top) + 15px);
   left: 0;
   right: 0;
   background: var(--bg2);

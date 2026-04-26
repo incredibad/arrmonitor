@@ -183,7 +183,10 @@ export default function Layout({ children }) {
           <button className={styles.testModeDismiss} onClick={toggleTestMode}>Disable</button>
         </div>
       )}
-      <div className={`${styles.content} ${onDashboard && tabletMode ? styles.contentTablet : ''}`}>{children}</div>
+      <div className={`${styles.content} ${onDashboard && tabletMode ? styles.contentTablet : ''}`}>
+        {showCompactNav && <div className={styles.compactNavSpacer} />}
+        {children}
+      </div>
       <ImportToastStack />
       {showCompactNav && <TabletNav />}
     </div>
