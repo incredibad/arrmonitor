@@ -4,6 +4,13 @@ All notable changes are documented here, newest first.
 
 ---
 
+## [1.16.1] — 2026-04-26
+
+### Changed
+- Tablet mode dashboard background set to `#000`
+- Compact nav trigger bar height increased to 15px with a lighter `#222` background
+- 12px spacer added between the trigger bar and dashboard content for visual symmetry
+
 ## [1.16.0] — 2026-04-26
 
 ### Added
