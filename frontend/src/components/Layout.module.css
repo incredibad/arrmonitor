@@ -26,10 +26,28 @@ body { font-family: var(--font) !important; }
   font-weight: 500;
   font-family: var(--font-mono);
   letter-spacing: 0.04em;
-  text-align: center;
-  padding: 5px 0;
-  pointer-events: none;
+  padding: 5px 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
 }
+
+.testModeDismiss {
+  font-size: 10px;
+  font-family: var(--font-mono);
+  font-weight: 600;
+  color: var(--accent);
+  opacity: 0.7;
+  padding: 1px 7px;
+  border: 1px solid rgba(245,158,11,0.4);
+  border-radius: 3px;
+  letter-spacing: 0.04em;
+  -webkit-tap-highlight-color: transparent;
+  pointer-events: auto;
+  transition: opacity 0.12s;
+}
+.testModeDismiss:active { opacity: 1; }
 
 .content {
   flex: 1; width: 100%;
