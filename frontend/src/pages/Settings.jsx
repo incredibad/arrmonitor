@@ -41,7 +41,7 @@ export default function Settings() {
   const { auth, logout } = useAuth();
   const { clearRefresh, setPageTitle, clearPageTitle } = useNav();
   const { testMode, toggle: toggleTestMode } = useTestMode();
-  const { horizontalLayout, toggleHorizontal, autoRefresh, toggleAutoRefresh, autoRefreshValue, autoRefreshUnit, setAutoRefreshInterval, tabletMode, toggleTabletMode, hidePending, toggleHidePending, showNavBar, toggleShowNavBar, instanceOrder, setInstanceOrder, dcOrder, setDcOrder } = useLayout();
+  const { horizontalLayout, toggleHorizontal, autoRefresh, toggleAutoRefresh, autoRefreshValue, autoRefreshUnit, setAutoRefreshInterval, tabletMode, toggleTabletMode, hidePending, toggleHidePending, showNavBar, toggleShowNavBar, showSeeding, toggleShowSeeding, instanceOrder, setInstanceOrder, dcOrder, setDcOrder } = useLayout();
 
   const [tab, setTab] = useState('apps');
 
@@ -715,6 +715,20 @@ export default function Settings() {
                   {hidePending && <span className="chip chip-accent">on</span>}
                 </div>
                 <div className={styles.instUrl}>Filter out delayed or scheduled items from queue views</div>
+              </div>
+            </div>
+            <div className={styles.instanceRow}>
+              <button className={styles.toggleBtn} onClick={toggleShowSeeding} title="Toggle show seeding torrents">
+                <div className={`${styles.toggle} ${showSeeding ? styles.toggleOn : ''}`}>
+                  <div className={styles.toggleThumb} />
+                </div>
+              </button>
+              <div className={styles.instInfo}>
+                <div className={styles.instNameRow}>
+                  <span className={styles.instName}>Show seeding torrents</span>
+                  {showSeeding && <span className="chip chip-accent">on</span>}
+                </div>
+                <div className={styles.instUrl}>Show qBittorrent seeding torrents in All Download Clients view</div>
               </div>
             </div>
           </div>

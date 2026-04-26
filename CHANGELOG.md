@@ -4,6 +4,17 @@ All notable changes are documented here, newest first.
 
 ---
 
+## [1.17.0] — 2026-04-27
+
+### Added
+- New "All Download Clients" page at `/download-clients` showing every SABnzbd slot and qBittorrent torrent as individual rows, sorted Error → Processing → Downloading → Paused → Seeding
+- Each row shows a client/instance chip, name, status chip, progress %, ETA, speed, category, and a progress bar strip for active downloads
+- "Show seeding torrents" toggle in Settings Display (off by default); seeding items and filter tab hidden unless enabled
+- "All Download Clients" link added to main nav bar and compact nav sheet
+
+### Changed
+- "All Queues" renamed to "All App Queues" across nav, page header, and page title
+
 ## [1.16.4] — 2026-04-26
 
 ### Added

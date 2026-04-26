@@ -8,6 +8,7 @@ import Layout from './components/Layout.jsx';
 import Dashboard from './pages/Dashboard.jsx';
 import InstanceQueue from './pages/InstanceQueue.jsx';
 import GlobalQueue from './pages/GlobalQueue.jsx';
+import AllDownloadClients from './pages/AllDownloadClients.jsx';
 import SabnzbdQueue from './pages/SabnzbdQueue.jsx';
 import QbittorrentQueue from './pages/QbittorrentQueue.jsx';
 import Settings from './pages/Settings.jsx';
@@ -48,6 +49,7 @@ function AppContent() {
           <Route path="/" element={<Dashboard />} />
           <Route path="/instance/:id" element={<InstanceQueue />} />
           <Route path="/activity" element={<GlobalQueue />} />
+          <Route path="/download-clients" element={<AllDownloadClients />} />
           <Route path="/sabnzbd/:id" element={<SabnzbdQueue />} />
           <Route path="/qbittorrent/:id" element={<QbittorrentQueue />} />
           <Route path="/settings" element={<Settings />} />
