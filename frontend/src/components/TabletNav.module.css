@@ -30,16 +30,27 @@
   z-index: 200;
 }
 
-/* Panel drops down from below the trigger */
-.sheet {
+/* Clip container — overflow:hidden ensures the sheet is invisible when slid up */
+.sheetClip {
   position: fixed;
   top: calc(var(--safe-top) + 15px);
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 250;
+}
+
+/* Panel drops down from below the trigger */
+.sheet {
+  position: absolute;
+  top: 0;
   left: 0;
   right: 0;
   background: var(--bg2);
   border-bottom: 1px solid var(--border);
   box-shadow: 0 8px 32px rgba(0,0,0,0.5);
-  z-index: 250;
   display: flex;
   align-items: center;
   padding: 18px 28px;

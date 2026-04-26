@@ -22,6 +22,7 @@ export default function TabletNav() {
       <button className={`${styles.trigger} ${open ? styles.triggerOpen : ''}`} onClick={() => setOpen(o => !o)} aria-label="Navigation">
         <ChevronIcon />
       </button>
+      <div className={styles.sheetClip}>
       <div className={`${styles.sheet} ${open ? styles.sheetOpen : ''}`} aria-hidden={!open}>
         <NavLink to="/" className={styles.logo} onClick={close}>
           <img src="/favicon.svg" alt="" className={styles.logoIcon} />
@@ -50,6 +51,7 @@ export default function TabletNav() {
         <a href="https://github.com/incredibad/arrmonitor" target="_blank" rel="noopener noreferrer" className={styles.version}>
           v{__APP_VERSION__}
         </a>
+      </div>
       </div>
     </>
   );
