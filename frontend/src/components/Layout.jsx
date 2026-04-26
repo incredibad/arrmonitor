@@ -164,7 +164,7 @@ function useRemoteReload() {
 }
 
 export default function Layout({ children }) {
-  const { testMode } = useTestMode();
+  const { testMode, toggle: toggleTestMode } = useTestMode();
   const { tabletMode, showNavBar } = useLayout();
   const location = useLocation();
 
@@ -177,7 +177,12 @@ export default function Layout({ children }) {
 
   return (
     <div className={`${styles.root} ${testMode ? styles.testModeRoot : ''}`}>
-      {testMode && <div className={styles.testModeBanner}>Test mode — queue data is simulated</div>}
+      {testMode && (
+        <div className={styles.testModeBanner}>
+          Test mode — queue data is simulated
+          <button className={styles.testModeDismiss} onClick={toggleTestMode}>Disable</button>
+        </div>
+      )}
       <div className={`${styles.content} ${onDashboard && tabletMode ? styles.contentTablet : ''}`}>{children}</div>
       <ImportToastStack />
       {showCompactNav && <TabletNav />}

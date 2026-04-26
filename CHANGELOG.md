@@ -4,6 +4,11 @@ All notable changes are documented here, newest first.
 
 ---
 
+## [1.15.2] — 2026-04-26
+
+### Added
+- Test mode banner now includes a "Disable" button to turn off test mode without going to Settings
+
 ## [1.15.1] — 2026-04-26
 
 ### Changed
