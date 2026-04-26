@@ -86,6 +86,8 @@ function useAllDCItems() {
               name: item.name || 'Unknown',
               category: (item.category && item.category !== '*') ? item.category : null,
               processStatus: item.status,
+              processPct: Math.min(100, parseInt(item.percentage) || 0),
+              actionLine: item.action_line || null,
             });
           });
         } catch {}
@@ -234,8 +236,13 @@ export default function AllDownloadClients() {
 function DCItem({ item }) {
   const clientChip = item._client === 'sabnzbd' ? 'chip-sabnzbd' : 'chip-qbittorrent';
   const isDownloading = item._sem === 'downloading';
+  const isProcessing  = item._sem === 'processing';
 
   const progressPct = item.pct != null ? item.pct : (item.progress ?? 0) * 100;
+  const processPct  = item.processPct ?? 0;
+  const barPct      = isProcessing ? processPct : progressPct;
+  const showBar     = isDownloading || (isProcessing && processPct > 0);
+
   const pctStr   = progressPct > 0 ? `${Math.round(progressPct)}%` : null;
   const etaSecs  = item.eta || parseSabTimeleft(item.timeleft);
   const etaStr   = fmtEta(etaSecs);
@@ -252,23 +259,34 @@ function DCItem({ item }) {
             {isDownloading && pctStr && (
               <span className={styles.pct}>{pctStr}{etaStr ? ` · ${etaStr}` : ''}</span>
             )}
-            {item.processStatus && <span className={styles.pct}>{item.processStatus}</span>}
-            <span className={`chip ${SEM_CHIP[item._sem] || 'chip-neutral'} ${styles.statusChip}`}>
-              {SEM_LABEL[item._sem] || item._sem}
-            </span>
+            {isProcessing && processPct > 0 && (
+              <span className={styles.pct}>{processPct}%</span>
+            )}
+            {item.processStatus && (
+              <span className={`chip ${SEM_CHIP.processing} ${styles.statusChip}`}>{item.processStatus}</span>
+            )}
+            {!item.processStatus && (
+              <span className={`chip ${SEM_CHIP[item._sem] || 'chip-neutral'} ${styles.statusChip}`}>
+                {SEM_LABEL[item._sem] || item._sem}
+              </span>
+            )}
           </div>
         </div>
         <div className={styles.metaRow}>
           <span className={`chip ${clientChip}`} style={{ flexShrink: 0 }}>{item._instanceName}</span>
           {item.category && <span className="chip chip-neutral">{item.category}</span>}
+          {item.actionLine && <span className={styles.metaMuted}>{item.actionLine}</span>}
           {speedStr && <span className={styles.metaTag}>↓ {speedStr}</span>}
           {ulStr    && <span className={styles.metaTag}>↑ {ulStr}</span>}
-          {!isDownloading && sizeStr && <span className={styles.metaMuted}>{sizeStr}</span>}
+          {!isDownloading && !isProcessing && sizeStr && <span className={styles.metaMuted}>{sizeStr}</span>}
         </div>
       </div>
-      {isDownloading && (
+      {showBar && (
         <div className={styles.progressStrip}>
-          <div className={styles.progressFill} style={{ width: `${Math.min(100, progressPct)}%` }} />
+          <div
+            className={isProcessing ? styles.progressFillProcess : styles.progressFill}
+            style={{ width: `${Math.min(100, barPct)}%` }}
+          />
         </div>
       )}
     </div>

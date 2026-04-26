@@ -200,6 +200,8 @@ function HistorySlot({ slot }) {
     Running:    'chip-downloading',
   }[slot.status] || 'chip-neutral';
 
+  const pct = Math.min(100, parseInt(slot.percentage) || 0);
+
   return (
     <div className={styles.item}>
       <div className={styles.itemMain}>
@@ -207,8 +209,14 @@ function HistorySlot({ slot }) {
           <span className={styles.itemName}>{slot.name}</span>
           {slot.category && slot.category !== '*' && <span className={`chip chip-neutral ${styles.catChip}`}>{slot.category}</span>}
         </div>
+        {pct > 0 && (
+          <div className={styles.progressTrack}>
+            <div className={styles.progressFill} style={{ width: `${pct}%` }} />
+          </div>
+        )}
         <div className={styles.itemMeta}>
           <span className={`chip ${statusClass}`}>{slot.status}</span>
+          {pct > 0 && <span>{pct}%</span>}
           {slot.size && <span>{slot.size}</span>}
           {slot.action_line && <span className={styles.actionLine}>{slot.action_line}</span>}
         </div>

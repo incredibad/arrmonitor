@@ -4,6 +4,11 @@ All notable changes are documented here, newest first.
 
 ---
 
+## [1.17.1] — 2026-04-27
+
+### Added
+- SABnzbd processing items (Extracting, Repairing, Verifying, Moving) now show a progress bar and percentage in both the SABnzbd detail queue and the All Download Clients view; the action line (e.g. current file being extracted) is shown as sub-text
+
 ## [1.17.0] — 2026-04-27
 
 ### Added
