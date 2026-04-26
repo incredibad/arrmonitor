@@ -4,6 +4,11 @@ All notable changes are documented here, newest first.
 
 ---
 
+## [1.15.4] — 2026-04-26
+
+### Changed
+- Dashboard section headers ("Download Clients" / "Apps") now shown in horizontal layout mode as well; still hidden in tablet mode
+
 ## [1.15.3] — 2026-04-26
 
 ### Added
