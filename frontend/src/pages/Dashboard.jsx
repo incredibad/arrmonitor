@@ -128,6 +128,7 @@ export default function Dashboard() {
       <div className={styles.content}>
         {allClients.length > 0 && (
           <div className={styles.section}>
+            <div className={styles.sectionLabel}>Download Clients</div>
             <div className={styles.list}>
               {enabledSab.map(instance => <SabnzbdCard key={`sab-${instance.id}`} instance={instance} />)}
               {enabledQb.map(instance => <QbittorrentCard key={`qb-${instance.id}`} instance={instance} />)}
@@ -136,6 +137,7 @@ export default function Dashboard() {
         )}
         {enabled.length > 0 && (
           <div className={styles.section}>
+            <div className={styles.sectionLabel}>Apps</div>
             <div className={styles.list}>
               {enabled.map(instance => <InstanceCard key={instance.id} instance={instance} />)}
             </div>
