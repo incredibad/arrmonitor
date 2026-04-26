@@ -31,6 +31,14 @@ export function LayoutProvider({ children }) {
     try { const v = localStorage.getItem('arrmonitor_show_nav_bar'); return v === null ? true : v === 'true'; } catch { return true; }
   });
 
+  const [instanceOrder, setInstanceOrderState] = useState(() => {
+    try { return JSON.parse(localStorage.getItem('arrmonitor_instance_order') || 'null') || []; } catch { return []; }
+  });
+
+  const [dcOrder, setDcOrderState] = useState(() => {
+    try { return JSON.parse(localStorage.getItem('arrmonitor_dc_order') || 'null') || []; } catch { return []; }
+  });
+
   const toggleHorizontal = useCallback(() => {
     setHorizontalLayout(prev => {
       const next = !prev;
@@ -73,6 +81,16 @@ export function LayoutProvider({ children }) {
     });
   }, []);
 
+  const setInstanceOrder = useCallback((ids) => {
+    setInstanceOrderState(ids);
+    try { localStorage.setItem('arrmonitor_instance_order', JSON.stringify(ids)); } catch {}
+  }, []);
+
+  const setDcOrder = useCallback((ids) => {
+    setDcOrderState(ids);
+    try { localStorage.setItem('arrmonitor_dc_order', JSON.stringify(ids)); } catch {}
+  }, []);
+
   const toggleShowNavBar = useCallback(() => {
     setShowNavBar(prev => {
       const next = !prev;
@@ -82,7 +100,7 @@ export function LayoutProvider({ children }) {
   }, []);
 
   return (
-    <LayoutContext.Provider value={{ horizontalLayout, toggleHorizontal, autoRefresh, toggleAutoRefresh, autoRefreshValue, autoRefreshUnit, setAutoRefreshInterval, tabletMode, toggleTabletMode, hidePending, toggleHidePending, showNavBar, toggleShowNavBar }}>
+    <LayoutContext.Provider value={{ horizontalLayout, toggleHorizontal, autoRefresh, toggleAutoRefresh, autoRefreshValue, autoRefreshUnit, setAutoRefreshInterval, tabletMode, toggleTabletMode, hidePending, toggleHidePending, showNavBar, toggleShowNavBar, instanceOrder, setInstanceOrder, dcOrder, setDcOrder }}>
       {children}
     </LayoutContext.Provider>
   );

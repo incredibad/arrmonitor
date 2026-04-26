@@ -7,6 +7,14 @@ import { useNav } from '../lib/navContext.jsx';
 import { useLayout } from '../lib/layoutContext.jsx';
 import { api } from '../lib/api.js';
 import AppNav from '../components/AppNav.jsx';
+
+function applyOrder(items, orderIds, getId) {
+  if (!orderIds?.length) return items;
+  const map = new Map(items.map(item => [getId(item), item]));
+  const ordered = orderIds.filter(id => map.has(id)).map(id => map.get(id));
+  const unordered = items.filter(item => !orderIds.includes(getId(item)));
+  return [...ordered, ...unordered];
+}
 import InstanceCard from '../components/InstanceCard.jsx';
 import SabnzbdCard from '../components/SabnzbdCard.jsx';
 import QbittorrentCard from '../components/QbittorrentCard.jsx';
@@ -17,12 +25,22 @@ export default function Dashboard() {
   const { instances: sabInstances } = useSabnzbdInstances();
   const { instances: qbInstances } = useQbittorrentInstances();
   const { registerRefresh, clearRefresh, setPageTitle, clearPageTitle } = useNav();
-  const { horizontalLayout, tabletMode, showNavBar } = useLayout();
+  const { horizontalLayout, tabletMode, showNavBar, instanceOrder, dcOrder } = useLayout();
   const navigate = useNavigate();
   const enabled    = instances.filter(i => i.enabled);
   const enabledSab = sabInstances.filter(i => i.enabled);
   const enabledQb  = qbInstances.filter(i => i.enabled);
   const allClients = [...enabledSab.map(i => ({ ...i, _client: 'sab' })), ...enabledQb.map(i => ({ ...i, _client: 'qb' }))];
+
+  const sortedEnabled = applyOrder(enabled, instanceOrder, i => String(i.id));
+  const sortedDcs = applyOrder(
+    [
+      ...enabledSab.map(i => ({ ...i, _dcKey: `sab-${i.id}` })),
+      ...enabledQb.map(i => ({ ...i, _dcKey: `qb-${i.id}` })),
+    ],
+    dcOrder,
+    i => i._dcKey
+  );
 
   async function refreshAll() {
     await Promise.allSettled(
@@ -77,13 +95,15 @@ export default function Dashboard() {
     const tabletCols = (
       <>
         <div className={styles.tabletColClients}>
-          {enabledSab.map(instance => <SabnzbdCard key={`sab-${instance.id}`} instance={instance} />)}
-          {enabledQb.map(instance => <QbittorrentCard key={`qb-${instance.id}`} instance={instance} />)}
+          {sortedDcs.map(dc => dc._dcKey.startsWith('sab-')
+            ? <SabnzbdCard key={dc._dcKey} instance={dc} />
+            : <QbittorrentCard key={dc._dcKey} instance={dc} />
+          )}
           {allClients.length === 0 && <p className={styles.colEmpty}>No download clients configured.</p>}
         </div>
         <div className={styles.tabletColInstances}>
-          {enabled.map(instance => <InstanceCard key={instance.id} instance={instance} />)}
-          {enabled.length === 0 && <p className={styles.colEmpty}>No instances configured.</p>}
+          {sortedEnabled.map(instance => <InstanceCard key={instance.id} instance={instance} />)}
+          {sortedEnabled.length === 0 && <p className={styles.colEmpty}>No instances configured.</p>}
         </div>
       </>
     );
@@ -106,8 +126,10 @@ export default function Dashboard() {
           <div className={styles.colClients}>
             <div className={styles.sectionLabel}>Download Clients</div>
             <div className={styles.clientList}>
-              {enabledSab.map(instance => <SabnzbdCard key={`sab-${instance.id}`} instance={instance} />)}
-              {enabledQb.map(instance => <QbittorrentCard key={`qb-${instance.id}`} instance={instance} />)}
+              {sortedDcs.map(dc => dc._dcKey.startsWith('sab-')
+                ? <SabnzbdCard key={dc._dcKey} instance={dc} />
+                : <QbittorrentCard key={dc._dcKey} instance={dc} />
+              )}
               {allClients.length === 0 && <p className={styles.colEmpty}>No download clients configured.</p>}
             </div>
           </div>
@@ -115,8 +137,8 @@ export default function Dashboard() {
           <div className={styles.colInstances}>
             <div className={styles.sectionLabel}>Apps</div>
             <div className={styles.instanceList}>
-              {enabled.map(instance => <InstanceCard key={instance.id} instance={instance} />)}
-              {enabled.length === 0 && <p className={styles.colEmpty}>No instances configured.</p>}
+              {sortedEnabled.map(instance => <InstanceCard key={instance.id} instance={instance} />)}
+              {sortedEnabled.length === 0 && <p className={styles.colEmpty}>No instances configured.</p>}
             </div>
           </div>
         </div>
@@ -128,20 +150,22 @@ export default function Dashboard() {
     <div className={styles.page}>
       {showNavBar && <AppNav />}
       <div className={styles.content}>
-        {allClients.length > 0 && (
+        {sortedDcs.length > 0 && (
           <div className={styles.section}>
             <div className={styles.sectionLabel}>Download Clients</div>
             <div className={styles.list}>
-              {enabledSab.map(instance => <SabnzbdCard key={`sab-${instance.id}`} instance={instance} />)}
-              {enabledQb.map(instance => <QbittorrentCard key={`qb-${instance.id}`} instance={instance} />)}
+              {sortedDcs.map(dc => dc._dcKey.startsWith('sab-')
+                ? <SabnzbdCard key={dc._dcKey} instance={dc} />
+                : <QbittorrentCard key={dc._dcKey} instance={dc} />
+              )}
             </div>
           </div>
         )}
-        {enabled.length > 0 && (
+        {sortedEnabled.length > 0 && (
           <div className={styles.section}>
             <div className={styles.sectionLabel}>Apps</div>
             <div className={styles.list}>
-              {enabled.map(instance => <InstanceCard key={instance.id} instance={instance} />)}
+              {sortedEnabled.map(instance => <InstanceCard key={instance.id} instance={instance} />)}
             </div>
           </div>
         )}

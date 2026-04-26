@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useInstances } from '../hooks/useQueue.js';
 import { useSabnzbdInstances } from '../hooks/useSabnzbd.js';
 import { useQbittorrentInstances } from '../hooks/useQbittorrent.js';
@@ -13,6 +13,14 @@ import styles from './Settings.module.css';
 const TYPES = ['sonarr', 'radarr', 'lidarr', 'sportarr'];
 const defaultForm   = { name: '', type: 'sonarr', url: '', api_key: '', external_url: '' };
 const defaultDcForm = { dcType: 'sabnzbd', name: '', url: '', api_key: '', username: '', password: '' };
+
+function applyOrder(items, orderIds, getId) {
+  if (!orderIds?.length) return items;
+  const map = new Map(items.map(item => [getId(item), item]));
+  const ordered = orderIds.filter(id => map.has(id)).map(id => map.get(id));
+  const unordered = items.filter(item => !orderIds.includes(getId(item)));
+  return [...ordered, ...unordered];
+}
 
 function validate(form, isEdit) {
   const errors = {};
@@ -33,7 +41,7 @@ export default function Settings() {
   const { auth, logout } = useAuth();
   const { clearRefresh, setPageTitle, clearPageTitle } = useNav();
   const { testMode, toggle: toggleTestMode } = useTestMode();
-  const { horizontalLayout, toggleHorizontal, autoRefresh, toggleAutoRefresh, autoRefreshValue, autoRefreshUnit, setAutoRefreshInterval, tabletMode, toggleTabletMode, hidePending, toggleHidePending, showNavBar, toggleShowNavBar } = useLayout();
+  const { horizontalLayout, toggleHorizontal, autoRefresh, toggleAutoRefresh, autoRefreshValue, autoRefreshUnit, setAutoRefreshInterval, tabletMode, toggleTabletMode, hidePending, toggleHidePending, showNavBar, toggleShowNavBar, instanceOrder, setInstanceOrder, dcOrder, setDcOrder } = useLayout();
 
   const [tab, setTab] = useState('apps');
 
@@ -60,6 +68,12 @@ export default function Settings() {
   const [pwError, setPwError] = useState(null);
   const [pwSuccess, setPwSuccess] = useState(false);
   const [pwLoading, setPwLoading] = useState(false);
+
+  // Drag-to-reorder state
+  const instDragRef = useRef(null);
+  const [instDragOver, setInstDragOver] = useState(null);
+  const dcDragRef = useRef(null);
+  const [dcDragOver, setDcDragOver] = useState(null);
 
   useEffect(() => {
     clearRefresh();
@@ -256,6 +270,62 @@ export default function Settings() {
     else { await api.updateQbittorrentInstance(inst.id, { enabled: !inst.enabled }); reloadQb(); }
   }
 
+  // Derived ordered lists
+  const orderedInstances = applyOrder(instances, instanceOrder, i => String(i.id));
+  const orderedDcs = applyOrder(
+    [
+      ...sabInstances.map(i => ({ ...i, _dcKey: `sab-${i.id}`, _dcType: 'sabnzbd' })),
+      ...qbInstances.map(i => ({ ...i, _dcKey: `qb-${i.id}`, _dcType: 'qbittorrent' })),
+    ],
+    dcOrder,
+    i => i._dcKey
+  );
+
+  function reorder(list, from, to) {
+    const next = [...list];
+    const [item] = next.splice(from, 1);
+    next.splice(to, 0, item);
+    return next;
+  }
+
+  function handleInstDragStart(e, idx) {
+    instDragRef.current = idx;
+    e.dataTransfer.effectAllowed = 'move';
+  }
+  function handleInstDragOver(e, idx) {
+    e.preventDefault();
+    if (instDragRef.current !== null && idx !== instDragRef.current) setInstDragOver(idx);
+  }
+  function handleInstDrop(e, idx) {
+    e.preventDefault();
+    const from = instDragRef.current;
+    if (from !== null && from !== idx) {
+      const next = reorder(orderedInstances, from, idx);
+      setInstanceOrder(next.map(i => String(i.id)));
+    }
+    instDragRef.current = null; setInstDragOver(null);
+  }
+  function handleInstDragEnd() { instDragRef.current = null; setInstDragOver(null); }
+
+  function handleDcDragStart(e, idx) {
+    dcDragRef.current = idx;
+    e.dataTransfer.effectAllowed = 'move';
+  }
+  function handleDcDragOver(e, idx) {
+    e.preventDefault();
+    if (dcDragRef.current !== null && idx !== dcDragRef.current) setDcDragOver(idx);
+  }
+  function handleDcDrop(e, idx) {
+    e.preventDefault();
+    const from = dcDragRef.current;
+    if (from !== null && from !== idx) {
+      const next = reorder(orderedDcs, from, idx);
+      setDcOrder(next.map(i => i._dcKey));
+    }
+    dcDragRef.current = null; setDcDragOver(null);
+  }
+  function handleDcDragEnd() { dcDragRef.current = null; setDcDragOver(null); }
+
   async function handleChangePassword(e) {
     e.preventDefault();
     setPwError(null);
@@ -345,8 +415,18 @@ export default function Settings() {
               <div className={styles.emptyText}>No instances configured yet. Tap Add to get started.</div>
             ) : (
               <div className={styles.instanceList}>
-                {instances.map(inst => (
-                  <div key={inst.id} className={`${styles.instanceRow} ${!inst.enabled ? styles.disabled : ''}`}>
+                {orderedInstances.map((inst, idx) => (
+                  <div
+                    key={inst.id}
+                    className={`${styles.instanceRow} ${!inst.enabled ? styles.disabled : ''} ${instDragOver === idx ? styles.dragTarget : ''}`}
+                    draggable
+                    onDragStart={e => handleInstDragStart(e, idx)}
+                    onDragOver={e => handleInstDragOver(e, idx)}
+                    onDragLeave={() => setInstDragOver(null)}
+                    onDrop={e => handleInstDrop(e, idx)}
+                    onDragEnd={handleInstDragEnd}
+                  >
+                    <div className={styles.dragHandle}><DragHandleIcon /></div>
                     <button className={styles.toggleBtn} onClick={() => toggleEnabled(inst)} title={inst.enabled ? 'Disable' : 'Enable'}>
                       <div className={`${styles.toggle} ${inst.enabled ? styles.toggleOn : ''}`}>
                         <div className={styles.toggleThumb} />
@@ -438,9 +518,19 @@ export default function Settings() {
               <div className={styles.emptyText}>No download clients configured yet. Tap Add to get started.</div>
             ) : (
               <div className={styles.instanceList}>
-                {sabInstances.map(inst => (
-                  <div key={`sab-${inst.id}`} className={`${styles.instanceRow} ${!inst.enabled ? styles.disabled : ''}`}>
-                    <button className={styles.toggleBtn} onClick={() => toggleDcEnabled(inst, 'sabnzbd')} title={inst.enabled ? 'Disable' : 'Enable'}>
+                {orderedDcs.map((inst, idx) => (
+                  <div
+                    key={inst._dcKey}
+                    className={`${styles.instanceRow} ${!inst.enabled ? styles.disabled : ''} ${dcDragOver === idx ? styles.dragTarget : ''}`}
+                    draggable
+                    onDragStart={e => handleDcDragStart(e, idx)}
+                    onDragOver={e => handleDcDragOver(e, idx)}
+                    onDragLeave={() => setDcDragOver(null)}
+                    onDrop={e => handleDcDrop(e, idx)}
+                    onDragEnd={handleDcDragEnd}
+                  >
+                    <div className={styles.dragHandle}><DragHandleIcon /></div>
+                    <button className={styles.toggleBtn} onClick={() => toggleDcEnabled(inst, inst._dcType)} title={inst.enabled ? 'Disable' : 'Enable'}>
                       <div className={`${styles.toggle} ${inst.enabled ? styles.toggleOn : ''}`}>
                         <div className={styles.toggleThumb} />
                       </div>
@@ -448,33 +538,13 @@ export default function Settings() {
                     <div className={styles.instInfo}>
                       <div className={styles.instNameRow}>
                         <span className={styles.instName}>{inst.name}</span>
-                        <span className="chip chip-sabnzbd">sabnzbd</span>
+                        <span className={`chip chip-${inst._dcType}`}>{inst._dcType}</span>
                       </div>
                       <div className={styles.instUrl}>{inst.url}</div>
                     </div>
                     <div className={styles.instActions}>
-                      <button className={styles.editBtn} onClick={() => startDcEdit(inst, 'sabnzbd')}><EditIcon /></button>
-                      <button className={styles.deleteBtn} onClick={() => handleDcDelete(inst, 'sabnzbd')}><TrashIcon /></button>
-                    </div>
-                  </div>
-                ))}
-                {qbInstances.map(inst => (
-                  <div key={`qb-${inst.id}`} className={`${styles.instanceRow} ${!inst.enabled ? styles.disabled : ''}`}>
-                    <button className={styles.toggleBtn} onClick={() => toggleDcEnabled(inst, 'qbittorrent')} title={inst.enabled ? 'Disable' : 'Enable'}>
-                      <div className={`${styles.toggle} ${inst.enabled ? styles.toggleOn : ''}`}>
-                        <div className={styles.toggleThumb} />
-                      </div>
-                    </button>
-                    <div className={styles.instInfo}>
-                      <div className={styles.instNameRow}>
-                        <span className={styles.instName}>{inst.name}</span>
-                        <span className="chip chip-qbittorrent">qbittorrent</span>
-                      </div>
-                      <div className={styles.instUrl}>{inst.url}</div>
-                    </div>
-                    <div className={styles.instActions}>
-                      <button className={styles.editBtn} onClick={() => startDcEdit(inst, 'qbittorrent')}><EditIcon /></button>
-                      <button className={styles.deleteBtn} onClick={() => handleDcDelete(inst, 'qbittorrent')}><TrashIcon /></button>
+                      <button className={styles.editBtn} onClick={() => startDcEdit(inst, inst._dcType)}><EditIcon /></button>
+                      <button className={styles.deleteBtn} onClick={() => handleDcDelete(inst, inst._dcType)}><TrashIcon /></button>
                     </div>
                   </div>
                 ))}
@@ -698,6 +768,13 @@ function Field({ label, hint, error, children }) {
   );
 }
 
+const DragHandleIcon = () => (
+  <svg width="12" height="16" viewBox="0 0 8 14" fill="currentColor">
+    <circle cx="2" cy="2" r="1.5"/><circle cx="6" cy="2" r="1.5"/>
+    <circle cx="2" cy="7" r="1.5"/><circle cx="6" cy="7" r="1.5"/>
+    <circle cx="2" cy="12" r="1.5"/><circle cx="6" cy="12" r="1.5"/>
+  </svg>
+);
 const PlusIcon = () => (
   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
     <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
