@@ -63,6 +63,8 @@
 }
 .item:active { background: var(--bg3); }
 .itemActive { color: var(--accent); background: var(--accent-light); }
+.itemSpinning svg { animation: spin 0.7s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
 
 .version {
   margin-left: auto;

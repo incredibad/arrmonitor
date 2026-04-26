@@ -4,6 +4,11 @@ All notable changes are documented here, newest first.
 
 ---
 
+## [1.16.4] — 2026-04-26
+
+### Added
+- Refresh button re-added to the main nav bar; spins while refreshing and only appears on pages that support refresh (dashboard, queue views)
+
 ## [1.16.3] — 2026-04-26
 
 ### Fixed

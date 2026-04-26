@@ -1,9 +1,12 @@
 import { NavLink } from 'react-router-dom';
+import { useNav } from '../lib/navContext.jsx';
 import styles from './AppNav.module.css';
 
 /* eslint-disable no-undef */
 
 export default function AppNav() {
+  const { refreshFn, refreshing, handleRefresh } = useNav();
+
   return (
     <div className={styles.nav}>
       <NavLink to="/" className={styles.logo}>
@@ -21,6 +24,11 @@ export default function AppNav() {
         <NavLink to="/settings" className={({ isActive }) => `${styles.item} ${isActive ? styles.itemActive : ''}`}>
           <SettingsIcon /> Settings
         </NavLink>
+        {refreshFn && (
+          <button className={`${styles.item} ${refreshing ? styles.itemSpinning : ''}`} onClick={handleRefresh}>
+            <RefreshIcon /> Refresh
+          </button>
+        )}
       </nav>
       <a href="https://github.com/incredibad/arrmonitor" target="_blank" rel="noopener noreferrer" className={styles.version}>
         v{__APP_VERSION__}
@@ -29,6 +37,11 @@ export default function AppNav() {
   );
 }
 
+const RefreshIcon = () => (
+  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+    <polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
+  </svg>
+);
 const DashIcon = () => (
   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/>
