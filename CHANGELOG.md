@@ -4,6 +4,11 @@ All notable changes are documented here, newest first.
 
 ---
 
+## [1.15.3] — 2026-04-26
+
+### Added
+- Dashboard (standard mode): section headers "Download Clients" and "Apps" reinstated above each card group
+
 ## [1.15.2] — 2026-04-26
 
 ### Added
