@@ -4,6 +4,11 @@ All notable changes are documented here, newest first.
 
 ---
 
+## [1.16.2] — 2026-04-26
+
+### Fixed
+- Compact nav sheet no longer visible behind iOS status bar or overlapping the trigger when closed; sheet is now clipped by an `overflow: hidden` container so it is fully invisible when slid off-screen
+
 ## [1.16.1] — 2026-04-26
 
 ### Changed
