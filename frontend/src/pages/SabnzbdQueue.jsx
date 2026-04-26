@@ -170,14 +170,11 @@ export default function SabnzbdQueue() {
 function QueueSlot({ slot }) {
   const pct = Math.min(100, parseInt(slot.percentage) || 0);
   return (
-    <div className={styles.item}>
+    <div className={styles.item} style={{ '--progress-pct': `${pct}%`, '--progress-bg': 'rgba(255,179,0,0.09)' }}>
       <div className={styles.itemMain}>
         <div className={styles.itemHeader}>
           <span className={styles.itemName}>{slot.filename || slot.name}</span>
           {slot.cat && slot.cat !== '*' && <span className={`chip chip-neutral ${styles.catChip}`}>{slot.cat}</span>}
-        </div>
-        <div className={styles.progressTrack}>
-          <div className={styles.progressFill} style={{ width: `${pct}%` }} />
         </div>
         <div className={styles.itemMeta}>
           <span>{pct}%</span>
@@ -203,17 +200,12 @@ function HistorySlot({ slot }) {
   const pct = Math.min(100, parseInt(slot.percentage) || 0);
 
   return (
-    <div className={styles.item}>
+    <div className={styles.item} style={pct > 0 ? { '--progress-pct': `${pct}%`, '--progress-bg': 'rgba(56,189,248,0.09)' } : undefined}>
       <div className={styles.itemMain}>
         <div className={styles.itemHeader}>
           <span className={styles.itemName}>{slot.name}</span>
           {slot.category && slot.category !== '*' && <span className={`chip chip-neutral ${styles.catChip}`}>{slot.category}</span>}
         </div>
-        {pct > 0 && (
-          <div className={styles.progressTrack}>
-            <div className={styles.progressFill} style={{ width: `${pct}%` }} />
-          </div>
-        )}
         <div className={styles.itemMeta}>
           <span className={`chip ${statusClass}`}>{slot.status}</span>
           {pct > 0 && <span>{pct}%</span>}

@@ -405,7 +405,10 @@ export default function QueueItem({ item, instanceId, instanceType, instanceName
 
   return (
     <>
-      <div className={`${styles.item} ${hasError ? styles.hasError : ''}`}>
+      <div
+        className={`${styles.item} ${hasError ? styles.hasError : ''}`}
+        style={sem === 'downloading' ? { '--progress-pct': `${Math.min(100, progress).toFixed(1)}%`, '--progress-bg': 'rgba(74,222,128,0.09)' } : undefined}
+      >
         <div className={styles.main}>
           {/* Row 1: title + episode code+name + status + progress */}
           <div className={styles.titleRow}>
@@ -467,11 +470,6 @@ export default function QueueItem({ item, instanceId, instanceType, instanceName
           </button>
         </div>
 
-        {sem === 'downloading' && (
-          <div className={styles.progressStrip}>
-            <div className={styles.progressFill} style={{ width: `${Math.min(100, progress)}%` }} />
-          </div>
-        )}
       </div>
 
       {showImport && (

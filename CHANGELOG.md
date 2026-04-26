@@ -4,6 +4,11 @@ All notable changes are documented here, newest first.
 
 ---
 
+## [1.17.2] — 2026-04-27
+
+### Changed
+- Progress bars removed from queue item rows across all views (Arr queues, SABnzbd, qBittorrent, All Download Clients); progress is now shown as a subtle background fill on the card itself using a `::before` pseudo-element, keeping text fully readable while giving a clear visual indication of progress
+
 ## [1.17.1] — 2026-04-27
 
 ### Added

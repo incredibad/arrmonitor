@@ -209,17 +209,12 @@ function TorrentRow({ torrent }) {
   const ulSpeed = torrent.upspeed ? formatSpeed(torrent.upspeed) : null;
 
   return (
-    <div className={styles.item}>
+    <div className={styles.item} style={isDown ? { '--progress-pct': `${pct}%`, '--progress-bg': 'rgba(61,155,233,0.09)' } : undefined}>
       <div className={styles.itemMain}>
         <div className={styles.itemHeader}>
           <span className={styles.itemName}>{torrent.name}</span>
           <span className={`chip ${stateChipClass} ${styles.stateChip}`}>{stateLabel}</span>
         </div>
-        {isDown && (
-          <div className={styles.progressTrack}>
-            <div className={styles.progressFill} style={{ width: `${pct}%` }} />
-          </div>
-        )}
         <div className={styles.itemMeta}>
           {isDown && <span>{pct}%</span>}
           {sizeLeft && <span>{sizeLeft} left</span>}

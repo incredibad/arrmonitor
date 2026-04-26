@@ -17,6 +17,7 @@
 .controlBtn:disabled { opacity: 0.5; cursor: default; }
 
 .item {
+  position: relative;
   background: var(--bg2);
   border: 1px solid var(--border);
   border-radius: var(--radius);
@@ -24,12 +25,24 @@
   transition: background 0.12s;
 }
 .item:hover { background: var(--bg3); }
+.item::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; bottom: 0;
+  width: var(--progress-pct, 0%);
+  background-color: var(--progress-bg, transparent);
+  pointer-events: none;
+  z-index: 0;
+  transition: width 0.3s ease;
+}
 
 .itemMain {
   padding: 9px 12px 10px;
   display: flex;
   flex-direction: column;
   gap: 6px;
+  position: relative;
+  z-index: 1;
 }
 
 .itemHeader {
@@ -52,18 +65,6 @@
 
 .stateChip { flex-shrink: 0; }
 
-.progressTrack {
-  height: 3px;
-  background: var(--bg4);
-  border-radius: 2px;
-  overflow: hidden;
-}
-.progressFill {
-  height: 100%;
-  background: linear-gradient(90deg, var(--qbittorrent), #7dd3fc);
-  border-radius: 2px;
-  transition: width 0.4s ease;
-}
 
 .itemMeta {
   display: flex;
