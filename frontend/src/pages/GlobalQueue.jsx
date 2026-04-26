@@ -51,7 +51,7 @@ export default function GlobalQueue() {
   }, [refresh]);
 
   useEffect(() => {
-    setPageTitle('All Queues');
+    setPageTitle('All App Queues');
     return () => clearPageTitle();
   }, []);
 
@@ -87,7 +87,7 @@ export default function GlobalQueue() {
           </button>
           <div className={styles.instanceInfo}>
             <div className={styles.instanceNameRow}>
-              <span className={styles.instanceName}>All Queues</span>
+              <span className={styles.instanceName}>All App Queues</span>
             </div>
           </div>
 

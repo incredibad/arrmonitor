@@ -134,6 +134,9 @@
 .filterChip[data-f="waiting"].active     { color: var(--status-waiting);     background: var(--status-waiting-bg);     border-color: var(--status-waiting); }
 .filterChip[data-f="paused"].active      { color: var(--status-paused);      background: var(--status-paused-bg);      border-color: var(--status-paused); }
 .filterChip[data-f="issues"].active      { color: var(--status-issue);       background: var(--status-issue-bg);       border-color: var(--status-issue); }
+.filterChip[data-f="error"].active       { color: var(--status-issue);       background: var(--status-issue-bg);       border-color: var(--status-issue); }
+.filterChip[data-f="processing"].active  { color: var(--status-importing);   background: var(--status-importing-bg);   border-color: var(--status-importing); }
+.filterChip[data-f="seeding"].active     { color: var(--qbittorrent);        background: var(--qbittorrent-bg);        border-color: var(--qbittorrent); }
 
 .filterCount { font-family: var(--font-mono); font-size: 10px; opacity: 0.7; margin-left: 2px; }
 

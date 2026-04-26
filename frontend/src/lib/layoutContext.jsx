@@ -31,6 +31,10 @@ export function LayoutProvider({ children }) {
     try { const v = localStorage.getItem('arrmonitor_show_nav_bar'); return v === null ? true : v === 'true'; } catch { return true; }
   });
 
+  const [showSeeding, setShowSeedingState] = useState(() => {
+    try { return localStorage.getItem('arrmonitor_show_seeding') === 'true'; } catch { return false; }
+  });
+
   const [instanceOrder, setInstanceOrderState] = useState(() => {
     try { return JSON.parse(localStorage.getItem('arrmonitor_instance_order') || 'null') || []; } catch { return []; }
   });
@@ -99,8 +103,16 @@ export function LayoutProvider({ children }) {
     });
   }, []);
 
+  const toggleShowSeeding = useCallback(() => {
+    setShowSeedingState(prev => {
+      const next = !prev;
+      try { localStorage.setItem('arrmonitor_show_seeding', String(next)); } catch {}
+      return next;
+    });
+  }, []);
+
   return (
-    <LayoutContext.Provider value={{ horizontalLayout, toggleHorizontal, autoRefresh, toggleAutoRefresh, autoRefreshValue, autoRefreshUnit, setAutoRefreshInterval, tabletMode, toggleTabletMode, hidePending, toggleHidePending, showNavBar, toggleShowNavBar, instanceOrder, setInstanceOrder, dcOrder, setDcOrder }}>
+    <LayoutContext.Provider value={{ horizontalLayout, toggleHorizontal, autoRefresh, toggleAutoRefresh, autoRefreshValue, autoRefreshUnit, setAutoRefreshInterval, tabletMode, toggleTabletMode, hidePending, toggleHidePending, showNavBar, toggleShowNavBar, showSeeding, toggleShowSeeding, instanceOrder, setInstanceOrder, dcOrder, setDcOrder }}>
       {children}
     </LayoutContext.Provider>
   );
