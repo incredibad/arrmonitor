@@ -23,11 +23,14 @@ export default function InstanceCard({ instance }) {
   const navigate = useNavigate();
   const { queue, loading, error } = useQueue(instance.id, 30000);
   const { status, updateAvailable } = useInstanceStatus(instance.id, instance.type);
-  const { horizontalLayout, tabletMode } = useLayout();
+  const { horizontalLayout, tabletMode, hidePending } = useLayout();
 
   const records    = queue?.records || [];
   const issues     = records.filter(r => getSemanticStatus(r) === 'issue').length;
-  const totalItems = records.filter(r => getSemanticStatus(r) !== 'issue').length;
+  const nonIssues  = records.filter(r => getSemanticStatus(r) !== 'issue');
+  const totalItems = hidePending
+    ? nonIssues.filter(r => { const st = (r.status || '').toLowerCase(); return st !== 'delay' && st !== 'pending'; }).length
+    : nonIssues.length;
 
   const cardClass = `${styles.card} ${horizontalLayout ? styles.cardH : ''} ${tabletMode ? styles.cardT : ''}`;
 
