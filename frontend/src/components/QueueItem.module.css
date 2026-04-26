@@ -8,12 +8,22 @@
   overflow: hidden;
   box-shadow: var(--elevation-1);
 }
+.item::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; bottom: 0;
+  width: var(--progress-pct, 0%);
+  background-color: var(--progress-bg, transparent);
+  pointer-events: none;
+  z-index: 0;
+  transition: width 0.3s ease;
+}
 .item.hasError {
   border-color: rgba(248,113,113,0.22);
   box-shadow: 0 0 0 1px rgba(248,113,113,0.10), var(--elevation-1);
 }
 
-.main { flex: 1; padding: 8px 10px 10px; min-width: 0; }
+.main { flex: 1; padding: 8px 10px 10px; min-width: 0; position: relative; z-index: 1; }
 
 /* Row 1: title + episode + right-aligned status+progress */
 .titleRow {
@@ -94,19 +104,6 @@
 .metaTagRed    { color: #200808; background: var(--red);    border-color: transparent; }
 .metaTagAccent { color: #1a0e00; background: var(--accent); border-color: transparent; }
 
-/* Progress strip — sits at the bottom edge of the card */
-.progressStrip {
-  position: absolute;
-  bottom: 0; left: 0; right: 0;
-  height: 2px;
-  background: var(--bg4);
-}
-.progressFill {
-  height: 100%;
-  background: linear-gradient(90deg, var(--accent), var(--orange));
-  transition: width 0.4s ease;
-  box-shadow: 0 0 6px rgba(245,158,11,0.5);
-}
 
 /* Warning row — full width, own line, truncated */
 .warningRow {
@@ -137,6 +134,7 @@
 .actions {
   display: flex; flex-direction: column;
   border-left: 1px solid rgba(255,255,255,0.05); flex-shrink: 0;
+  position: relative; z-index: 1;
 }
 .actionBtn {
   flex: 1; display: flex; align-items: center; justify-content: center;

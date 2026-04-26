@@ -242,6 +242,9 @@ function DCItem({ item }) {
   const processPct  = item.processPct ?? 0;
   const barPct      = isProcessing ? processPct : progressPct;
   const showBar     = isDownloading || (isProcessing && processPct > 0);
+  const progressBg  = isProcessing ? 'rgba(56,189,248,0.09)'
+    : item._client === 'sabnzbd' ? 'rgba(255,179,0,0.09)'
+    : 'rgba(61,155,233,0.09)';
 
   const pctStr   = progressPct > 0 ? `${Math.round(progressPct)}%` : null;
   const etaSecs  = item.eta || parseSabTimeleft(item.timeleft);
@@ -251,7 +254,7 @@ function DCItem({ item }) {
   const sizeStr  = item.size ? fmtBytes(item.size) : item.mbleft ? `${Math.round(item.mbleft)} MB left` : null;
 
   return (
-    <div className={styles.item}>
+    <div className={styles.item} style={showBar ? { '--progress-pct': `${Math.min(100, barPct).toFixed(1)}%`, '--progress-bg': progressBg } : undefined}>
       <div className={styles.main}>
         <div className={styles.titleRow}>
           <span className={styles.title} title={item.name}>{item.name}</span>
@@ -281,14 +284,6 @@ function DCItem({ item }) {
           {!isDownloading && !isProcessing && sizeStr && <span className={styles.metaMuted}>{sizeStr}</span>}
         </div>
       </div>
-      {showBar && (
-        <div className={styles.progressStrip}>
-          <div
-            className={isProcessing ? styles.progressFillProcess : styles.progressFill}
-            style={{ width: `${Math.min(100, barPct)}%` }}
-          />
-        </div>
-      )}
     </div>
   );
 }
