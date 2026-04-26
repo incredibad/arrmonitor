@@ -4,6 +4,12 @@ All notable changes are documented here, newest first.
 
 ---
 
+## [1.16.0] — 2026-04-26
+
+### Added
+- Settings Apps and Download Clients lists are now drag-to-reorder; each row has a 6-dot handle on the left and a drop-target indicator on hover
+- Drag order is persisted to localStorage and applied on the dashboard across all layout modes (standard, horizontal, tablet)
+
 ## [1.15.4] — 2026-04-26
 
 ### Changed
