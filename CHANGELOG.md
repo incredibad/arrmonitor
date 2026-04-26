@@ -4,6 +4,11 @@ All notable changes are documented here, newest first.
 
 ---
 
+## [1.16.3] — 2026-04-26
+
+### Fixed
+- Instance card queue count now respects the "Hide pending downloads" setting; pending items are no longer counted when the setting is enabled, matching what is shown in the queue view
+
 ## [1.16.2] — 2026-04-26
 
 ### Fixed
