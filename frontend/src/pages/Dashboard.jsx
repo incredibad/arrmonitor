@@ -104,6 +104,7 @@ export default function Dashboard() {
         {showNavBar && <AppNav />}
         <div className={styles.twoCol}>
           <div className={styles.colClients}>
+            <div className={styles.sectionLabel}>Download Clients</div>
             <div className={styles.clientList}>
               {enabledSab.map(instance => <SabnzbdCard key={`sab-${instance.id}`} instance={instance} />)}
               {enabledQb.map(instance => <QbittorrentCard key={`qb-${instance.id}`} instance={instance} />)}
@@ -112,6 +113,7 @@ export default function Dashboard() {
           </div>
 
           <div className={styles.colInstances}>
+            <div className={styles.sectionLabel}>Apps</div>
             <div className={styles.instanceList}>
               {enabled.map(instance => <InstanceCard key={instance.id} instance={instance} />)}
               {enabled.length === 0 && <p className={styles.colEmpty}>No instances configured.</p>}
