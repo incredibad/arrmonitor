@@ -79,7 +79,8 @@ export default function SabnzbdCard({ instance }) {
   const speed         = queue?.speed || '';
   const sizeleft      = queue?.sizeleft || '';
   const timeleft      = queue?.timeleft || '';
-  const queueCount    = queue?.noofslots ?? 0;
+  const processingCount = processing.filter(h => /^(Extracting|Repairing|Verifying|Moving|Running)$/.test(h.status)).length;
+  const queueCount      = (queue?.noofslots ?? 0) + processingCount;
 
   const statusLabel = isDownloading ? 'Downloading'
     : isProcessing  ? 'Processing'

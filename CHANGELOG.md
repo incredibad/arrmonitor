@@ -4,6 +4,11 @@ All notable changes are documented here, newest first.
 
 ---
 
+## [1.17.6] — 2026-04-27
+
+### Fixed
+- SABnzbd card queue count now includes actively processing items (Extracting, Repairing, Verifying, Moving, Running)
+
 ## [1.17.5] — 2026-04-27
 
 ### Fixed
