@@ -17,7 +17,7 @@ function resolveApiBase(instance) {
   return '/api/v3';
 }
 
-async function arrFetch(instance, apiPath, options = {}, retries = 2) {
+async function arrFetch(instance, apiPath, options = {}, retries = 2, timeoutMs = 5000) {
   const apiBase = resolveApiBase(instance);
   const url = `${instance.url}${apiBase}${apiPath}`;
   const headers = {
@@ -28,12 +28,15 @@ async function arrFetch(instance, apiPath, options = {}, retries = 2) {
 
   let lastError;
   for (let attempt = 0; attempt <= retries; attempt++) {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), timeoutMs);
     try {
       const res = await fetch(url, {
         ...options,
         headers,
-        signal: AbortSignal.timeout(12000),
+        signal: controller.signal,
       });
+      clearTimeout(timer);
       const contentType = res.headers.get('content-type') || '';
       if (!res.ok) {
         const text = await res.text();
@@ -50,6 +53,7 @@ async function arrFetch(instance, apiPath, options = {}, retries = 2) {
       }
       return await res.json();
     } catch (e) {
+      clearTimeout(timer);
       lastError = e;
       const isRetryable =
         e.code === 'ECONNRESET' ||
@@ -93,7 +97,7 @@ router.get('/:id/queue', async (req, res) => {
     if (instance.type === 'sportarr') {
       // Sportarr native /api/queue returns a flat array, not a paginated object
       // Normalise it into the standard {page, totalRecords, records} shape
-      const raw = await arrFetch(instance, `/queue`);
+      const raw = await arrFetch(instance, `/queue`, {}, 0, 5000);
       const records = Array.isArray(raw) ? raw : (raw?.records || []);
       // Map Sportarr field names to Sonarr-compatible names for display
       const mapped = records.map(r => {
@@ -118,7 +122,7 @@ router.get('/:id/queue', async (req, res) => {
       });
       data = { page: 1, pageSize: mapped.length, totalRecords: mapped.length, records: mapped };
     } else {
-      data = await arrFetch(instance, `/queue?page=${page}&pageSize=${pageSize}&includeUnknownSeriesItems=true&includeSeries=true&includeEpisode=true&includeMovie=true&includeArtist=true`);
+      data = await arrFetch(instance, `/queue?page=${page}&pageSize=${pageSize}&includeUnknownSeriesItems=true&includeSeries=true&includeEpisode=true&includeMovie=true&includeArtist=true`, {}, 0, 5000);
     }
 
     res.json(data);
