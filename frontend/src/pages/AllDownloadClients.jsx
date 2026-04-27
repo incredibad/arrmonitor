@@ -1,8 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { api } from '../lib/api.js';
-import { useSabnzbdInstances } from '../hooks/useSabnzbd.js';
-import { useQbittorrentInstances } from '../hooks/useQbittorrent.js';
 import { useNav } from '../lib/navContext.jsx';
 import { useLayout } from '../lib/layoutContext.jsx';
 import iqStyles from './InstanceQueue.module.css';
@@ -49,91 +47,106 @@ function parseSabTimeleft(s) {
 }
 
 function useAllDCItems() {
-  const { instances: sabInstances } = useSabnzbdInstances();
-  const { instances: qbInstances }  = useQbittorrentInstances();
+  const { showSeeding } = useLayout();
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [lastUpdated, setLastUpdated] = useState(null);
-  const sabRef = useRef([]);
-  const qbRef  = useRef([]);
-
-  useEffect(() => { sabRef.current = sabInstances.filter(i => i.enabled); }, [sabInstances]);
-  useEffect(() => { qbRef.current  = qbInstances.filter(i => i.enabled);  }, [qbInstances]);
+  const sabRef      = useRef(null); // null = not yet loaded
+  const qbRef       = useRef(null);
+  const fetchingRef = useRef(false);
+  const showSeedRef = useRef(showSeeding);
+  useEffect(() => { showSeedRef.current = showSeeding; }, [showSeeding]);
 
   const fetchAll = useCallback(async () => {
-    const all = [];
-    await Promise.all([
-      ...sabRef.current.map(async inst => {
-        try {
-          const [q, hist] = await Promise.all([
-            api.getSabnzbdQueue(inst.id),
-            api.getSabnzbdHistory(inst.id).catch(() => []),
-          ]);
-          const paused = q?.status === 'Paused';
-          (q?.slots || []).forEach((slot, i) => {
-            all.push({
-              _key: `sab-${inst.id}-slot-${slot.nzo_id || i}`,
-              _client: 'sabnzbd',
-              _instanceId: inst.id,
-              _instanceName: inst.name,
-              _sem: paused ? 'paused' : 'downloading',
-              name: slot.filename || slot.nzo_id || 'Unknown',
-              category: (slot.cat && slot.cat !== '*') ? slot.cat : null,
-              pct: parseFloat(slot.percentage) || 0,
-              mbleft: parseFloat(slot.mbleft) || 0,
-              timeleft: slot.timeleft || null,
+    if (fetchingRef.current) return;
+    fetchingRef.current = true;
+    try {
+      if (sabRef.current === null || qbRef.current === null) {
+        const [sab, qb] = await Promise.all([
+          api.getSabnzbdInstances().catch(() => []),
+          api.getQbittorrentInstances().catch(() => []),
+        ]);
+        sabRef.current = sab.filter(i => i.enabled);
+        qbRef.current  = qb.filter(i => i.enabled);
+      }
+      const showSeed = showSeedRef.current;
+      const all = [];
+      await Promise.all([
+        ...sabRef.current.map(async inst => {
+          try {
+            const [q, hist] = await Promise.all([
+              api.getSabnzbdQueue(inst.id),
+              api.getSabnzbdHistory(inst.id).catch(() => []),
+            ]);
+            const paused = q?.status === 'Paused';
+            (q?.slots || []).forEach((slot, i) => {
+              all.push({
+                _key: `sab-${inst.id}-slot-${slot.nzo_id || i}`,
+                _client: 'sabnzbd',
+                _instanceId: inst.id,
+                _instanceName: inst.name,
+                _sem: paused ? 'paused' : 'downloading',
+                name: slot.filename || slot.nzo_id || 'Unknown',
+                category: (slot.cat && slot.cat !== '*') ? slot.cat : null,
+                pct: parseFloat(slot.percentage) || 0,
+                mbleft: parseFloat(slot.mbleft) || 0,
+                timeleft: slot.timeleft || null,
+              });
             });
-          });
-          (hist || []).filter(h => SAB_ACTIVE.has(h.status)).forEach((item, i) => {
-            all.push({
-              _key: `sab-${inst.id}-hist-${item.nzo_id || i}`,
-              _client: 'sabnzbd',
-              _instanceId: inst.id,
-              _instanceName: inst.name,
-              _sem: 'processing',
-              name: item.name || 'Unknown',
-              category: (item.category && item.category !== '*') ? item.category : null,
-              processStatus: item.status,
-              processPct: Math.min(100, parseInt(item.percentage) || 0) || parseActionProgress(item.action_line),
-              actionLine: item.action_line || null,
+            (hist || []).filter(h => SAB_ACTIVE.has(h.status)).forEach((item, i) => {
+              all.push({
+                _key: `sab-${inst.id}-hist-${item.nzo_id || i}`,
+                _client: 'sabnzbd',
+                _instanceId: inst.id,
+                _instanceName: inst.name,
+                _sem: 'processing',
+                name: item.name || 'Unknown',
+                category: (item.category && item.category !== '*') ? item.category : null,
+                processStatus: item.status,
+                processPct: Math.min(100, parseInt(item.percentage) || 0) || parseActionProgress(item.action_line),
+                actionLine: item.action_line || null,
+              });
             });
-          });
-        } catch {}
-      }),
-      ...qbRef.current.map(async inst => {
-        try {
-          const torrents = await api.getQbittorrentTorrents(inst.id);
-          (torrents || []).forEach(t => {
-            const sem = QB_ERROR.has(t.state) ? 'error'
-              : QB_DL.has(t.state)     ? 'downloading'
-              : QB_SEED.has(t.state)   ? 'seeding'
-              : QB_PAUSED.has(t.state) ? 'paused'
-              : 'downloading';
-            all.push({
-              _key: `qb-${inst.id}-${t.hash}`,
-              _client: 'qbittorrent',
-              _instanceId: inst.id,
-              _instanceName: inst.name,
-              _sem: sem,
-              name: t.name || 'Unknown',
-              category: t.category || null,
-              progress: t.progress ?? 0,
-              dlspeed: t.dlspeed || 0,
-              upspeed: t.upspeed || 0,
-              eta: t.eta || 0,
-              size: t.size || 0,
+          } catch {}
+        }),
+        ...qbRef.current.map(async inst => {
+          try {
+            const torrents = await api.getQbittorrentTorrents(inst.id);
+            (torrents || []).forEach(t => {
+              const sem = QB_ERROR.has(t.state) ? 'error'
+                : QB_DL.has(t.state)     ? 'downloading'
+                : QB_SEED.has(t.state)   ? 'seeding'
+                : QB_PAUSED.has(t.state) ? 'paused'
+                : 'downloading';
+              if (sem === 'seeding' && !showSeed) return;
+              all.push({
+                _key: `qb-${inst.id}-${t.hash}`,
+                _client: 'qbittorrent',
+                _instanceId: inst.id,
+                _instanceName: inst.name,
+                _sem: sem,
+                name: t.name || 'Unknown',
+                category: t.category || null,
+                progress: t.progress ?? 0,
+                dlspeed: t.dlspeed || 0,
+                upspeed: t.upspeed || 0,
+                eta: t.eta || 0,
+                size: t.size || 0,
+              });
             });
-          });
-        } catch {}
-      }),
-    ]);
-    all.sort((a, b) => {
-      const d = (SORT_GROUP[a._sem] ?? 99) - (SORT_GROUP[b._sem] ?? 99);
-      return d !== 0 ? d : (a.name || '').localeCompare(b.name || '');
-    });
-    setItems(all);
-    setLastUpdated(new Date());
-    setLoading(false);
+          } catch {}
+        }),
+      ]);
+      all.sort((a, b) => {
+        const d = (SORT_GROUP[a._sem] ?? 99) - (SORT_GROUP[b._sem] ?? 99);
+        return d !== 0 ? d : (a.name || '').localeCompare(b.name || '');
+      });
+      setItems(all);
+      setLastUpdated(new Date());
+    } finally {
+      setLoading(false);
+      fetchingRef.current = false;
+    }
   }, []);
 
   useEffect(() => {

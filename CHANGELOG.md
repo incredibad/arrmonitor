@@ -4,6 +4,19 @@ All notable changes are documented here, newest first.
 
 ---
 
+## [1.18.0] — 2026-04-27
+
+### Fixed
+- All Download Clients now loads immediately — instances are fetched inside the first `fetchAll` call rather than asynchronously via separate hooks, eliminating the race condition that caused a blank state until the 2s interval fired
+- Seeding torrents are now skipped during qBittorrent response processing (not just at render time) when "show seeding" is off, avoiding unnecessary work on 486+ seeds every 2 seconds
+- All Download Clients polling now has a concurrency guard to prevent request pile-up
+
+### Added
+- "Pause for" button added to SABnzbd dedicated queue page, next to the existing Pause button
+
+### Fixed
+- SABnzbd "Pause for" now correctly uses `set_config` to write the `pause_int` value before pausing; the previous `mode=config` call was a read endpoint and silently did nothing
+
 ## [1.17.10] — 2026-04-27
 
 ### Fixed

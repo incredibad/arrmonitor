@@ -25,6 +25,8 @@ export default function SabnzbdQueue() {
   const [filter, setFilter] = useState('all');
   const [acting, setActing] = useState(false);
   const [toast, setToast] = useState(null);
+  const [pauseForOpen, setPauseForOpen] = useState(false);
+  const [customMins, setCustomMins] = useState('');
 
   const instance = instances.find(i => String(i.id) === String(id));
 
@@ -54,6 +56,14 @@ export default function SabnzbdQueue() {
     setQueue(q => q ? { ...q, status: 'Downloading' } : q);
     setActing(true);
     try { await api.resumeSabnzbd(id); showToast('Resumed'); } catch (e) { showToast(e.message, 'error'); }
+    setActing(false);
+  }
+
+  async function handlePauseFor(minutes) {
+    setPauseForOpen(false);
+    setQueue(q => q ? { ...q, status: 'Paused' } : q);
+    setActing(true);
+    try { await api.pauseSabnzbdFor(id, minutes); showToast(`Paused for ${minutes}m`); } catch (e) { showToast(e.message, 'error'); }
     setActing(false);
   }
 
@@ -107,9 +117,14 @@ export default function SabnzbdQueue() {
 
           <div className={iqStyles.controlsCenter}>
             {isDownloading && (
-              <button className={styles.controlBtn} onClick={handlePause} disabled={acting}>
-                <PauseIcon /> Pause
-              </button>
+              <>
+                <button className={styles.controlBtn} onClick={handlePause} disabled={acting}>
+                  <PauseIcon /> Pause
+                </button>
+                <button className={styles.controlBtn} onClick={() => setPauseForOpen(true)} disabled={acting} title="Pause for…">
+                  <ClockIcon />
+                </button>
+              </>
             )}
             {isPaused && (
               <button className={styles.controlBtn} onClick={handleResume} disabled={acting}>
@@ -170,6 +185,43 @@ export default function SabnzbdQueue() {
 
       {lastUpdated && (
         <div className={iqStyles.footer}>Refreshes every 15s · Last {lastUpdated.toLocaleTimeString()}</div>
+      )}
+
+      {pauseForOpen && (
+        <div className="modal-backdrop" onClick={() => setPauseForOpen(false)}>
+          <div className="modal-sheet" onClick={e => e.stopPropagation()}>
+            <div className="modal-header">
+              <span className="modal-title">Pause for</span>
+              {instance && <span className="modal-subtitle">{instance.name}</span>}
+            </div>
+            {[
+              { label: '5 minutes',  value: 5 },
+              { label: '15 minutes', value: 15 },
+              { label: '30 minutes', value: 30 },
+              { label: '1 hour',     value: 60 },
+              { label: '3 hours',    value: 180 },
+            ].map(p => (
+              <button key={p.value} className="modal-action" onClick={() => handlePauseFor(p.value)}>
+                <span className="modal-action-icon"><ClockIcon /></span>
+                <span className="modal-action-label">{p.label}</span>
+              </button>
+            ))}
+            <div className="modal-divider" />
+            <div style={{ padding: '8px 16px', display: 'flex', gap: 8, alignItems: 'center' }}>
+              <input
+                type="number" min="1" max="9999" placeholder="Custom (minutes)"
+                value={customMins} onChange={e => setCustomMins(e.target.value)}
+                style={{ flex: 1, padding: '8px 10px', fontSize: 13 }}
+              />
+              <button className="modal-action" style={{ flex: '0 0 auto', padding: '8px 16px', borderRadius: 'var(--radius-sm)' }}
+                disabled={!customMins}
+                onClick={() => { if (customMins) handlePauseFor(parseInt(customMins)); }}>
+                Apply
+              </button>
+            </div>
+            <button className="modal-cancel" onClick={() => setPauseForOpen(false)}>Cancel</button>
+          </div>
+        </div>
       )}
     </div>
   );
@@ -254,4 +306,9 @@ const PauseIcon = () => (
 );
 const ResumeIcon = () => (
   <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+);
+const ClockIcon = () => (
+  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+  </svg>
 );
