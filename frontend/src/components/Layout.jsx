@@ -12,7 +12,10 @@ function useTabNotification() {
     const BASE = 'ArrMonitor';
 
     let arrTotal = 0, arrIssues = 0;
+    let arrFetching = false;
     async function refreshArr() {
+      if (arrFetching) return;
+      arrFetching = true;
       try {
         const instances = await api.getInstances();
         let total = 0, issues = 0;
@@ -30,11 +33,15 @@ function useTabNotification() {
         }));
         arrTotal = total;
         arrIssues = issues;
-      } catch {}
+      } catch {} finally {
+        arrFetching = false;
+      }
     }
 
-    let sabInstances = [], qbInstances = [];
+    let sabInstances = [], qbInstances = [], clientsFetching = false;
     async function refreshClients() {
+      if (clientsFetching) return;
+      clientsFetching = true;
       try {
         if (!sabInstances.length) sabInstances = await api.getSabnzbdInstances().catch(() => []);
         if (!qbInstances.length) qbInstances = await api.getQbittorrentInstances().catch(() => []);
@@ -90,7 +97,9 @@ function useTabNotification() {
         let title = parts.length ? `${parts.join(' - ')} - ${BASE}` : BASE;
         if (arrIssues > 0) title = `⚠ ${title}`;
         document.title = title;
-      } catch {}
+      } catch {} finally {
+        clientsFetching = false;
+      }
     }
 
     let arrTimer, sabTimer;
