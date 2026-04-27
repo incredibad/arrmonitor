@@ -4,6 +4,11 @@ All notable changes are documented here, newest first.
 
 ---
 
+## [1.18.1] — 2026-04-27
+
+### Changed
+- Default dashboard layout now has a clear 1px divider rule with extra padding between the Download Clients and Apps sections
+
 ## [1.18.0] — 2026-04-27
 
 ### Fixed
