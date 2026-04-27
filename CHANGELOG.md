@@ -4,6 +4,11 @@ All notable changes are documented here, newest first.
 
 ---
 
+## [1.17.10] — 2026-04-27
+
+### Fixed
+- Tab notification `refreshArr` and `refreshClients` now have concurrency guards — previously both could pile up concurrent requests, doubling backend load alongside the GlobalQueue's own polling
+
 ## [1.17.9] — 2026-04-27
 
 ### Fixed
