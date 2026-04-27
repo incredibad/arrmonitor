@@ -4,6 +4,11 @@ All notable changes are documented here, newest first.
 
 ---
 
+## [1.17.5] — 2026-04-27
+
+### Fixed
+- SABnzbd extracting items parse file count from action line (e.g. "Unpacking: 01/22") as a fallback progress percentage when SABnzbd reports 0%
+
 ## [1.17.4] — 2026-04-27
 
 ### Fixed

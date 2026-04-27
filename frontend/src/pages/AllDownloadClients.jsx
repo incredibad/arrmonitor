@@ -9,6 +9,14 @@ import iqStyles from './InstanceQueue.module.css';
 import styles from './AllDownloadClients.module.css';
 
 const SAB_ACTIVE = new Set(['Extracting','Repairing','Verifying','Moving','Running']);
+
+function parseActionProgress(actionLine) {
+  if (!actionLine) return 0;
+  const m = actionLine.match(/:\s*(\d+)\/(\d+)/);
+  if (!m) return 0;
+  const total = parseInt(m[2]);
+  return total ? Math.round((parseInt(m[1]) / total) * 100) : 0;
+}
 const QB_DL      = new Set(['downloading','stalledDL','forcedDL','checkingDL','queuedDL','metaDL','checkingResumeData','moving']);
 const QB_SEED    = new Set(['uploading','stalledUP','forcedUP','checkingUP','queuedUP']);
 const QB_PAUSED  = new Set(['pausedDL','pausedUP','stoppedDL','stoppedUP']);
@@ -86,7 +94,7 @@ function useAllDCItems() {
               name: item.name || 'Unknown',
               category: (item.category && item.category !== '*') ? item.category : null,
               processStatus: item.status,
-              processPct: Math.min(100, parseInt(item.percentage) || 0),
+              processPct: Math.min(100, parseInt(item.percentage) || 0) || parseActionProgress(item.action_line),
               actionLine: item.action_line || null,
             });
           });
