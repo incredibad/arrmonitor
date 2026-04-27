@@ -281,6 +281,14 @@ function HistorySlot({ slot }) {
   );
 }
 
+function parsePauseInt(s) {
+  if (!s) return 0;
+  const parts = s.split(':').map(Number);
+  if (parts.length === 3) return parts[0] * 3600 + parts[1] * 60 + parts[2];
+  if (parts.length === 2) return parts[0] * 60 + parts[1];
+  return parseInt(s) || 0;
+}
+
 function fmtPauseRemaining(secs) {
   if (!secs || secs <= 0) return null;
   const h = Math.floor(secs / 3600);
@@ -293,7 +301,7 @@ function fmtPauseRemaining(secs) {
 function StatusChip({ status, pauseInt }) {
   if (status === 'Downloading') return <span className="chip chip-downloading">downloading</span>;
   if (status === 'Paused') {
-    const remaining = fmtPauseRemaining(parseInt(pauseInt) || 0);
+    const remaining = fmtPauseRemaining(parsePauseInt(pauseInt));
     return <span className="chip chip-paused">{remaining ? `paused - ${remaining}` : 'paused'}</span>;
   }
   if (status === 'Idle') return <span className="chip chip-neutral">idle</span>;
