@@ -8,6 +8,14 @@ import iqStyles from './InstanceQueue.module.css';
 
 const PROCESSING_STATUSES = ['Extracting', 'Moving', 'Repairing', 'Verifying', 'Running'];
 
+function parseActionProgress(actionLine) {
+  if (!actionLine) return 0;
+  const m = actionLine.match(/:\s*(\d+)\/(\d+)/);
+  if (!m) return 0;
+  const total = parseInt(m[2]);
+  return total ? Math.round((parseInt(m[1]) / total) * 100) : 0;
+}
+
 export default function SabnzbdQueue() {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -197,7 +205,7 @@ function HistorySlot({ slot }) {
     Running:    'chip-downloading',
   }[slot.status] || 'chip-neutral';
 
-  const pct = Math.min(100, parseInt(slot.percentage) || 0);
+  const pct = Math.min(100, parseInt(slot.percentage) || 0) || parseActionProgress(slot.action_line);
   const itemClass = `${styles.item}${pct === 0 ? ` ${styles.itemIndeterminate}` : ''}`;
 
   return (
