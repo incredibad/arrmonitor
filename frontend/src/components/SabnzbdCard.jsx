@@ -19,6 +19,23 @@ function parseSabTimeleft(s) {
   return parts.length === 3 ? parts[0] * 3600 + parts[1] * 60 + parts[2] : 0;
 }
 
+function parsePauseInt(s) {
+  if (!s) return 0;
+  const parts = s.split(':').map(Number);
+  if (parts.length === 3) return parts[0] * 3600 + parts[1] * 60 + parts[2];
+  if (parts.length === 2) return parts[0] * 60 + parts[1];
+  return parseInt(s) || 0;
+}
+
+function fmtPauseRemaining(secs) {
+  if (!secs || secs <= 0) return null;
+  const h = Math.floor(secs / 3600);
+  const m = Math.floor((secs % 3600) / 60);
+  const s = secs % 60;
+  if (h > 0) return `${h}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+  return `${m}:${String(s).padStart(2,'0')}`;
+}
+
 const PAUSE_PRESETS = [
   { label: '5 minutes',  value: 5 },
   { label: '15 minutes', value: 15 },
@@ -82,9 +99,10 @@ export default function SabnzbdCard({ instance }) {
   const processingCount = processing.filter(h => /^(Extracting|Repairing|Verifying|Moving|Running)$/.test(h.status)).length;
   const queueCount      = (queue?.noofslots ?? 0) + processingCount;
 
+  const pauseRemaining = isPaused ? fmtPauseRemaining(parsePauseInt(queue?.pause_int)) : null;
   const statusLabel = isDownloading ? 'Downloading'
     : isProcessing  ? 'Processing'
-    : isPaused      ? 'Paused'
+    : isPaused      ? (pauseRemaining ? `Paused - ${pauseRemaining}` : 'Paused')
     : queue         ? 'Idle'
     : null;
 

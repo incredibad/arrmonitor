@@ -4,6 +4,11 @@ All notable changes are documented here, newest first.
 
 ---
 
+## [1.18.4] — 2026-04-27
+
+### Fixed
+- SABnzbd pause countdown now correctly parses `pause_int` as a `"mm:ss"` / `"h:mm:ss"` string (e.g. `"11:18"`) rather than treating it as an integer — `parseInt("11:18")` was silently returning 11 (seconds) and the countdown vanished almost immediately
+
 ## [1.18.3] — 2026-04-27
 
 ### Added
