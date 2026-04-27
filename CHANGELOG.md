@@ -4,6 +4,11 @@ All notable changes are documented here, newest first.
 
 ---
 
+## [1.18.5] — 2026-04-27
+
+### Fixed
+- Browser tab queue count now respects the "hide pending" setting — items with `status: delay` or `status: pending` are excluded from the tab count when the setting is enabled
+
 ## [1.18.4] — 2026-04-27
 
 ### Fixed

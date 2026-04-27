@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 import { api } from '../lib/api.js';
 import { useLayout } from '../lib/layoutContext.jsx';
@@ -8,6 +8,10 @@ import TabletNav from './TabletNav.jsx';
 import styles from './Layout.module.css';
 
 function useTabNotification() {
+  const { hidePending } = useLayout();
+  const hidePendingRef = useRef(hidePending);
+  useEffect(() => { hidePendingRef.current = hidePending; }, [hidePending]);
+
   useEffect(() => {
     const BASE = 'ArrMonitor';
 
@@ -27,7 +31,7 @@ function useTabNotification() {
               const t = r.trackedDownloadState?.toLowerCase();
               const st = r.status?.toLowerCase();
               if (s === 'warning' || s === 'error' || st === 'failed' || t === 'failed' || t === 'failedpending') issues++;
-              else total++;
+              else if (!hidePendingRef.current || (st !== 'delay' && st !== 'pending')) total++;
             });
           } catch {}
         }));
