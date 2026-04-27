@@ -4,6 +4,11 @@ All notable changes are documented here, newest first.
 
 ---
 
+## [1.17.4] — 2026-04-27
+
+### Fixed
+- Indeterminate processing shimmer is now a smooth gradient sweep rather than a jarring solid block
+
 ## [1.17.3] — 2026-04-27
 
 ### Fixed
