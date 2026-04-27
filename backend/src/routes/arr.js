@@ -52,9 +52,8 @@ async function arrFetch(instance, apiPath, options = {}, retries = 2) {
     } catch (e) {
       lastError = e;
       const isRetryable =
-        e.code === 'ECONNRESET' || e.code === 'ECONNREFUSED' ||
-        e.name === 'AbortError' || e.name === 'TimeoutError' ||
-        (e.message && (e.message.includes('ECONNRESET') || e.message.includes('aborted')));
+        e.code === 'ECONNRESET' ||
+        (e.message && e.message.includes('ECONNRESET'));
       if (!isRetryable || options.method === 'DELETE' || options.method === 'POST') break;
       if (attempt < retries) {
         await new Promise(r => setTimeout(r, 500 * (attempt + 1)));

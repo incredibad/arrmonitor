@@ -4,6 +4,11 @@ All notable changes are documented here, newest first.
 
 ---
 
+## [1.17.7] — 2026-04-27
+
+### Fixed
+- All App Queues no longer hangs for up to 37 seconds when an instance is slow or unreachable; timeouts and connection-refused errors now fail immediately instead of being retried twice (only genuine ECONNRESET transient errors are retried)
+
 ## [1.17.6] — 2026-04-27
 
 ### Fixed
