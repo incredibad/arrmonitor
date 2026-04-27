@@ -4,6 +4,11 @@ All notable changes are documented here, newest first.
 
 ---
 
+## [1.18.3] — 2026-04-27
+
+### Added
+- SABnzbd "Paused" status chip now shows a live countdown of remaining pause time (e.g. "Paused - 4:53"), updated every 2s via existing polling, on both the dashboard card and the dedicated queue page
+
 ## [1.18.2] — 2026-04-27
 
 ### Fixed

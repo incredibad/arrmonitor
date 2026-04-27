@@ -108,7 +108,7 @@ export default function SabnzbdQueue() {
               )}
             </div>
             <div className={iqStyles.instanceMeta}>
-              {queue && <StatusChip status={status} />}
+              {queue && <StatusChip status={status} pauseInt={queue?.pause_int} />}
               {isDownloading && speed && (
                 <span className="chip chip-neutral" style={{ fontFamily: 'var(--font-mono)', fontSize: 10 }}>↓ {speed}</span>
               )}
@@ -281,10 +281,22 @@ function HistorySlot({ slot }) {
   );
 }
 
-function StatusChip({ status }) {
+function fmtPauseRemaining(secs) {
+  if (!secs || secs <= 0) return null;
+  const h = Math.floor(secs / 3600);
+  const m = Math.floor((secs % 3600) / 60);
+  const s = secs % 60;
+  if (h > 0) return `${h}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+  return `${m}:${String(s).padStart(2,'0')}`;
+}
+
+function StatusChip({ status, pauseInt }) {
   if (status === 'Downloading') return <span className="chip chip-downloading">downloading</span>;
-  if (status === 'Paused')      return <span className="chip chip-paused">paused</span>;
-  if (status === 'Idle')        return <span className="chip chip-neutral">idle</span>;
+  if (status === 'Paused') {
+    const remaining = fmtPauseRemaining(parseInt(pauseInt) || 0);
+    return <span className="chip chip-paused">{remaining ? `paused - ${remaining}` : 'paused'}</span>;
+  }
+  if (status === 'Idle') return <span className="chip chip-neutral">idle</span>;
   return null;
 }
 
