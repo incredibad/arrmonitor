@@ -110,7 +110,8 @@ export function useGlobalQueue(intervalMs = 15000) {
   const [loading, setLoading] = useState(true);
   const [lastUpdated, setLastUpdated] = useState(null);
   const instancesRef = useRef([]);
-  const hasDataRef = useRef(false);
+  const hasDataRef   = useRef(false);
+  const fetchingRef  = useRef(false);
 
   const fetchAll = useCallback(async (silent = false) => {
     if (testMode) {
@@ -119,8 +120,10 @@ export function useGlobalQueue(intervalMs = 15000) {
       setLoading(false);
       return;
     }
+    if (fetchingRef.current) return;
+    fetchingRef.current = true;
     const insts = instancesRef.current;
-    if (insts.length === 0) { setLoading(false); return; }
+    if (insts.length === 0) { fetchingRef.current = false; setLoading(false); return; }
     if (!silent) setLoading(true);
     try {
       const results = await Promise.all(
@@ -141,6 +144,7 @@ export function useGlobalQueue(intervalMs = 15000) {
       if (!hasDataRef.current) setAllRecords([]);
     } finally {
       setLoading(false);
+      fetchingRef.current = false;
     }
   }, [testMode]);
 

@@ -4,6 +4,12 @@ All notable changes are documented here, newest first.
 
 ---
 
+## [1.17.9] — 2026-04-27
+
+### Fixed
+- Queue fetch timeout reduced from 12s to 5s and switched from `AbortSignal.timeout()` to `AbortController` for reliable cross-Node.js-version support
+- GlobalQueue polling now skips a cycle if the previous fetch is still in-flight, preventing request pile-up when instances are slow
+
 ## [1.17.8] — 2026-04-27
 
 ### Fixed
