@@ -51,6 +51,17 @@
   transition: width 0.3s ease;
 }
 
+@keyframes progressShimmer {
+  0%   { transform: translateX(-150%); }
+  100% { transform: translateX(350%); }
+}
+.item.itemIndeterminate::before {
+  width: 35%;
+  background-color: rgba(56,189,248,0.09);
+  animation: progressShimmer 1.6s ease-in-out infinite;
+  transition: none;
+}
+
 .itemMain {
   padding: 9px 12px 10px;
   display: flex;

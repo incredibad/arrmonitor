@@ -198,9 +198,13 @@ function HistorySlot({ slot }) {
   }[slot.status] || 'chip-neutral';
 
   const pct = Math.min(100, parseInt(slot.percentage) || 0);
+  const itemClass = `${styles.item}${pct === 0 ? ` ${styles.itemIndeterminate}` : ''}`;
 
   return (
-    <div className={styles.item} style={pct > 0 ? { '--progress-pct': `${pct}%`, '--progress-bg': 'rgba(56,189,248,0.09)' } : undefined}>
+    <div
+      className={itemClass}
+      style={pct > 0 ? { '--progress-pct': `${pct}%`, '--progress-bg': 'rgba(56,189,248,0.09)' } : undefined}
+    >
       <div className={styles.itemMain}>
         <div className={styles.itemHeader}>
           <span className={styles.itemName}>{slot.name}</span>
