@@ -52,13 +52,13 @@
 }
 
 @keyframes progressShimmer {
-  0%   { transform: translateX(-150%); }
-  100% { transform: translateX(350%); }
+  0%   { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
 }
 .item.itemIndeterminate::before {
-  width: 35%;
-  background-color: rgba(56,189,248,0.09);
-  animation: progressShimmer 1.6s ease-in-out infinite;
+  width: 100%;
+  background: linear-gradient(90deg, transparent 20%, rgba(56,189,248,0.14) 50%, transparent 80%);
+  animation: progressShimmer 2s ease-in-out infinite;
   transition: none;
 }
 
