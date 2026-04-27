@@ -155,13 +155,7 @@ export function useGlobalQueue(intervalMs = 15000) {
       })
       .catch(() => setLoading(false));
 
-    const poll = async () => {
-      instancesRef.current.forEach(inst => {
-        api.sendCommand(inst.id, { name: 'RefreshMonitoredDownloads' }).catch(() => {});
-      });
-      await new Promise(r => setTimeout(r, 2000));
-      if (!cancelled) fetchAll(true);
-    };
+    const poll = () => { if (!cancelled) fetchAll(true); };
 
     const interval = setInterval(poll, intervalMs);
     return () => { cancelled = true; clearInterval(interval); };
