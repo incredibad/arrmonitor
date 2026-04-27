@@ -4,6 +4,11 @@ All notable changes are documented here, newest first.
 
 ---
 
+## [1.17.8] — 2026-04-27
+
+### Fixed
+- All App Queues no longer fires `RefreshMonitoredDownloads` commands to every instance on each poll — these were the 12–57s 502 errors visible in the network tab causing the page to stall
+
 ## [1.17.7] — 2026-04-27
 
 ### Fixed
