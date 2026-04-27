@@ -4,6 +4,11 @@ All notable changes are documented here, newest first.
 
 ---
 
+## [1.18.2] — 2026-04-27
+
+### Fixed
+- SABnzbd "Pause for" now uses the correct API call (`mode=config&name=set_pause&value=<minutes>`); previous attempts used wrong parameter names and an unnecessary second pause call
+
 ## [1.18.1] — 2026-04-27
 
 ### Changed
