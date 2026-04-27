@@ -4,6 +4,11 @@ All notable changes are documented here, newest first.
 
 ---
 
+## [1.17.3] — 2026-04-27
+
+### Fixed
+- SABnzbd extracting/processing items now always show a background progress indicator; when the percentage is unavailable or zero an animated shimmer is shown, transitioning to a percentage fill once SABnzbd reports actual progress
+
 ## [1.17.2] — 2026-04-27
 
 ### Changed

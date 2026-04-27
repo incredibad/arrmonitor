@@ -253,8 +253,14 @@ function DCItem({ item }) {
   const ulStr    = item.upspeed > 0 ? fmtSpeed(item.upspeed) : null;
   const sizeStr  = item.size ? fmtBytes(item.size) : item.mbleft ? `${Math.round(item.mbleft)} MB left` : null;
 
+  const indeterminate = isProcessing && processPct === 0;
+  const itemClass = `${styles.item}${indeterminate ? ` ${styles.itemIndeterminate}` : ''}`;
+
   return (
-    <div className={styles.item} style={showBar ? { '--progress-pct': `${Math.min(100, barPct).toFixed(1)}%`, '--progress-bg': progressBg } : undefined}>
+    <div
+      className={itemClass}
+      style={showBar && !indeterminate ? { '--progress-pct': `${Math.min(100, barPct).toFixed(1)}%`, '--progress-bg': progressBg } : undefined}
+    >
       <div className={styles.main}>
         <div className={styles.titleRow}>
           <span className={styles.title} title={item.name}>{item.name}</span>
