@@ -117,7 +117,7 @@ router.post('/:id/pausefor', async (req, res) => {
     const { minutes } = req.body;
     if (!minutes) return res.status(400).json({ error: 'minutes required' });
     const inst = await getInst(req.params.id);
-    await sabFetch(inst, 'config', { name: 'pause_int', value: minutes });
+    await sabFetch(inst, 'set_config', { section: 'misc', keyword: 'pause_int', value: minutes });
     await sabFetch(inst, 'pause');
     res.json({ ok: true });
   } catch (e) {
