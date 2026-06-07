@@ -4,6 +4,11 @@ All notable changes are documented here, newest first.
 
 ---
 
+## [1.19.3] — 2026-06-07
+
+### Fixed
+- Queue auto-refreshes 1 second after a manual import command completes, so the imported item disappears immediately instead of waiting up to 15 s for the next poll cycle
+
 ## [1.19.2] — 2026-06-07
 
 ### Fixed

@@ -81,7 +81,7 @@ function needsManualImport(item) {
 }
 
 // ─── Manual Import Confirmation Modal ────────────────────────────────────────
-function ManualImportModal({ item, instanceId, instanceType, instanceName, onClose, onImportStarted }) {
+function ManualImportModal({ item, instanceId, instanceType, instanceName, onClose, onImportStarted, onComplete }) {
   const [candidates, setCandidates] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -164,6 +164,7 @@ function ManualImportModal({ item, instanceId, instanceType, instanceName, onClo
         instanceName,
         mediaTitle: getTitle(item),
         mediaSubtitle: getSubtitle(item),
+        onComplete,
       });
       onImportStarted?.();
       onClose();
@@ -480,6 +481,7 @@ export default function QueueItem({ item, instanceId, instanceType, instanceName
           instanceName={instanceName}
           onClose={() => setShowImport(false)}
           onImportStarted={() => setManuallyImporting(true)}
+          onComplete={onRefresh}
         />
       )}
       {showRemove && (

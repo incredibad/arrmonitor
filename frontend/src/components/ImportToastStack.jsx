@@ -22,6 +22,7 @@ function ImportToast({ toast, onDismiss }) {
         const s = (data.status || '').toLowerCase();
         setStatus(s);
         if (s === 'completed') {
+          setTimeout(() => { if (!cancelled) toast.onComplete?.(); }, 1000);
           timer = setTimeout(() => { if (!cancelled) onDismiss(); }, SUCCESS_DISMISS_MS);
           return;
         }
