@@ -6,7 +6,6 @@ const router = Router();
 const ALLOWED_KEYS = new Set([
   'gotify_url',
   'gotify_token',
-  'app_base_url',
 ]);
 
 // GET /api/settings — returns all settings as { key: value }
