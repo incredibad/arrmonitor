@@ -69,6 +69,14 @@ export default function Settings() {
   const [pwSuccess, setPwSuccess] = useState(false);
   const [pwLoading, setPwLoading] = useState(false);
 
+  // Notifications tab state
+  const [notifForm, setNotifForm] = useState({ gotify_url: '', gotify_token: '', app_base_url: '' });
+  const [notifLoading, setNotifLoading] = useState(false);
+  const [notifSaving, setNotifSaving] = useState(false);
+  const [notifSaveResult, setNotifSaveResult] = useState(null);
+  const [notifTesting, setNotifTesting] = useState(false);
+  const [notifTestResult, setNotifTestResult] = useState(null);
+
   // Drag-to-reorder state
   const instDragRef = useRef(null);
   const [instDragOver, setInstDragOver] = useState(null);
@@ -80,6 +88,19 @@ export default function Settings() {
     setPageTitle('Settings');
     return () => clearPageTitle();
   }, []);
+
+  useEffect(() => {
+    if (tab !== 'notifications') return;
+    setNotifLoading(true);
+    api.getSettings()
+      .then(s => setNotifForm({
+        gotify_url:   s.gotify_url   || '',
+        gotify_token: s.gotify_token || '',
+        app_base_url: s.app_base_url || '',
+      }))
+      .catch(() => {})
+      .finally(() => setNotifLoading(false));
+  }, [tab]);
 
   function switchTab(t) {
     cancelForm();
@@ -349,9 +370,10 @@ export default function Settings() {
     <div className={styles.page}>
       <AppNav />
       <div className={styles.tabBar}>
-        <button className={`${styles.tab} ${tab === 'apps'    ? styles.tabActive : ''}`} onClick={() => switchTab('apps')}>Apps</button>
-        <button className={`${styles.tab} ${tab === 'account' ? styles.tabActive : ''}`} onClick={() => switchTab('account')}>Account</button>
-        <button className={`${styles.tab} ${tab === 'display' ? styles.tabActive : ''}`} onClick={() => switchTab('display')}>Display</button>
+        <button className={`${styles.tab} ${tab === 'apps'          ? styles.tabActive : ''}`} onClick={() => switchTab('apps')}>Apps</button>
+        <button className={`${styles.tab} ${tab === 'notifications' ? styles.tabActive : ''}`} onClick={() => switchTab('notifications')}>Notifications</button>
+        <button className={`${styles.tab} ${tab === 'account'       ? styles.tabActive : ''}`} onClick={() => switchTab('account')}>Account</button>
+        <button className={`${styles.tab} ${tab === 'display'       ? styles.tabActive : ''}`} onClick={() => switchTab('display')}>Display</button>
       </div>
 
       {/* ── Apps tab ── */}
@@ -552,6 +574,115 @@ export default function Settings() {
             )}
           </div>
 
+        </div>
+      )}
+
+      {/* ── Notifications tab ── */}
+      {tab === 'notifications' && (
+        <div className={styles.displayZones}>
+          <div className={styles.displayZone}>
+            <div className={styles.sectionHeader}>
+              <span className={styles.sectionLabel}>Gotify</span>
+            </div>
+            {notifLoading ? (
+              <div className={styles.loadingText}>Loading…</div>
+            ) : (
+              <div className={styles.formCard}>
+                <div className={styles.formTitle}>Push Notifications</div>
+                <Field label="Gotify URL" hint="Base URL of your Gotify server, e.g. http://192.168.1.100:8080">
+                  <input
+                    value={notifForm.gotify_url}
+                    onChange={e => { setNotifForm(f => ({ ...f, gotify_url: e.target.value })); setNotifTestResult(null); setNotifSaveResult(null); }}
+                    placeholder="http://192.168.1.100:8080"
+                    autoComplete="off"
+                  />
+                </Field>
+                <Field label="App Token" hint="Token for the arrmonitor application in Gotify">
+                  <input
+                    type="password"
+                    value={notifForm.gotify_token}
+                    onChange={e => { setNotifForm(f => ({ ...f, gotify_token: e.target.value })); setNotifTestResult(null); setNotifSaveResult(null); }}
+                    placeholder="Paste your Gotify app token"
+                    autoComplete="new-password"
+                  />
+                </Field>
+                <Field label="App Base URL (optional)" hint="Public URL of arrmonitor — used to include the app icon in notifications">
+                  <input
+                    value={notifForm.app_base_url}
+                    onChange={e => { setNotifForm(f => ({ ...f, app_base_url: e.target.value })); setNotifSaveResult(null); }}
+                    placeholder="http://192.168.1.100:3000"
+                    autoComplete="off"
+                  />
+                </Field>
+                {notifTestResult && (
+                  <div className={`${styles.testResult} ${notifTestResult.ok ? styles.testOk : styles.testFail}`}>
+                    {notifTestResult.ok ? '✓' : '✗'} {notifTestResult.msg}
+                  </div>
+                )}
+                {notifSaveResult && (
+                  <div className={`${styles.testResult} ${notifSaveResult.ok ? styles.testOk : styles.testFail}`}>
+                    {notifSaveResult.ok ? '✓' : '✗'} {notifSaveResult.msg}
+                  </div>
+                )}
+                <div className={styles.formActions}>
+                  <button
+                    className={styles.testBtn}
+                    disabled={notifTesting || !notifForm.gotify_url || !notifForm.gotify_token}
+                    onClick={async () => {
+                      setNotifTesting(true);
+                      setNotifTestResult(null);
+                      try {
+                        await api.testGotify({ gotify_url: notifForm.gotify_url, gotify_token: notifForm.gotify_token });
+                        setNotifTestResult({ ok: true, msg: 'Test notification sent' });
+                      } catch (e) {
+                        setNotifTestResult({ ok: false, msg: e.message });
+                      } finally {
+                        setNotifTesting(false);
+                      }
+                    }}
+                  >
+                    {notifTesting ? 'Sending…' : 'Send Test'}
+                  </button>
+                  <div className={styles.formActionsRight}>
+                    <button
+                      className={styles.saveBtn}
+                      disabled={notifSaving}
+                      onClick={async () => {
+                        setNotifSaving(true);
+                        setNotifSaveResult(null);
+                        try {
+                          await api.saveSettings(notifForm);
+                          setNotifSaveResult({ ok: true, msg: 'Settings saved' });
+                          setTimeout(() => setNotifSaveResult(null), 3000);
+                        } catch (e) {
+                          setNotifSaveResult({ ok: false, msg: e.message });
+                        } finally {
+                          setNotifSaving(false);
+                        }
+                      }}
+                    >
+                      {notifSaving ? 'Saving…' : 'Save'}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+          <div className={styles.displayZone}>
+            <div className={styles.sectionHeader}>
+              <span className={styles.sectionLabel}>How it works</span>
+            </div>
+            <div style={{ fontSize: 12, color: 'var(--text3)', lineHeight: 1.6, display: 'flex', flexDirection: 'column', gap: 8 }}>
+              <p style={{ margin: 0 }}>arrmonitor polls each enabled instance every 60 seconds. When a queue item enters an error state, a push notification is sent to Gotify with:</p>
+              <ul style={{ margin: 0, paddingLeft: 16 }}>
+                <li>The app icon (Sonarr, Radarr, etc.)</li>
+                <li>The instance name and type</li>
+                <li>The media title and error message</li>
+                <li>A link directly to the instance queue</li>
+              </ul>
+              <p style={{ margin: 0 }}>Re-occurring errors (cleared then re-raised) will trigger a new notification. The <strong style={{ color: 'var(--text2)' }}>App Base URL</strong> is only needed for the icon — leave blank to skip it.</p>
+            </div>
+          </div>
         </div>
       )}
 

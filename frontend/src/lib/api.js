@@ -77,4 +77,9 @@ export const api = {
   // Remote reload trigger
   getReloadTrigger: () => request('/api/reload-trigger'),
   triggerReload: () => request('/api/reload-trigger', { method: 'POST' }),
+
+  // Notification settings
+  getSettings: () => request('/api/settings'),
+  saveSettings: (body) => request('/api/settings', { method: 'POST', body: JSON.stringify(body) }),
+  testGotify: (body) => request('/api/settings/test-gotify', { method: 'POST', body: JSON.stringify(body) }),
 };
