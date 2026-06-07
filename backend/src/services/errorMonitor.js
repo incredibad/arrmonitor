@@ -59,7 +59,7 @@ async function fetchQueueForInstance(instance) {
 
 async function loadSettings() {
   const { rows } = await pool.query(
-    "SELECT key, value FROM settings WHERE key IN ('gotify_url', 'gotify_token', 'app_base_url')",
+    "SELECT key, value FROM settings WHERE key IN ('gotify_url', 'gotify_token')",
   );
   const obj = {};
   for (const row of rows) obj[row.key] = row.value;
@@ -67,7 +67,7 @@ async function loadSettings() {
 }
 
 async function sendGotifyNotification(settings, instance, item) {
-  const { gotify_url, gotify_token, app_base_url } = settings;
+  const { gotify_url, gotify_token } = settings;
   const instanceUrl = (instance.external_url || instance.url).replace(/\/$/, '');
   const clickUrl = `${instanceUrl}/activity/queue`;
 
@@ -82,11 +82,6 @@ async function sendGotifyNotification(settings, instance, item) {
       click: { url: clickUrl },
     },
   };
-
-  if (app_base_url) {
-    const base = app_base_url.replace(/\/$/, '');
-    extras['client::notification'].bigImageUrl = `${base}/logos/${instance.type}.png`;
-  }
 
   const r = await fetch(`${gotify_url.replace(/\/$/, '')}/message`, {
     method: 'POST',

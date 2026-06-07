@@ -4,6 +4,11 @@ All notable changes are documented here, newest first.
 
 ---
 
+## [1.19.1] — 2026-06-07
+
+### Changed
+- Removed "App Base URL" field and `bigImageUrl` from Gotify notifications — Gotify clients fetch images at render time so the URL must be externally reachable, which isn't practical for a self-hosted app; set a custom icon on the Gotify application instead
+
 ## [1.19.0] — 2026-06-07
 
 ### Added

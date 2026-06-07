@@ -70,7 +70,7 @@ export default function Settings() {
   const [pwLoading, setPwLoading] = useState(false);
 
   // Notifications tab state
-  const [notifForm, setNotifForm] = useState({ gotify_url: '', gotify_token: '', app_base_url: '' });
+  const [notifForm, setNotifForm] = useState({ gotify_url: '', gotify_token: '' });
   const [notifLoading, setNotifLoading] = useState(false);
   const [notifSaving, setNotifSaving] = useState(false);
   const [notifSaveResult, setNotifSaveResult] = useState(null);
@@ -96,7 +96,6 @@ export default function Settings() {
       .then(s => setNotifForm({
         gotify_url:   s.gotify_url   || '',
         gotify_token: s.gotify_token || '',
-        app_base_url: s.app_base_url || '',
       }))
       .catch(() => {})
       .finally(() => setNotifLoading(false));
@@ -606,14 +605,6 @@ export default function Settings() {
                     autoComplete="new-password"
                   />
                 </Field>
-                <Field label="App Base URL (optional)" hint="Public URL of arrmonitor — used to include the app icon in notifications">
-                  <input
-                    value={notifForm.app_base_url}
-                    onChange={e => { setNotifForm(f => ({ ...f, app_base_url: e.target.value })); setNotifSaveResult(null); }}
-                    placeholder="http://192.168.1.100:3000"
-                    autoComplete="off"
-                  />
-                </Field>
                 {notifTestResult && (
                   <div className={`${styles.testResult} ${notifTestResult.ok ? styles.testOk : styles.testFail}`}>
                     {notifTestResult.ok ? '✓' : '✗'} {notifTestResult.msg}
@@ -675,12 +666,11 @@ export default function Settings() {
             <div style={{ fontSize: 12, color: 'var(--text3)', lineHeight: 1.6, display: 'flex', flexDirection: 'column', gap: 8 }}>
               <p style={{ margin: 0 }}>arrmonitor polls each enabled instance every 60 seconds. When a queue item enters an error state, a push notification is sent to Gotify with:</p>
               <ul style={{ margin: 0, paddingLeft: 16 }}>
-                <li>The app icon (Sonarr, Radarr, etc.)</li>
                 <li>The instance name and type</li>
                 <li>The media title and error message</li>
                 <li>A link directly to the instance queue</li>
               </ul>
-              <p style={{ margin: 0 }}>Re-occurring errors (cleared then re-raised) will trigger a new notification. The <strong style={{ color: 'var(--text2)' }}>App Base URL</strong> is only needed for the icon — leave blank to skip it.</p>
+              <p style={{ margin: 0 }}>Re-occurring errors (cleared then re-raised) will trigger a new notification. You can set a custom icon for the Gotify application in Gotify's own settings.</p>
             </div>
           </div>
         </div>
