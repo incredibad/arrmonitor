@@ -4,6 +4,14 @@ All notable changes are documented here, newest first.
 
 ---
 
+## [1.19.0] — 2026-06-07
+
+### Added
+- Gotify push notifications for queue errors — when any monitored instance has a download enter an error state, a push notification is sent to Gotify with the app icon, instance name/type, media title, error message, and a direct link to the instance queue
+- Notifications tab in Settings to configure Gotify URL, app token, and an optional arrmonitor base URL (used to include the app type icon in notifications)
+- Send Test button to verify Gotify connectivity before saving
+- Background error monitor polls all enabled instances every 60 seconds (configurable via `NOTIFY_INTERVAL_MS` env var); errors that clear and re-occur will re-trigger a notification
+
 ## [1.18.5] — 2026-04-27
 
 ### Fixed

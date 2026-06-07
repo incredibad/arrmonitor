@@ -94,6 +94,15 @@ export async function initDb() {
     );
   `);
 
+  // Global settings (key-value store)
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS settings (
+      key TEXT PRIMARY KEY,
+      value TEXT NOT NULL,
+      updated_at TIMESTAMPTZ DEFAULT NOW()
+    );
+  `);
+
   // Remote reload trigger — single row, touched on demand
   await pool.query(`
     CREATE TABLE IF NOT EXISTS reload_trigger (
