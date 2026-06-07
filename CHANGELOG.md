@@ -4,6 +4,12 @@ All notable changes are documented here, newest first.
 
 ---
 
+## [1.19.2] — 2026-06-07
+
+### Fixed
+- Gotify test endpoint now wraps the entire handler in a single try/catch — previously a missing or unparsed request body could throw outside the try block, causing Express to send a plain-text error response that the frontend couldn't parse as JSON
+- Switched settings route from global `fetch` to `node-fetch` for consistency with the rest of the backend; replaced `AbortSignal.timeout()` with an explicit `AbortController` for broader compatibility
+
 ## [1.19.1] — 2026-06-07
 
 ### Changed
